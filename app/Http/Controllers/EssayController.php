@@ -1,8 +1,10 @@
 <?php
+// app/Http/Controllers/EssayController.php
 
 namespace App\Http\Controllers;
 
 use App\Models\Essay;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 
 class EssayController extends Controller
@@ -12,7 +14,9 @@ class EssayController extends Controller
         // Fetch all essays from the database
         $essays = Essay::all();
 
-        // Return the data as JSON (for testing)
-        return response()->json($essays);
+        // Return the data using Inertia
+        return Inertia::render('Essays', [
+            'essays' => $essays,
+        ]);
     }
 }

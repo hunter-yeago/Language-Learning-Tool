@@ -16,7 +16,7 @@ Route::get('/', function () {
 });
 
 
-Route::get('/essays', [EssayController::class, 'index']);
+Route::get('/essays', [EssayController::class, 'index'])->name('essays.index');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
