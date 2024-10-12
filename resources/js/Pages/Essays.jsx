@@ -1,6 +1,6 @@
 // resources/js/Pages/Essays.jsx
 import React from 'react';
-import { usePage } from '@inertiajs/inertia-react';
+import { usePage } from '@inertiajs/react';
 
 const Essays = () => {
     const { essays } = usePage().props;
