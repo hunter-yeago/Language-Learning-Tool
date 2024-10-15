@@ -16,6 +16,12 @@ class UserFactory extends Factory
      */
     protected static ?string $password;
 
+    // Use a model factory in order to:
+    // quickly scaffold example data
+    // -- quickly generate 10 users for testing --
+    // 
+
+
     /**
      * Define the model's default state.
      *

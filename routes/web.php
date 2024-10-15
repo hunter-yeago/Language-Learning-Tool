@@ -5,8 +5,17 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Models\Essay;
+
 
 Route::get('/', function () {
+    $essays = Essay::all();
+
+
+    // how to show data
+    dd($essays);
+    // dd($essays[0]->title);
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -15,7 +24,7 @@ Route::get('/', function () {
     ]);
 });
 
-
+// the Essay Contorller is doing the heavy lifting here
 Route::get('/essays', [EssayController::class, 'index'])->name('essays.index');
 
 Route::get('/dashboard', function () {

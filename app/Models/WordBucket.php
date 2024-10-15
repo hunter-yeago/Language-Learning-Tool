@@ -5,10 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Essay extends Model
+class WordBucket extends Model
 {
+    /** @use HasFactory<\Database\Factories\WordBucketFactory> */
     use HasFactory;
-    protected $table = "essays";
-    // only these two can be mass assigned
-    protected $fillable = ['title', 'content'];
 }
