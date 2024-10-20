@@ -20,6 +20,6 @@ class WordBank extends Model
     // belongs to an iteration
     public function essay()
     {
-        return $this->belongsTo(Iteration::class);
+        return $this->hasMany(Iteration::class);
     }
 }

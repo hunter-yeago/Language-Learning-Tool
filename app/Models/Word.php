@@ -9,11 +9,14 @@ class Word extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['word', 'word_bank_id'];
+    // Allow mass-assignment for these fields
+    protected $fillable = ['word', 'word_bucket_id'];
 
-    // Each word belongs to one word bank
-    public function wordBank()
+    /** 
+     * A Word belongs to a Word Bucket.
+     */
+    public function wordBucket()
     {
-        return $this->belongsTo(WordBank::class);
+        return $this->belongsTo(WordBucket::class);
     }
 }

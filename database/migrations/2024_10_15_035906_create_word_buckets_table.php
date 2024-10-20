@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('word_buckets', function (Blueprint $table) {
             $table->id();
-            // $table->name();
+            $table->string('title');
+            $table->json('words')->nullable(); // Add a JSON column for words
             $table->timestamps();
         });
     }

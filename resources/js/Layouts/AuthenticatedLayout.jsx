@@ -31,10 +31,10 @@ export default function AuthenticatedLayout({ header, children }) {
                                     Dashboard
                                 </NavLink>
                                 <NavLink
-                                    href={route('wordbanks')}
-                                    active={route().current('wordbanks')}
+                                    href={route('wordbuckets')}
+                                    active={route().current('wordbuckets')}
                                 >
-                                    Word Banks
+                                    Word Buckets
                                 </NavLink>
                             </div>
                         </div>

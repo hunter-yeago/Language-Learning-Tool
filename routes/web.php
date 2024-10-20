@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\EssayController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WordBucketController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -31,14 +32,17 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/wordbanks', function () {
-    return Inertia::render('WordBanks');
-})->middleware(['auth', 'verified'])->name('wordbanks');
 
 Route::get('/test', function () {
     return Inertia::render('Test');
 })->middleware(['auth', 'verified'])->name('test');
 
+
+// Word buckets
+Route::get('/wordbuckets', function () {return Inertia::render('WordBuckets'); })->middleware(['auth', 'verified'])->name('wordbuckets');
+Route::post('/word_buckets', [WordBucketController::class, 'store'])->name('wordbuckets.store');
+
+// Auth
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
