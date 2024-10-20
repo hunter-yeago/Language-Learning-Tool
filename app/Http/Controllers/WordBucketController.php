@@ -25,7 +25,8 @@ class WordBucketController extends Controller
         // Save the Word Bucket
         WordBucket::create([
             'title' => $validated['title'],
-            'words' => json_encode($validated['words']), // Convert the array to JSON
+            'words' => $validated['words'],
+            // 'words' => json_encode($validated['words']), // Convert the array to JSON
         ]);
 
 

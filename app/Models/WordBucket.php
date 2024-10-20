@@ -14,10 +14,10 @@ class WordBucket extends Model
         protected $casts = ['words' => 'array'];
 
         // A word bank has many words
-        // public function words()
-        // {
-        //     return $this->hasMany(Word::class);
-        // }
+        public function words()
+        {
+            return $this->hasMany(Word::class);
+        }
     
         // belongs to an iteration
         // public function essay()
