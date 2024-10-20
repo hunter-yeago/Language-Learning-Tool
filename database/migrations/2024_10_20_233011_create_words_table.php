@@ -6,26 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateWordsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('words', function (Blueprint $table) {
             $table->id();
             $table->string('word');
-            $table->foreignId('word_bucket_id')->constrained()->onDelete('cascade');
+            $table->foreignId('word_bucket_id') // Foreign key to word_buckets table
+                  ->constrained()
+                  ->onDelete('cascade'); // Cascade delete to remove words if the bucket is deleted
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('words');

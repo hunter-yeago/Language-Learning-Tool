@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\WordBucket;
-use Illuminate\Container\Attributes\Log;
+use App\Models\Word;
+use Illuminate\Http\Request;
 
 class WordBucketController extends Controller
 {
@@ -17,19 +17,14 @@ class WordBucketController extends Controller
             'words.*' => 'required|string|max:255',
         ]);
 
-            // Log the validated data for debugging
-            // Log::info('Validated data:', $validated);
+        // Create the WordBucket
+        $wordBucket = WordBucket::create(['title' => $validated['title']]);
 
-        // dd($validated['words']);
-        
-        // Save the Word Bucket
-        WordBucket::create([
-            'title' => $validated['title'],
-            'words' => $validated['words'],
-            // 'words' => json_encode($validated['words']), // Convert the array to JSON
-        ]);
+        // Create associated words and link them to the WordBucket
+        foreach ($validated['words'] as $word) {
+            $wordBucket->words()->create(['word' => $word]);
+        }
 
-
-        // return redirect()->route('wordbuckets')->with('success', 'Word Bucket created!');
+        return redirect()->route('wordbuckets')->with('success', 'Word Bucket created!');
     }
 }

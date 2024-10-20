@@ -11,7 +11,6 @@ class WordBucket extends Model
     use HasFactory;
     
         protected $fillable = ['title'];
-        protected $casts = ['words' => 'array'];
 
         // A word bank has many words
         public function words()
