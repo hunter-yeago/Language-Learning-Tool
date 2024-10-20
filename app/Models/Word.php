@@ -16,10 +16,4 @@ class Word extends Model
     {
         return $this->belongsTo(WordBank::class);
     }
-
-    // // Each word has many variations
-    // public function variations()
-    // {
-    //     return $this->hasMany(WordVariation::class);
-    // }
 }

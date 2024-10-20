@@ -20,6 +20,6 @@ class Iteration extends Model
     // Each iteration has a word bank
     public function wordBank()
     {
-        return $this->belongsTo(WordBank::class);
+        return $this->hasOne(WordBank::class);
     }
 }

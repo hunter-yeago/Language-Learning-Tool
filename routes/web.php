@@ -31,6 +31,10 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/wordbanks', function () {
+    return Inertia::render('WordBanks');
+})->middleware(['auth', 'verified'])->name('wordbanks');
+
 Route::get('/test', function () {
     return Inertia::render('Test');
 })->middleware(['auth', 'verified'])->name('test');

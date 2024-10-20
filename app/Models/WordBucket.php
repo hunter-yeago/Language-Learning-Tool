@@ -9,4 +9,16 @@ class WordBucket extends Model
 {
     /** @use HasFactory<\Database\Factories\WordBucketFactory> */
     use HasFactory;
+
+        // A word bank has many words
+        public function words()
+        {
+            return $this->hasMany(Word::class);
+        }
+    
+        // belongs to an iteration
+        public function essay()
+        {
+            return $this->hasMany(Essay::class);
+        }
 }

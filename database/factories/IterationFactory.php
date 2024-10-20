@@ -2,22 +2,18 @@
 
 namespace Database\Factories;
 
+use App\Models\Essay;
+use App\Models\WordBank;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Iteration>
- */
 class IterationFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
         return [
-            //
+            'essay_id' => Essay::factory(),
+            'word_bank_id' => WordBank::factory(),
+            'notes' => $this->faker->sentence(),
         ];
     }
 }
