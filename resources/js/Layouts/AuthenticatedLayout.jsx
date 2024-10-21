@@ -36,6 +36,12 @@ export default function AuthenticatedLayout({ header, children }) {
                                 >
                                     Word Buckets
                                 </NavLink>
+                                <NavLink
+                                    href={route('write-essay')}
+                                    active={route().current('write-essay')}
+                                >
+                                    Write Essay
+                                </NavLink>
                             </div>
                         </div>
 

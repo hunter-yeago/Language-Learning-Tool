@@ -25,6 +25,6 @@ class WordBucketController extends Controller
             $wordBucket->words()->create(['word' => $word]);
         }
 
-        return redirect()->route('wordbuckets')->with('success', 'Word Bucket created!');
+        return redirect()->route('write-essay')->with('success', 'Word Bucket created!');
     }
 }

@@ -14,7 +14,7 @@ class CreateEssaysTable extends Migration
             //given that every essay belongs to a Word Bucket
 
             // this is one way to do it (just using the id name)
-            // $table->unsignedBigInteger('wordbucket_id');
+            // $table->unsignedBigInteger('word_bucket_id');
 
             // this is another cool way to do it!
             $table->foreignIdFor(\App\Models\WordBucket::class);
