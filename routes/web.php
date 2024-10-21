@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\Essay;
 use App\Models\WordBucket;
+use Illuminate\Http\Request;
 
 Route::get('/', function () {
     $essays = Essay::all();
@@ -50,6 +51,18 @@ Route::get('/write-essay', function () {
     ]);
 })->middleware(['auth', 'verified'])->name('write-essay');
 Route::post('/word_buckets', [WordBucketController::class, 'store'])->name('wordbuckets.store');
+
+Route::post('/start-essay', function (Request $request) {
+    $bucket = $request->input('bucket');
+    $words = $request->input('words', []);
+
+    return Inertia::render('StartEssay', [
+        'bucket' => $bucket,
+        'words' => $words,
+    ]);
+})->middleware(['auth', 'verified'])->name('start-essay');
+
+
 
 // Auth
 Route::middleware('auth')->group(function () {

@@ -28,7 +28,6 @@ export default function WordBuckets() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('thedata', data);
         post('/word_buckets', {
             onSuccess: () => alert('Word Bank created successfully!'),
         });

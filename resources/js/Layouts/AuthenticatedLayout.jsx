@@ -42,6 +42,12 @@ export default function AuthenticatedLayout({ header, children }) {
                                 >
                                     Write Essay
                                 </NavLink>
+                                {/* <NavLink
+                                    href={route('start-essay')}
+                                    active={route().current('start-essay')}
+                                >
+                                    Start Essay
+                                </NavLink> */}
                             </div>
                         </div>
 
