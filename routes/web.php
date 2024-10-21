@@ -33,7 +33,15 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Word buckets
-Route::get('/wordbuckets', function () {return Inertia::render('WordBuckets'); })->middleware(['auth', 'verified'])->name('wordbuckets');
+Route::get('/wordbuckets', function () {
+    
+    $wordBuckets = WordBucket::with('words')->get();
+
+    return Inertia::render('WordBuckets', [
+        'wordBuckets' => $wordBuckets,
+    ]);
+
+})->middleware(['auth', 'verified'])->name('wordbuckets');
 Route::get('/write-essay', function () {
     $wordBuckets = WordBucket::with('words')->get();
 

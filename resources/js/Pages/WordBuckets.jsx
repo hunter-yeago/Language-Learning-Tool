@@ -3,27 +3,22 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm } from '@inertiajs/react';
 
 export default function WordBuckets() {
-    // Initialize the form with Inertia's useForm hook
     const { data, setData, post, processing, errors } = useForm({
-        title: '',  // Word Bank title
-        words: [],  // List of words
+        title: '',
+        words: [],
     });
 
-    const [currentWord, setCurrentWord] = useState(''); // State for the current word input
-    const [wordList, setWordList] = useState([]); // List to store the added words
-    const inputRef = useRef(null); // Create a ref to focus the input
+    const [currentWord, setCurrentWord] = useState('');
+    const [wordList, setWordList] = useState([]);
+    const inputRef = useRef(null);
 
-    // Handle adding a word when the user presses Enter
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
-            e.preventDefault(); // Prevent form submission
+            e.preventDefault();
             if (currentWord.trim() !== '') {
-                // Add the current word to the list
                 setWordList((prevList) => [...prevList, currentWord.trim()]);
-                setData('words', [...wordList, currentWord.trim()]); // Sync form data
-                setCurrentWord(''); // Clear the input field
-
-                // Focus the input field again after a short delay
+                setData('words', [...wordList, currentWord.trim()]);
+                setCurrentWord('');
                 setTimeout(() => {
                     inputRef.current.focus();
                 }, 0);
@@ -31,13 +26,11 @@ export default function WordBuckets() {
         }
     };
 
-    // Handle form submission using Inertia's post method
     const handleSubmit = (e) => {
-        e.preventDefault(); // Prevent page reload
-
+        e.preventDefault();
         console.log('thedata', data);
-        post('/word_buckets', { // Send the data to your backend route
-            onSuccess: () => alert('Word Bank created successfully!'), // Optional: Success feedback
+        post('/word_buckets', {
+            onSuccess: () => alert('Word Bank created successfully!'),
         });
     };
 
@@ -53,10 +46,8 @@ export default function WordBuckets() {
 
             <div className="flex items-center justify-center mt-12">
                 <div className="w-full max-w-2xl p-6 bg-white shadow-md rounded-lg flex space-x-4">
-                    {/* Left Side: Word Input Section */}
                     <div className="flex-1">
                         <form onSubmit={handleSubmit} className="space-y-4">
-                            {/* Word Bank Title */}
                             <div>
                                 <label
                                     htmlFor="title"
@@ -80,7 +71,6 @@ export default function WordBuckets() {
                                 )}
                             </div>
 
-                            {/* Single Word Input */}
                             <div>
                                 <label
                                     htmlFor="wordInput"
@@ -93,14 +83,13 @@ export default function WordBuckets() {
                                     id="wordInput"
                                     value={currentWord}
                                     onChange={(e) => setCurrentWord(e.target.value)}
-                                    onKeyDown={handleKeyDown} // Keydown event
-                                    ref={inputRef} // Store ref
+                                    onKeyDown={handleKeyDown}
+                                    ref={inputRef}
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                     required
                                 />
                             </div>
 
-                            {/* Submit Button */}
                             <div className="mt-4">
                                 <button
                                     type="submit"
@@ -113,7 +102,6 @@ export default function WordBuckets() {
                         </form>
                     </div>
 
-                    {/* Right Side: Word List Preview Section */}
                     <div className="w-1/3 max-h-80 overflow-y-auto border border-gray-300 rounded-md p-4">
                         <h3 className="text-lg font-medium text-gray-800">Word Bank Preview:</h3>
                         <ul className="list-disc list-inside mt-2 text-gray-900">
