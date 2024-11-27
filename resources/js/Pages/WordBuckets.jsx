@@ -28,9 +28,15 @@ export default function WordBuckets() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post('/word_buckets', {
-            onSuccess: () => alert('Word Bank created successfully!'),
-        });
+
+        // Check if currentWord is empty before submitting
+        if (currentWord.trim() === '') {
+            post('/word_buckets', {
+                onSuccess: () => alert('Word Bank created successfully!'),
+            });
+        } else {
+            alert('Please finish adding the word before submitting.');
+        }
     };
 
     return (
@@ -85,7 +91,6 @@ export default function WordBuckets() {
                                     onKeyDown={handleKeyDown}
                                     ref={inputRef}
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                    required
                                 />
                             </div>
 
