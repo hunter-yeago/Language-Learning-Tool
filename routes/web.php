@@ -57,6 +57,18 @@ Route::get('/add-words', function () {
 
 })->middleware(['auth', 'verified'])->name('add-words');
 
+// Start Adding Words with Article?
+Route::post('/start-adding-words', function (Request $request) {
+    $bucket = $request->input('bucket');
+    $words = $request->input('words', []);
+
+    // Return an Inertia response instead of a JSON response
+    return Inertia::render('StartAddingWords', [
+        'bucket' => $bucket,
+        'words' => $words,
+    ]);
+})->middleware(['auth', 'verified'])->name('start-adding-words');
+
 
 // Go to Write Essay
 Route::get('/write-essay', function () {
@@ -71,7 +83,7 @@ Route::get('/write-essay', function () {
 Route::post('/word_buckets', [WordBucketController::class, 'store'])->name('store-wordbucket');
 
 // Add Words to Words Bucket
-// Route::post('/word_buckets/{id}/add-words', [WordBucketController::class, 'addWords'])->name('add-words');
+Route::post('/word_buckets/{id}/add-new-words', [WordBucketController::class, 'addWords'])->name('add-new-words');
 
 
 Route::post('/start-essay', function (Request $request) {

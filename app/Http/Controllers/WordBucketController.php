@@ -41,22 +41,21 @@ class WordBucketController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function addWords(Request $request, $id)
-    {
-        $wordBucket = WordBucket::findOrFail($id);
-
-        // Validate the request data
-        $validated = $request->validate([
-            'words' => 'required|array|min:1',
-            'words.*' => 'required|string|max:255',
-        ]);
-
-        // Add words to the WordBucket
-        foreach ($validated['words'] as $word) {
-            $wordBucket->words()->create(['word' => $word]);
-        }
-
-        // Redirect to a view to show the WordBucket with a success message
-        return redirect()->route('view-wordbucket', ['id' => $wordBucket->id])
-                         ->with('success', 'Words added successfully!');
+{
+    $wordBucket = WordBucket::findOrFail($id);
+    
+    // Validate the request data
+    $validated = $request->validate([
+        'words' => 'required|array|min:1',
+        'words.*' => 'required|string|max:255',
+    ]);
+    
+    // Add words to the WordBucket
+    foreach ($validated['words'] as $word) {
+        $wordBucket->words()->create(['word' => $word]);
     }
+    
+    // Return an Inertia response
+    return back()->with('success', 'Words added successfully!');
+}
 }

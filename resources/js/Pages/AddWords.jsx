@@ -34,15 +34,15 @@ export default function AddWords({ wordBuckets }) {
     };
 
     const handleStartEssay = (e) => {
-        e.preventDefault(); // Prevent default form submission
-
+        e.preventDefault();
+    
         // Check if a bucket is selected
-        // if (currentBucket) {
-        //     post('/start-essay', {
-        //         bucket: currentBucket, // Pass the selected bucket title
-        //         words: wordList, // Pass the list of words
-        //     });
-        // }
+        if (currentBucket) {
+            post(route('start-adding-words'), {
+                bucket: currentBucket,
+                words: wordList,
+            });
+        }
     };
     
     return (
