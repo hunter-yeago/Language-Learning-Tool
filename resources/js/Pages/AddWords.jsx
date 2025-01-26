@@ -16,10 +16,10 @@ export default function AddWords({ wordBuckets }) {
         const bucket = wordBuckets.find((b) => b.id === parseInt(bucketId));
 
         if (bucket) {
-            setCurrentBucket(bucket.title); // Save selected bucket title
+            setCurrentBucket(bucket); // Save selected bucket title
             setWordList(bucket.words);       // Save the words associated with the bucket
             setData({
-                bucket: bucket.title, // Set selected bucket data for submission
+                bucket: bucket, // Set selected bucket data for submission
                 words: bucket.words, // Set selected words data for submission
             });
 
@@ -35,7 +35,7 @@ export default function AddWords({ wordBuckets }) {
 
     const handleStartEssay = (e) => {
         e.preventDefault();
-    
+
         // Check if a bucket is selected
         if (currentBucket) {
             post(route('start-adding-words'), {
@@ -44,7 +44,7 @@ export default function AddWords({ wordBuckets }) {
             });
         }
     };
-    
+
     return (
         <AuthenticatedLayout
             header={
@@ -83,7 +83,7 @@ export default function AddWords({ wordBuckets }) {
                         {currentBucket && (
                             <div className="mt-6">
                                 <h2 className="text-lg font-semibold text-center">
-                                    You selected: {currentBucket}
+                                    You selected: {currentBucket.title}
                                 </h2>
                                 <h3 className="text-md mt-4 font-medium">Words in this Bucket:</h3>
                                 <ul className="list-disc pl-6 mt-2 space-y-1">
@@ -102,7 +102,7 @@ export default function AddWords({ wordBuckets }) {
                                     disabled={processing}
                                     className="mt-4 w-full p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
                                 >
-                                    {processing ? 'Loading...' : 'Start Essay'}
+                                    {processing ? 'Loading...' : 'Start Adding Words'}
                                 </button>
                             </div>
                         )}

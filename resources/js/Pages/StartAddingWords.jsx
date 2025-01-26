@@ -2,8 +2,11 @@ import { useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
-export default function StartAddingWords({ id, bucket }) {
-    console.log('hereisbucet', bucket);
+export default function StartAddingWords({ bucket, words }) {
+    console.log('bucket', bucket)
+    console.log('bucketID', bucket.id)
+    console.log('bucketName', bucket.title)
+    console.log('words', words)
     const { data, setData, post, processing, errors } = useForm({
         words: [],
     });
@@ -33,12 +36,19 @@ export default function StartAddingWords({ id, bucket }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(`/word_buckets/${bucket}/add-words`, {
+
+        console.log('api route', `/word_buckets/${bucket.id}/add-new-words`)
+        post(`/word_buckets/${bucket.id}/add-new-words`, {
+            data: {
+                words: wordList,
+            },
             onSuccess: () => {
                 alert('Words added successfully!');
-                // Optionally, you might want to clear the word list after successful submission
                 setWordList([]);
                 setData('words', []);
+            },
+            onError: (error) => {
+                console.error('Error adding words:', error);
             },
         });
     };
@@ -57,8 +67,10 @@ export default function StartAddingWords({ id, bucket }) {
                 </h2>
             }
         >
-                <div className="flex flex-col px-20 mx-auto gap-3 mt-40">
+                {/* Container - Word Bank Preview, Word Adding Form */}
+                <div className="flex flex-col px-20 mx-auto gap-3 mt-20">
 
+                    {/* Word Bank Preview */}
                     <div className=" max-h-80 overflow-y-auto border border-gray-300 rounded-md p-4">
                         <h3 className="text-lg font-medium text-gray-800 mb-2">Word Bank Preview:</h3>
                         {wordList.length > 0 ? (

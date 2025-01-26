@@ -7,7 +7,7 @@ export default function WordBankForm({
 }) {
     return (
         <div className="flex-1">
-            <form onSubmit={handleSubmit} className="space-y-4" method="POST">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-6" method="POST">
                 <div>
                     <label
                         htmlFor="title"

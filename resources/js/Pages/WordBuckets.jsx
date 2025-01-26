@@ -8,8 +8,6 @@ export default function WordBuckets() {
         description: '',
         words: [],
     });
-
-
     const handleSubmit = (e) => {
         e.preventDefault();
         if (data.title.trim() === '') {

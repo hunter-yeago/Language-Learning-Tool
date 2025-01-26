@@ -37,7 +37,7 @@ Route::get('/dashboard', function () {
 
 // Go to WordBuckets
 Route::get('/wordbuckets', function () {
-    
+
     $wordBuckets = WordBucket::with('words')->get();
 
     return Inertia::render('WordBuckets', [
@@ -48,7 +48,7 @@ Route::get('/wordbuckets', function () {
 
 // Go to Add Words
 Route::get('/add-words', function () {
-    
+
     $wordBuckets = WordBucket::with('words')->get();
 
     return Inertia::render('AddWords', [
@@ -60,6 +60,7 @@ Route::get('/add-words', function () {
 // Start Adding Words with Article?
 Route::post('/start-adding-words', function (Request $request) {
     $bucket = $request->input('bucket');
+
     $words = $request->input('words', []);
 
     // Return an Inertia response instead of a JSON response
@@ -83,7 +84,7 @@ Route::get('/write-essay', function () {
 Route::post('/word_buckets', [WordBucketController::class, 'store'])->name('store-wordbucket');
 
 // Add Words to Words Bucket
-Route::post('/word_buckets/{id}/add-new-words', [WordBucketController::class, 'addWords'])->name('add-new-words');
+Route::post('/word_buckets/{bucketID}/add-new-words', [WordBucketController::class, 'addWords'])->name('add-new-words');
 
 
 Route::post('/start-essay', function (Request $request) {

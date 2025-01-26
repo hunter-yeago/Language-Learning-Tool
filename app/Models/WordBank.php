@@ -12,7 +12,7 @@ class WordBank extends Model
     protected $fillable = ['name'];
 
     // A word bank has many words
-    public function words(): hasMan
+    public function words(): hasMany
     {
         return $this->hasMany(Word::class);
     }

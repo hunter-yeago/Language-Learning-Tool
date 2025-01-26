@@ -12,7 +12,7 @@ class WordBucketController extends Controller
      * Store a newly created WordBucket in the database.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -37,25 +37,25 @@ class WordBucketController extends Controller
      * Add words to an existing WordBucket.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $bucketID
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function addWords(Request $request, $id)
-{
-    $wordBucket = WordBucket::findOrFail($id);
-    
-    // Validate the request data
-    $validated = $request->validate([
-        'words' => 'required|array|min:1',
-        'words.*' => 'required|string|max:255',
-    ]);
-    
-    // Add words to the WordBucket
-    foreach ($validated['words'] as $word) {
-        $wordBucket->words()->create(['word' => $word]);
+    public function addWords(Request $request, int $bucketID): \Illuminate\Http\RedirectResponse
+    {
+        $wordBucket = WordBucket::findOrFail($bucketID);
+
+        // Validate the request data
+        $validated = $request->validate([
+            'words' => 'required|array|min:1',
+            'words.*' => 'required|string|max:255',
+        ]);
+
+        // Add words to the WordBucket
+        foreach ($validated['words'] as $word) {
+            $wordBucket->words()->create(['word' => $word]);
+        }
+
+        // Return an Inertia response
+        return back()->with('success', 'Words added successfully!');
     }
-    
-    // Return an Inertia response
-    return back()->with('success', 'Words added successfully!');
-}
 }
