@@ -29,11 +29,13 @@ Route::get('/', function () {
 // the Essay Contorller is doing the heavy lifting here
 Route::get('/essays', [EssayController::class, 'index'])->name('essays.index');
 
+// Go to Dashboard
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Word buckets
+
+// Go to WordBuckets
 Route::get('/wordbuckets', function () {
     
     $wordBuckets = WordBucket::with('words')->get();
@@ -43,6 +45,20 @@ Route::get('/wordbuckets', function () {
     ]);
 
 })->middleware(['auth', 'verified'])->name('wordbuckets');
+
+// Go to Add Words
+Route::get('/add-words', function () {
+    
+    $wordBuckets = WordBucket::with('words')->get();
+
+    return Inertia::render('AddWords', [
+        'wordBuckets' => $wordBuckets,
+    ]);
+
+})->middleware(['auth', 'verified'])->name('add-words');
+
+
+// Go to Write Essay
 Route::get('/write-essay', function () {
     $wordBuckets = WordBucket::with('words')->get();
 
@@ -50,7 +66,13 @@ Route::get('/write-essay', function () {
         'wordBuckets' => $wordBuckets,
     ]);
 })->middleware(['auth', 'verified'])->name('write-essay');
-Route::post('/word_buckets', [WordBucketController::class, 'store'])->name('wordbuckets.store');
+
+// Create Work Bucket
+Route::post('/word_buckets', [WordBucketController::class, 'store'])->name('store-wordbucket');
+
+// Add Words to Words Bucket
+// Route::post('/word_buckets/{id}/add-words', [WordBucketController::class, 'addWords'])->name('add-words');
+
 
 Route::post('/start-essay', function (Request $request) {
     $bucket = $request->input('bucket');
@@ -61,6 +83,17 @@ Route::post('/start-essay', function (Request $request) {
         'words' => $words,
     ]);
 })->middleware(['auth', 'verified'])->name('start-essay');
+
+
+Route::get('/add-words-form', function (Request $request) {
+    $bucket = $request->input('bucket');
+    $words = $request->input('words', []);
+
+    return Inertia::render('AddWordsForm', [
+        'bucket' => $bucket,
+        'words' => $words,
+    ]);
+})->middleware(['auth', 'verified'])->name('add-words-form');
 
 
 

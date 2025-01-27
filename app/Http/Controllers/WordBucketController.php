@@ -8,23 +8,55 @@ use Illuminate\Http\Request;
 
 class WordBucketController extends Controller
 {
+    /**
+     * Store a newly created WordBucket in the database.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request)
     {
         // Validate the request data
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:500',
+        ]);
+
+        // Create the WordBucket
+        $wordBucket = WordBucket::create([
+            'title' => $validated['title'],
+            'description' => $validated['description'] ?? null,
+        ]);
+
+        // Redirect to the 'write-essay' route with a success message
+        return redirect()->route('write-essay', ['id' => $wordBucket->id])
+                         ->with('success', 'Words added successfully!');
+    }
+
+    /**
+     * Add words to an existing WordBucket.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function addWords(Request $request, $id)
+    {
+        $wordBucket = WordBucket::findOrFail($id);
+
+        // Validate the request data
+        $validated = $request->validate([
             'words' => 'required|array|min:1',
             'words.*' => 'required|string|max:255',
         ]);
 
-        // Create the WordBucket
-        $wordBucket = WordBucket::create(['title' => $validated['title']]);
-
-        // Create associated words and link them to the WordBucket
+        // Add words to the WordBucket
         foreach ($validated['words'] as $word) {
             $wordBucket->words()->create(['word' => $word]);
         }
 
-        return redirect()->route('write-essay')->with('success', 'Word Bucket created!');
+        // Redirect to a view to show the WordBucket with a success message
+        return redirect()->route('view-wordbucket', ['id' => $wordBucket->id])
+                         ->with('success', 'Words added successfully!');
     }
 }
