@@ -30,7 +30,7 @@ Route::get('/', function () {
 Route::get('/essays', [EssayController::class, 'index'])->name('essays.index');
 
 // Go to Dashboard
-Route::get('/dashboard', function () {
+Route::get('/', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
