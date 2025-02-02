@@ -29,8 +29,8 @@ class WordBucketController extends Controller
         ]);
 
         // Redirect to the 'write-essay' route with a success message
-        return redirect()->route('write-essay', ['id' => $wordBucket->id])
-                         ->with('success', 'Words added successfully!');
+        return redirect()->route('word-bucket-dashboard', ['bucketID' => $wordBucket->id])
+            ->with('success', 'Words added successfully!');
     }
 
     /**

@@ -6,9 +6,12 @@ export default function WordBucketsDashboard({ wordBuckets, bucketID }) {
     const { data, setData, post, processing } = useForm({
         bucket: null,
         words: [],
+        title: '',
+        description: '',
     });
 
     const [currentBucket, setCurrentBucket] = useState(null);
+    const [isCreatingNew, setIsCreatingNew] = useState(false); // New state to toggle form visibility
 
     // Set the bucket when the component mounts, using the bucketID from query parameters
     useEffect(() => {
@@ -24,7 +27,7 @@ export default function WordBucketsDashboard({ wordBuckets, bucketID }) {
         }
     }, [bucketID, wordBuckets]);
 
-    function handleBucketChange (event) {
+    function handleBucketChange(event) {
         const bucketId = event.target.value;
         const bucket = wordBuckets.find(b => b.id === parseInt(bucketId)) || null;
 
@@ -33,9 +36,9 @@ export default function WordBucketsDashboard({ wordBuckets, bucketID }) {
             bucket: bucket,
             words: bucket ? bucket.words : [],
         });
-    };
+    }
 
-    function handleStartEssay (e) {
+    function handleStartEssay(e) {
         e.preventDefault();
         if (currentBucket) {
             post(route('start-essay'), {
@@ -43,9 +46,9 @@ export default function WordBucketsDashboard({ wordBuckets, bucketID }) {
                 words: currentBucket.words,
             });
         }
-    };
+    }
 
-    function handleAddWords (e) {
+    function handleAddWords(e) {
         e.preventDefault();
         if (currentBucket) {
             post(route('start-adding-words'), {
@@ -53,7 +56,15 @@ export default function WordBucketsDashboard({ wordBuckets, bucketID }) {
                 words: currentBucket.words,
             });
         }
-    };
+    }
+
+    function handleCreateNewBucket(e) {
+        e.preventDefault();
+        post(route('store-wordbucket'), {
+            title: data.title,
+            description: data.description,
+        });
+    }
 
     return (
         <AuthenticatedLayout
@@ -68,7 +79,7 @@ export default function WordBucketsDashboard({ wordBuckets, bucketID }) {
 
                     {/* Word Bucket Selector */}
                     <div>
-                        <h1 className="text-xl font-semibold text-center mb-6">Word Buckets Dashboard</h1>
+                        <h1 className="text-xl font-semibold text-center mb-6">Existing Word Buckets</h1>
                         <label htmlFor="word-bucket" className="block text-sm font-medium mb-2">Select a Word Bucket:</label>
                         <select
                             id="word-bucket"
@@ -109,21 +120,84 @@ export default function WordBucketsDashboard({ wordBuckets, bucketID }) {
                 </article>
 
                 {/* Right Box - Bucket Information */}
-                {currentBucket && (
-                    <div className="bg-gray-50 p-6 rounded-md border border-gray-300">
-                        <h2 className="text-lg font-semibold text-center">You selected: {currentBucket.title}</h2>
-                        <h3 className="text-md mt-4 font-medium">Words in this Bucket:</h3>
-                        <ul className="flex flex-wrap gap-5 mt-2 list-disc">
-                            {currentBucket.words.length > 0 ? (
-                                currentBucket.words.map((word, index) => (
-                                    <li key={index} className="text-gray-700">{word.word}</li>
-                                ))
+                <div className="bg-gray-50 p-6 rounded-md border border-gray-300">
+                    {currentBucket ? (
+                        <>
+                            <h2 className="text-lg font-semibold text-center">You selected: {currentBucket.title}</h2>
+                            <h3 className="text-md mt-4 font-medium">Words in this Bucket:</h3>
+                            <ul className="flex flex-wrap gap-5 mt-2 list-disc">
+                                {currentBucket.words.length > 0 ? (
+                                    currentBucket.words.map((word, index) => (
+                                        <li key={index} className="text-gray-700">{word.word}</li>
+                                    ))
+                                ) : (
+                                    <li className="text-gray-500">No words available.</li>
+                                )}
+                            </ul>
+                        </>
+                    ) : (
+                        <>
+                            {isCreatingNew ? (
+                                <div className="bg-gray-50 p-6 rounded-md border border-gray-300">
+                                    <h2 className="text-lg font-semibold text-center">New Word Bucket</h2>
+                                    <form onSubmit={handleCreateNewBucket}>
+                                        <div>
+                                            <label htmlFor="title" className="block text-sm font-medium mb-2">Title:</label>
+                                            <input
+                                                type="text"
+                                                id="title"
+                                                name="title"
+                                                className="w-full p-2 border rounded-md mb-4"
+                                                value={data.title}
+                                                onChange={e => setData('title', e.target.value)}
+                                                required
+                                            />
+                                        </div>
+                                        <div>
+                                            <label htmlFor="description" className="block text-sm font-medium mb-2">Description (Optional):</label>
+                                            <textarea
+                                                id="description"
+                                                name="description"
+                                                className="w-full p-2 border rounded-md"
+                                                value={data.description}
+                                                onChange={e => setData('description', e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="flex gap-4 mt-6 justify-center">
+                                            <button
+                                                type="submit"
+                                                disabled={processing}
+                                                className="w-48 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                                            >
+                                                Create
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => setIsCreatingNew(false)}
+                                                className="w-48 p-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
                             ) : (
-                                <li className="text-gray-500">No words available.</li>
+                                <div className="bg-gray-50 p-6 rounded-md border border-gray-300">
+                                    <h2 className="text-lg font-semibold text-center">New Word Bucket</h2>
+                                    <div className="flex gap-4 mt-6 justify-center">
+                                        <button
+                                            onClick={() => setIsCreatingNew(true)}
+                                            className="w-48 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                                        >
+                                            Create
+                                        </button>
+
+                                    </div>
+                                </div>
                             )}
-                        </ul>
-                    </div>
-                )}
+                        </>
+                    )}
+                </div>
             </section>
         </AuthenticatedLayout>
     );

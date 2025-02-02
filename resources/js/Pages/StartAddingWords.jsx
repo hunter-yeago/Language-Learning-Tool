@@ -43,7 +43,6 @@ export default function StartAddingWords({ bucket, words }) {
         post(`/word_buckets/${bucket.id}/add-new-words`, {
             data: { words: wordList },
             onSuccess: () => {
-                alert('Words added successfully!');
                 setWordList([]);
                 setData('words', []);
             },

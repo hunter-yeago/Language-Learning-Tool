@@ -58,7 +58,7 @@ Route::get('/word-bucket-dashboard', function (Request $request) {
 
 })->middleware(['auth', 'verified'])->name('word-bucket-dashboard');
 
-// Start Adding Words with Article?
+// Start Adding Words
 Route::post('/start-adding-words', function (Request $request) {
 
     $bucket = $request->input('bucket');
@@ -71,8 +71,6 @@ Route::post('/start-adding-words', function (Request $request) {
     ]);
 })->middleware(['auth', 'verified'])->name('start-adding-words');
 
-// Redirect to /add-words
-// problem - once you are done adding words then it takes you back
 Route::get('/start-adding-words', function () {
     return redirect()->route('add-words');
 })->middleware('auth', 'verified')->name('start-adding-words');
