@@ -79,7 +79,7 @@ export default function Dictionary() {
                                 <div key={`entry-${entryIndex}-lexeme-${lexemeIndex}`} className="p-4 border border-gray-300 rounded-md">
                                     <div className="text-lg font-medium text-gray-800">
                                         {capitalizeFirstLetter(lexeme.partOfSpeech)}
-                                        {pluralForm && lexeme.partOfSpeech === 'noun' && <span> Plural: {pluralForm}</span>}
+                                        {pluralForm && lexeme.partOfSpeech === 'noun' && <span> ⦁ Plural: {pluralForm}</span>}
                                             </div>
                                             <p className="mt-1 text-gray-600">1. {lexeme.senses[0]?.definition || 'Definition not available'}</p>
                                     {Array.isArray(lexeme.senses[0]?.usageExamples) ? (

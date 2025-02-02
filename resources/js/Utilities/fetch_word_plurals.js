@@ -7,15 +7,8 @@ export default async function fetchPluralListFromDictionary(inputWord) {
             headers: {'Content-Type': 'application/json',},
         });
 
-        // Check if the response is OK
-        if (!response.ok) {
-            throw new Error('Failed to fetch data');
-        }
-
         const data = await response.json();
         return data.response.entries[0].lexemes;
 
-    } catch (error) {
-        console.error('Error fetching plural form: ', error);
-    }
+    } catch (error) {console.error('Error fetching plural form: ', error);}
 }
