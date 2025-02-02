@@ -3,10 +3,10 @@ import { useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 export default function StartAddingWords({ bucket, words }) {
-    console.log('bucket', bucket)
-    console.log('bucketID', bucket.id)
-    console.log('bucketName', bucket.title)
-    console.log('words', words)
+    // console.log('bucket', bucket)
+    // console.log('bucketID', bucket.id)
+    // console.log('bucketName', bucket.title)
+    // console.log('words', words)
     const { data, setData, post, processing, errors } = useForm({
         words: [],
     });
@@ -24,6 +24,7 @@ export default function StartAddingWords({ bucket, words }) {
     const addWord = () => {
         const trimmedWord = currentWord.trim();
         if (trimmedWord !== '') {
+
             // Prevent duplicate words
             if (!wordList.includes(trimmedWord)) {
                 const updatedWordList = [...wordList, trimmedWord];
@@ -31,25 +32,22 @@ export default function StartAddingWords({ bucket, words }) {
                 setData('words', updatedWordList);
                 setCurrentWord('');
             }
+
         }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        console.log('api route', `/word_buckets/${bucket.id}/add-new-words`)
+        // console.log('api route', `/word_buckets/${bucket.id}/add-new-words`)
         post(`/word_buckets/${bucket.id}/add-new-words`, {
-            data: {
-                words: wordList,
-            },
+            data: { words: wordList },
             onSuccess: () => {
                 alert('Words added successfully!');
                 setWordList([]);
                 setData('words', []);
             },
-            onError: (error) => {
-                console.error('Error adding words:', error);
-            },
+            onError: (error) => console.error('Error adding words:', error),
         });
     };
 
@@ -68,7 +66,7 @@ export default function StartAddingWords({ bucket, words }) {
             }
         >
                 {/* Container - Word Bank Preview, Word Adding Form */}
-                <div className="flex flex-col px-20 mx-auto gap-3 mt-20">
+                <div className="flex flex-col px-20 mx-auto gap-3 mt-20 max-w-[800px]">
 
                     {/* Word Bank Preview */}
                     <div className=" max-h-80 overflow-y-auto border border-gray-300 rounded-md p-4">
@@ -85,7 +83,7 @@ export default function StartAddingWords({ bucket, words }) {
                                             onClick={() => removeWord(word)}
                                             className="text-red-500 hover:text-red-700"
                                         >
-                                            ×
+                                            x
                                         </button>
                                     </li>
                                 ))}
@@ -138,8 +136,6 @@ export default function StartAddingWords({ bucket, words }) {
                             </div>
                         </form>
                     </div>
-
-
                 </div>
             </AuthenticatedLayout>
     );

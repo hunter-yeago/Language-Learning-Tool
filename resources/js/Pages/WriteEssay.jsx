@@ -44,7 +44,7 @@ export default function WriteEssay({ wordBuckets }) {
             });
         }
     };
-    
+
     return (
         <AuthenticatedLayout
             header={
@@ -86,7 +86,7 @@ export default function WriteEssay({ wordBuckets }) {
                                     You selected: {currentBucket}
                                 </h2>
                                 <h3 className="text-md mt-4 font-medium">Words in this Bucket:</h3>
-                                <ul className="list-disc pl-6 mt-2 space-y-1">
+                                <ul className="flex flex-wrap gap-5 mt-2 list-disc">
                                     {wordList.length > 0 ? (
                                         wordList.map((word, index) => (
                                             <li key={index} className="text-gray-700">

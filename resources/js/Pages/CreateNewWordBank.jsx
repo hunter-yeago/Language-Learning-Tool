@@ -2,7 +2,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm } from '@inertiajs/react';
 import WordBankForm from './WordBankForm';
 
-export default function WordBuckets() {
+export default function CreateNewWordBank() {
     const { data, setData, post, processing, errors } = useForm({
         title: '',
         description: '',

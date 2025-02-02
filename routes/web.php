@@ -15,7 +15,7 @@ Route::get('/', function () {
 
 
     // how to show data
-    dd($essays);
+//    dd($essays);
     // dd($essays[0]->title);
 
     return Inertia::render('Welcome', [
@@ -35,32 +35,33 @@ Route::get('/', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
-// Go to WordBuckets
-Route::get('/wordbuckets', function () {
+// Go to CreateNewWordBank
+Route::get('/create-new-word-bank', function () {
 
     $wordBuckets = WordBucket::with('words')->get();
 
-    return Inertia::render('WordBuckets', [
+    return Inertia::render('CreateNewWordBank', [
         'wordBuckets' => $wordBuckets,
     ]);
 
 })->middleware(['auth', 'verified'])->name('wordbuckets');
 
-// Go to Add Words
-Route::get('/add-words', function () {
+Route::get('/word-bucket-dashboard', function (Request $request) {
 
     $wordBuckets = WordBucket::with('words')->get();
+    $bucketID = $request->query('bucketID');
 
-    return Inertia::render('AddWords', [
+    return Inertia::render('WordBucketsDashboard', [
         'wordBuckets' => $wordBuckets,
+        'bucketID' => $bucketID,
     ]);
 
-})->middleware(['auth', 'verified'])->name('add-words');
+})->middleware(['auth', 'verified'])->name('word-bucket-dashboard');
 
 // Start Adding Words with Article?
 Route::post('/start-adding-words', function (Request $request) {
-    $bucket = $request->input('bucket');
 
+    $bucket = $request->input('bucket');
     $words = $request->input('words', []);
 
     // Return an Inertia response instead of a JSON response
@@ -70,15 +71,11 @@ Route::post('/start-adding-words', function (Request $request) {
     ]);
 })->middleware(['auth', 'verified'])->name('start-adding-words');
 
-
-// Go to Write Essay
-Route::get('/write-essay', function () {
-    $wordBuckets = WordBucket::with('words')->get();
-
-    return Inertia::render('WriteEssay', [
-        'wordBuckets' => $wordBuckets,
-    ]);
-})->middleware(['auth', 'verified'])->name('write-essay');
+// Redirect to /add-words
+// problem - once you are done adding words then it takes you back
+Route::get('/start-adding-words', function () {
+    return redirect()->route('add-words');
+})->middleware('auth', 'verified')->name('start-adding-words');
 
 // Create Work Bucket
 Route::post('/word_buckets', [WordBucketController::class, 'store'])->name('store-wordbucket');

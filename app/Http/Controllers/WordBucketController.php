@@ -55,7 +55,7 @@ class WordBucketController extends Controller
             $wordBucket->words()->create(['word' => $word]);
         }
 
-        // Return an Inertia response
-        return back()->with('success', 'Words added successfully!');
+        return redirect()->route('word-bucket-dashboard', ['bucketID' => $bucketID])
+            ->with('success', 'Words added successfully!');
     }
 }

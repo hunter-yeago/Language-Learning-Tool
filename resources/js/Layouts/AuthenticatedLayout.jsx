@@ -11,9 +11,7 @@ export default function AuthenticatedLayout({ header, children }) {
 
     const navigationLinks = [
         { href: route('dashboard'), label: 'Dashboard' },
-        { href: route('wordbuckets'), label: 'Word Buckets' },
-        { href: route('write-essay'), label: 'Write Essay' },
-        { href: route('add-words'), label: 'Add Words' },
+        { href: route('word-bucket-dashboard'), label: 'Word Buckets' },
     ];
 
     const toggleNavigation = () => setShowingNavigationDropdown(prev => !prev);
@@ -77,7 +75,7 @@ export default function AuthenticatedLayout({ header, children }) {
             </nav>
 
             {header && <header className="bg-white shadow"><div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{header}</div></header>}
-            <main>{children}</main>
+            <main className="max-w-[min(90%,800px)] mx-auto">{children}</main>
         </div>
     );
 }

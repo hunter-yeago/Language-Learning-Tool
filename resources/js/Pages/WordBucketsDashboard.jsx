@@ -1,0 +1,130 @@
+import { useEffect, useState } from 'react';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Head, useForm } from '@inertiajs/react';
+
+export default function WordBucketsDashboard({ wordBuckets, bucketID }) {
+    const { data, setData, post, processing } = useForm({
+        bucket: null,
+        words: [],
+    });
+
+    const [currentBucket, setCurrentBucket] = useState(null);
+
+    // Set the bucket when the component mounts, using the bucketID from query parameters
+    useEffect(() => {
+        if (bucketID && wordBuckets) {
+            const selectedBucket = wordBuckets.find(b => b.id === parseInt(bucketID));
+            if (selectedBucket) {
+                setCurrentBucket(selectedBucket);
+                setData({
+                    bucket: selectedBucket,
+                    words: selectedBucket.words,
+                });
+            }
+        }
+    }, [bucketID, wordBuckets]);
+
+    function handleBucketChange (event) {
+        const bucketId = event.target.value;
+        const bucket = wordBuckets.find(b => b.id === parseInt(bucketId)) || null;
+
+        setCurrentBucket(bucket);
+        setData({
+            bucket: bucket,
+            words: bucket ? bucket.words : [],
+        });
+    };
+
+    function handleStartEssay (e) {
+        e.preventDefault();
+        if (currentBucket) {
+            post(route('start-essay'), {
+                bucket: currentBucket.title,
+                words: currentBucket.words,
+            });
+        }
+    };
+
+    function handleAddWords (e) {
+        e.preventDefault();
+        if (currentBucket) {
+            post(route('start-adding-words'), {
+                bucket: currentBucket.title,
+                words: currentBucket.words,
+            });
+        }
+    };
+
+    return (
+        <AuthenticatedLayout
+            header={<h2 className="text-2xl font-semibold text-gray-800">Dashboard</h2>}
+        >
+            <Head title="Word Buckets Dashboard" />
+
+            <section className="min-h-[500px] py-12 mx-auto max-w-7xl sm:px-6 lg:px-8 grid grid-cols-1 gap-6 md:grid-cols-2" aria-label="choose the word bucket you would like to edit or use to write an essay">
+
+                {/* Left Box - Word Bucket Selector and Buttons */}
+                <article className="p-6 min-h-full bg-white shadow-sm sm:rounded-lg flex flex-col justify-between">
+
+                    {/* Word Bucket Selector */}
+                    <div>
+                        <h1 className="text-xl font-semibold text-center mb-6">Word Buckets Dashboard</h1>
+                        <label htmlFor="word-bucket" className="block text-sm font-medium mb-2">Select a Word Bucket:</label>
+                        <select
+                            id="word-bucket"
+                            onChange={handleBucketChange}
+                            className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            required
+                            value={currentBucket?.id || ''} // Reflect the current bucket ID in the selector
+                        >
+                            <option value="" className="text-center">-- Select a Word Bucket --</option>
+                            {wordBuckets.map((bucket) => (
+                                <option key={bucket.id} value={bucket.id}>{bucket.title}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/*Button / Choices*/}
+                    <div className="flex gap-4 mt-6">
+
+                        {/*Add Words*/}
+                        <button
+                            onClick={handleAddWords}
+                            disabled={processing}
+                            className="w-full p-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+                        >
+                            {processing ? 'Loading...' : 'Add Words'}
+                        </button>
+
+                        {/*Start Essay*/}
+                        <button
+                            onClick={handleStartEssay}
+                            disabled={processing}
+                            className="w-full p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                        >
+                            {processing ? 'Loading...' : 'Start Essay'}
+                        </button>
+
+                    </div>
+                </article>
+
+                {/* Right Box - Bucket Information */}
+                {currentBucket && (
+                    <div className="bg-gray-50 p-6 rounded-md border border-gray-300">
+                        <h2 className="text-lg font-semibold text-center">You selected: {currentBucket.title}</h2>
+                        <h3 className="text-md mt-4 font-medium">Words in this Bucket:</h3>
+                        <ul className="flex flex-wrap gap-5 mt-2 list-disc">
+                            {currentBucket.words.length > 0 ? (
+                                currentBucket.words.map((word, index) => (
+                                    <li key={index} className="text-gray-700">{word.word}</li>
+                                ))
+                            ) : (
+                                <li className="text-gray-500">No words available.</li>
+                            )}
+                        </ul>
+                    </div>
+                )}
+            </section>
+        </AuthenticatedLayout>
+    );
+}
