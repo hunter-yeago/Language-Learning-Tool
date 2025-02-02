@@ -3,6 +3,7 @@
 use App\Http\Controllers\EssayController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WordBucketController;
+use App\Http\Controllers\DictionaryController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -34,6 +35,13 @@ Route::get('/', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// Go to Dashboard
+Route::get('/dictionary', function () {
+    return Inertia::render('Dictionary');
+})->middleware(['auth', 'verified'])->name('dictionary');
+
+//Dictionary
+Route::get('/lookup-word/{word}', [DictionaryController::class, 'lookup']);
 
 // Go to CreateNewWordBank
 Route::get('/create-new-word-bank', function () {
