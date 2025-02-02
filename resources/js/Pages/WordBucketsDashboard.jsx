@@ -18,6 +18,7 @@ export default function WordBucketsDashboard({ wordBuckets, bucketID }) {
         if (bucketID && wordBuckets) {
             const selectedBucket = wordBuckets.find(b => b.id === parseInt(bucketID));
             if (selectedBucket) {
+                console.log(selectedBucket);
                 setCurrentBucket(selectedBucket);
                 setData({
                     bucket: selectedBucket,
@@ -31,9 +32,12 @@ export default function WordBucketsDashboard({ wordBuckets, bucketID }) {
         const bucketId = event.target.value;
         const bucket = wordBuckets.find(b => b.id === parseInt(bucketId)) || null;
 
+        console.log(bucket);
         setCurrentBucket(bucket);
         setData({
             bucket: bucket,
+            title: bucket.title,
+            description: bucket.description,
             words: bucket ? bucket.words : [],
         });
     }
@@ -42,6 +46,9 @@ export default function WordBucketsDashboard({ wordBuckets, bucketID }) {
         e.preventDefault();
         if (currentBucket) {
             post(route('start-essay'), {
+                // to do - title and bucket here shouldnt be the same
+                title: currentBucket.title,
+                description: currentBucket.description,
                 bucket: currentBucket.title,
                 words: currentBucket.words,
             });
@@ -52,6 +59,9 @@ export default function WordBucketsDashboard({ wordBuckets, bucketID }) {
         e.preventDefault();
         if (currentBucket) {
             post(route('start-adding-words'), {
+                // to do - title and bucket here shouldnt be the same
+                title: currentBucket.title,
+                description: currentBucket.description,
                 bucket: currentBucket.title,
                 words: currentBucket.words,
             });
@@ -182,17 +192,14 @@ export default function WordBucketsDashboard({ wordBuckets, bucketID }) {
                                     </form>
                                 </div>
                             ) : (
-                                <div className="bg-gray-50 p-6 rounded-md border border-gray-300">
+                                <div className="flex justify-center gap-6 items-center flex-col bg-gray-50 p-6 rounded-md border border-gray-300">
                                     <h2 className="text-lg font-semibold text-center">New Word Bucket</h2>
-                                    <div className="flex gap-4 mt-6 justify-center">
                                         <button
                                             onClick={() => setIsCreatingNew(true)}
-                                            className="w-48 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                                            className="min-w-48 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
                                         >
                                             Create
                                         </button>
-
-                                    </div>
                                 </div>
                             )}
                         </>
