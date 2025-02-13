@@ -17,7 +17,7 @@ class WordBucketFactory extends Factory
     public function definition()
     {
         return [
-            'title' => $this->faker->sentence(3),  // Generate a random title
+            'title' => $this->faker->sentence(3),
         ];
     }
 
@@ -31,6 +31,14 @@ class WordBucketFactory extends Factory
     {
         return $this->afterCreating(function (WordBucket $bucket) use ($count) {
             \App\Models\Word::factory()
+                ->count($count)
+                ->create(['word_bucket_id' => $bucket->id]);
+        });
+    }
+    public function withEssays($count = 5)
+    {
+        return $this->afterCreating(function (WordBucket $bucket) use ($count) {
+            \App\Models\Essay::factory()
                 ->count($count)
                 ->create(['word_bucket_id' => $bucket->id]);
         });

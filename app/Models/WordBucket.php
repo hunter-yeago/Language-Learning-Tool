@@ -10,17 +10,16 @@ class WordBucket extends Model
     /** @use HasFactory<\Database\Factories\WordBucketFactory> */
     use HasFactory;
 
-    protected $fillable = ['title', 'description'];
+    protected $fillable = ['title', 'description', 'user_id'];
 
-        // A word bank has many words
-        public function words()
-        {
-            return $this->hasMany(Word::class);
-        }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
-        // belongs to an iteration
-        // public function essay()
-        // {
-        //     return $this->hasMany(Essay::class);
-        // }
+    // A word bank has many words
+    public function words()
+    {
+        return $this->hasMany(Word::class);
+    }
 }

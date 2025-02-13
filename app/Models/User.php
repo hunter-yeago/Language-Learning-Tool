@@ -45,4 +45,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function wordBuckets()
+    {
+        return $this->hasMany(WordBucket::class);
+    }
+
+    public function essays()
+    {
+        return $this->hasMany(Essay::class);
+    }
+
 }
