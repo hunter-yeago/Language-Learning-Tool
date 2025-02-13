@@ -8,8 +8,6 @@ use App\Models\Word;
 
 class WordBucketSeeder extends Seeder
 {
-
-    
     public function run()
     {
         // Define some example word buckets with words

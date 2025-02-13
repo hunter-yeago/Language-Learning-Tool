@@ -4,7 +4,7 @@ import WordBank from "@/Pages/WordBank.jsx";
 export default function StartEssay({ bucket, words = [] }) {
 
     // Matched words
-    const [matchedWords, setMatchedWords] = useState([]);
+    const [usedWords, setUsedWords] = useState([]);
 
     // Essay text
     const [essay, setEssay] = useState('');
@@ -16,13 +16,33 @@ export default function StartEssay({ bucket, words = [] }) {
         setWordList(words.map(word => word.word.toLowerCase())); // Update when words change
     }, [words]);
 
+    const handleSubmit = (e) => {
+
+        // -- not necessarily in this function but create whatever setting is necessary for keeping track
+        // of the words that are used
+        // --attempted
+        // --used
+
+        e.preventDefault();
+
+        // console.log('api route', `/word_buckets/${bucket.id}/add-new-words`)
+        post(`/word_buckets/${bucket.id}/add-new-words`, {
+            data: { words: wordList },
+            onSuccess: () => {
+                setWordList([]);
+                setData('words', []);
+            },
+            onError: (error) => console.error('Error adding words:', error),
+        });
+    };
+
     const handleTextChange = (event) => {
         const newEssay = event.target.value;
         setEssay(newEssay);
-        checkForMatchedWords(newEssay);
+        checkForUsedWords(newEssay);
     };
 
-    function checkForMatchedWords(userEssay) {
+    function checkForUsedWords(userEssay) {
         const lowerCaseEssay = userEssay.toLowerCase();
 
         console.log('lowerCaseEssay', lowerCaseEssay)
@@ -34,7 +54,7 @@ export default function StartEssay({ bucket, words = [] }) {
 
         console.log('foundWords', words)
 
-        setMatchedWords(words);
+        setUsedWords(words);
     }
 
     return (
@@ -44,7 +64,7 @@ export default function StartEssay({ bucket, words = [] }) {
                     <h3 className="text-lg font-semibold mb-4">Bucket: {bucket.title}</h3>
                     <WordBank
                         wordBankWords={wordList}
-                        matchedWords={matchedWords}
+                        usedWords={usedWords}
                         wordBankTitle={bucket.title}
                     />
 
@@ -56,16 +76,6 @@ export default function StartEssay({ bucket, words = [] }) {
                         className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                     ></textarea>
 
-                    <h4 className="font-medium mt-4">Matched Words:</h4>
-                    <ul className="pl-6 mt-2">
-                        {matchedWords.length > 0 ? (
-                            matchedWords.map((word, index) => (
-                                <li key={index} className="text-green-700">{word}</li>
-                            ))
-                        ) : (
-                            <li className="text-gray-500">No matched words yet.</li>
-                        )}
-                    </ul>
                 </div>
             </div>
         </AuthenticatedLayout>

@@ -4,14 +4,8 @@ import { Head, useForm } from '@inertiajs/react';
 
 export default function WriteEssay({ wordBuckets }) {
 
-    // current bucket
     const [currentBucket, setCurrentBucket] = useState(null);
-
-    // current list of words
     const [wordList, setWordList] = useState([]);
-
-    // the words that are matched
-    const [matchedWords, setMatchedWords] = useState([]);
 
     const handleBucketChange = (event) => {
         const bucketId = event.target.value;
