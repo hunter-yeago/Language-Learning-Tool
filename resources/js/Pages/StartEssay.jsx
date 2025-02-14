@@ -18,6 +18,15 @@ export default function StartEssay({ bucket, words }) {
     function handleSubmit (e) {
         e.preventDefault();
 
+        // add in a needs_tutor_review boolean.
+        // I can't tell if the tutor needs to review it just with a non-zero times_used
+        // times_used will likely be meta data
+        // but turning needs_tutor_review on / off will be what is used
+        // to determine what the student used in THIS essay.
+        // that's the point - I can't just increase the number of a word data attribute independelty
+        // what did the student use in THIS essay?
+        // maybe essays need some of this data?
+
         // update times_used with used words
         const theUsedWordsOnSubmit = wordList.map((word) => {
 
