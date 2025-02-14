@@ -1,21 +1,24 @@
+export default function WordBank ({ words, usedWords }) {
 
-export default function WordBank ({ wordBankWords, usedWords }) {
-    const lowerCaseWords = wordBankWords.map(word => word.toLowerCase())
+    console.log('words', words)
 
-    if (!Array.isArray(wordBankWords) && wordBankWords.length > 0) {
+    if (!Array.isArray(words) || words.length === 0) {
         return <p className="text-gray-500">No words available.</p>
     }
 
+    console.log('usedWords', usedWords)
+
     return (
         <>
-            <ul className="pl-6 mb-4 flex flex-wrap gap-3">
+            <ul className="mb-2 flex flex-wrap gap-3">
                 {
-                    wordBankWords.map((word, index) => (
+                    words.map((word, index) => (
                         <li key={index}
-                            className={`${usedWords.includes(lowerCaseWords[index]) ? 'line-through' : 'none text-green-900'}`}
-                        >
-                            {word}
-                        </li>
+                        className={`${usedWords.includes(word) ? 'line-through' : 'text-green-900'}`}
+                    >
+                        {word.word}
+                    </li>
+                                        
                     ))
                 }
             </ul>
