@@ -36,7 +36,7 @@ class EssayController extends Controller
             throw $e;
         }
 
-        dd('Made it past validation!', $validated);
+        // dd('Made it past validation!', $validated);
         // ... rest of your code
 
         
@@ -63,20 +63,32 @@ class EssayController extends Controller
 
         // Loop through the used words to update the `essay_word_join` table
         foreach ($usedWords as $usedWord) {
-            $word = Word::find($usedWord);  // Find the word by its ID
+            // dd($usedWord);
+            // $word = Word::find($usedWord);  // Find the word by its ID
             
             // Ensure the word exists before proceeding
-            if ($word) {
+                // dd($usedWord);
                 // Check if there's already an entry in the pivot table (essay_word_join)
-                $entry = EssayWordJoin::firstOrCreate([
-                    'essay_id' => $essay->id,
-                    'word_id' => $word->id,
-                ]);
+            $entry = EssayWordJoin::firstOrCreate([
+                'essay_id' => $essay->id,
+                'word_id' => $usedWord["id"],
+                'status' => "awaiting_approval",
+                'times_used' => 1,
+                'attempts' => 1,
+            ]);
+            
+
+            // just set it to 1 and it works rather then increment
+            // the problem is that if its a new word that doesn't have a row
+            // if its an already used word then I need to send that data in here
+            // but for now, this is fine.
                 
-                // Increment the 'times_used' and 'attempts'
-                $entry->increment('times_used');
-                $entry->increment('attempts');
-            }
+            // Log the entry to see if it's being created correctly
+            Log::info('EssayWordJoin entry:', $entry->toArray());
+
+            // Increment the 'times_used' and 'attempts'
+            // $entry->increment('times_used');
+            // $entry->increment('attempts');
         }
 
         // Optionally, redirect to a dashboard or display success message

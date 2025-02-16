@@ -30,19 +30,22 @@ export default function StartEssay({ bucket, words }) {
     function handleTextChange(e) {
         const newEssay = e.target.value;
         setEssay(newEssay);
+        setData('content', newEssay);
+        const wordsInEssay = checkForUsedWords(newEssay);
+        setUsedWords(wordsInEssay);
         
         setData(prevData => {
             const newData = {
                 ...prevData,
-                content: e.target.value
+                content: e.target.value,
+                used_words: wordsInEssay
             };
             console.log('Updated data:', newData);
             return newData;
         });
         
-        const wordsInEssay = checkForUsedWords(newEssay);
-        setUsedWords(wordsInEssay);
-        setData('used_words', wordsInEssay);
+        
+        // setData('used_words', wordsInEssay);
     }
 
     // Check for used words in the essay using word boundaries
@@ -56,14 +59,15 @@ export default function StartEssay({ bucket, words }) {
     // Handle form submit (create new essay)
     function handleSubmit(e) {
         e.preventDefault();
-
-        // Log the current state
-        console.log('Final form data before post:', data);
-
-        // Post data to server
-        post(route('store-essay'), {
-            ...data,
+    
+        console.log('About to submit this data:', {
+            title: data.title,
+            content: data.content,
+            bucket_id: data.bucket_id,
+            used_words: data.used_words
         });
+    
+        post(route('store-essay'), data);
     }
 
     return (
