@@ -18,8 +18,10 @@ class Bucket extends Model
     }
 
     // A word bank has many words
+    // Bucket.php
     public function words()
     {
-        return $this->hasMany(Word::class);
+        return $this->belongsToMany(Word::class, 'bucket_word');
     }
+
 }
