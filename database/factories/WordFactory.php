@@ -13,7 +13,6 @@ class WordFactory extends Factory
     {
         return [
             'word' => $this->faker->word(),
-            'bucket_id' => null, // Will be assigned later when creating a bucket with words
         ];
     }
 }

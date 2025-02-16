@@ -24,12 +24,11 @@ class bucketSeeder extends Seeder
 
         // Loop through each bucket and create the corresponding records
         foreach ($buckets as $bucketData) {
-            $bucket = bucket::create(['title' => $bucketData['title']]);
+            // $bucket = Bucket::create(['title' => $bucketData['title']]);
 
             foreach ($bucketData['words'] as $word) {
                 Word::create([
                     'word' => $word,
-                    'bucket_id' => $bucket->id,
                 ]);
             }
         }

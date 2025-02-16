@@ -48,7 +48,7 @@ class User extends Authenticatable
 
     public function buckets()
     {
-        return $this->hasMany(bucket::class);
+        return $this->hasMany(Bucket::class);
     }
 
     public function essays()

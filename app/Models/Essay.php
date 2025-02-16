@@ -10,7 +10,7 @@ class Essay extends Model
     use HasFactory;
     protected $table = "essays";
     // only these two can be mass assigned
-    protected $fillable = ['title', 'content', 'user_id', 'bucket_id', 'pending_tutor_review'];
+    protected $fillable = ['title', 'content', 'user_id', 'bucket_id'];
 
     public function user()
     {
@@ -20,6 +20,6 @@ class Essay extends Model
     // Each essay belongs to one word bucket
     public function bucket()
     {
-        return $this->belongsTo(bucket::class);
+        return $this->belongsTo(Bucket::class);
     }
 }

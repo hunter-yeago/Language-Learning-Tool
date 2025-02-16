@@ -22,7 +22,7 @@ class EssayFactory extends Factory
             // laravel will reach this point and say ah yes
             // we need a word bucket factory so I'll generate that
             // word bucket for oyu and then give you its id here
-            'bucket_id' => bucket::factory(),
+            'bucket_id' => Bucket::factory(),
             'content' => fake()->paragraph(),
         ];
     }

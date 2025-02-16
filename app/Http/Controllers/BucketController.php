@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\bucket;
 use App\Models\Word;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BucketController extends Controller
 {
@@ -16,16 +17,19 @@ class BucketController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the request data
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string|max:500',
         ]);
 
+        // $userId = Auth::id();
+
         // Create the bucket
-        $bucket = bucket::create([
+        $bucket = Bucket::create([
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
+            'user_id' => Auth::id(),
         ]);
 
         // Redirect to the 'write-essay' route with a success message
@@ -42,7 +46,7 @@ class BucketController extends Controller
      */
     public function addWords(Request $request, int $bucketID): \Illuminate\Http\RedirectResponse
     {
-        $bucket = bucket::findOrFail($bucketID);
+        $bucket = Bucket::findOrFail($bucketID);
 
         // Validate the request data
         $validated = $request->validate([

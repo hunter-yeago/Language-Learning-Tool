@@ -5,9 +5,9 @@ namespace Database\Factories;
 use App\Models\bucket;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class bucketFactory extends Factory
+class BucketFactory extends Factory
 {
-    protected $model = bucket::class;
+    protected $model = Bucket::class;
 
     /**
      * Define the model's default state.

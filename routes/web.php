@@ -46,7 +46,7 @@ Route::get('/lookup-word/{word}', [DictionaryController::class, 'lookup']);
 // Go to CreateNewWordBank
 Route::get('/create-new-word-bank', function () {
 
-    $buckets = bucket::with('words')->get();
+    $buckets = Bucket::with('words')->get();
 
     return Inertia::render('CreateNewWordBank', [
         'buckets' => $buckets,
@@ -56,7 +56,7 @@ Route::get('/create-new-word-bank', function () {
 
 Route::get('/bucket-dashboard', function (Request $request) {
 
-    $buckets = bucket::with('words')->get();
+    $buckets = Bucket::with('words')->get();
     $bucketID = $request->query('bucketID');
 
     return Inertia::render('BucketsDashboard', [

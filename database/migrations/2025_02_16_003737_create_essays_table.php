@@ -13,8 +13,9 @@ return new class extends Migration
 {
     Schema::create('essays', function (Blueprint $table) {
         $table->id();
+        $table->string('title');
         $table->foreignId('user_id')->constrained();
-        $table->foreignId('word_bucket_id')->constrained();
+        $table->foreignId('bucket_id')->constrained();
         $table->text('content');
         $table->timestamps();
     });
