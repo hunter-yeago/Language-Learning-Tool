@@ -11,6 +11,13 @@ class Word extends Model
 
     protected $fillable = ['word'];
 
+    public function essays()
+    {
+        return $this->belongsToMany(Essay::class, 'essay_word_join')
+                    ->withPivot('attempts', 'times_used');  // Include pivot fields
+    }
+
+
     public function bucket()
     {
         return $this->belongsTo(Bucket::class);

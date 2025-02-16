@@ -12,6 +12,13 @@ class Essay extends Model
     // only these two can be mass assigned
     protected $fillable = ['title', 'content', 'user_id', 'bucket_id'];
 
+      // Relationship with Word model via the essay_word_join pivot table
+      public function words()
+      {
+          return $this->belongsToMany(Word::class, 'essay_word_join')
+                      ->withPivot('attempts', 'times_used');  // Include pivot fields
+      }
+
     public function user()
     {
         return $this->belongsTo(User::class);

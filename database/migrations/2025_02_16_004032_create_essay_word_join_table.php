@@ -15,6 +15,8 @@ return new class extends Migration
         $table->id();
         $table->foreignId('essay_id')->constrained();
         $table->foreignId('word_id')->constrained();
+        $table->integer('attempts')->default(0); // Track number of attempts
+        $table->integer('times_used')->default(0); // Track how many times word is used in essays
         $table->string('status');
         $table->timestamps();
     });
