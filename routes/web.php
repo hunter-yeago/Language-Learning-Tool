@@ -86,23 +86,13 @@ Route::get('/start-adding-words', function () {
 // Create Work Bucket
 Route::post('/buckets', [BucketController::class, 'store'])->name('store-bucket');
 
-// Create Work Bucket
+// Create Essay
 Route::post('/essays', [EssayController::class, 'store'])->name('store-essay');
 
 // Add Words to Words Bucket
 Route::post('/buckets/{bucketID}/add-new-words', [BucketController::class, 'addWords'])->name('add-new-words');
 
-Route::get('/start-essay', function (Request $request) {
-    $bucket = $request->input('bucket');
-    $words = $request->input('words', []);
-
-    return Inertia::render('StartEssay', [
-        'bucket' => $bucket,
-        'words' => $words,
-    ]);
-})->middleware(['auth', 'verified'])->name('start-essay');
-
-// Go to Dictionary on start-essay get
+// place holder to deal with get on /start-essay
 Route::get('/start-essay', function () {
     return Inertia::render('Dictionary');
 })->middleware(['auth', 'verified'])->name('dictionary');

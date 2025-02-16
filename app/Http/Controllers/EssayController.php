@@ -9,35 +9,57 @@ use App\Models\Word; // Assuming Word is a separate model for your words
 use App\Models\EssayWordJoin; // This is the pivot table model
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
 class EssayController extends Controller
 {
     public function store(Request $request)
     {
-        // Validate the incoming data
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'bucket_id' => 'required|exists:buckets,id',  // Ensure the bucket exists
-            'content' => 'required|string',  // Ensure essay content is provided
-            'used_words' => 'required|array',  // Array of used words
-        ]);
 
+        // dd($request->all());  // This will show all the data sent by the request
+        // First let's see what we're getting
+        Log::info('Raw request data:', $request->all());
+
+        try {
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'bucket_id' => 'required|exists:buckets,id',
+                'content' => 'required|string',
+                'used_words' => 'array', // Add this back
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Validation failed:', [
+                'errors' => $e->errors(),
+                'data' => $request->all()
+            ]);
+            throw $e;
+        }
+
+        dd('Made it past validation!', $validated);
+        // ... rest of your code
+
+        
         // Create the essay record in the database
         $essay = Essay::create([
             'title' => $validated['title'],
+            'bucket_id' => $validated['bucket_id'],  // Associate with the correct bucket
             'content' => $validated['content'],
             'user_id' => Auth::id(),  // Assuming the user is authenticated
-            'bucket_id' => $validated['bucket_id'],  // Associate with the correct bucket
         ]);
-
+        
+        
         // dd($essay);
         // echo 'the essay: ';
-        print_r($essay);
+        // print_r($essay);
 
         // Get the bucket and its words
         $bucket = Bucket::find($validated['bucket_id']);
         $usedWords = $validated['used_words'];  // Array of words used in the essay
+
+        
+        // echo 'test';
+        // print_r($usedWords);
 
         // Loop through the used words to update the `essay_word_join` table
         foreach ($usedWords as $usedWord) {
