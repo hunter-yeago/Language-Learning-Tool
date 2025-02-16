@@ -9,16 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('essay_word_join', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('essay_id')->constrained();
-            $table->foreignId('word_id')->constrained();
-            $table->string('status');
-            $table->timestamps();
-        });
-    }
+    public function up()
+{
+    Schema::create('essay_word_links', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('essay_id')->constrained();
+        $table->foreignId('word_id')->constrained();
+        $table->string('status');
+        $table->timestamps();
+    });
+}
+
 
     /**
      * Reverse the migrations.
