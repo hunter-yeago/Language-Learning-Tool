@@ -13,10 +13,10 @@ return new class extends Migration
 {
     Schema::create('word_status_history', function (Blueprint $table) {
         $table->id();
-        $table->foreignId('word_id')->constrained();  // Foreign key to words
-        $table->foreignId('essay_id')->constrained();  // Foreign key to essays
-        $table->string('status');  // Status of the word at that point in time
-        $table->timestamp('timestamp');  // The exact time when the status was recorded
+        $table->foreignId('word_id')->constrained();
+        $table->foreignId('essay_id')->constrained();
+        $table->string('status');
+        $table->timestamp('timestamp');
         $table->timestamps();
     });
 }
