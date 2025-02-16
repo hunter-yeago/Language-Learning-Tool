@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\WordBucket;
+use App\Models\bucket;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,9 +14,9 @@ class DatabaseSeeder extends Seeder
         User::factory(10)->create();
 
         // Seed 5 CreateNewWordBank, each with 5 related Words
-        WordBucket::factory(5)
-            ->withWords(5) // This method is defined in your WordBucketFactory
-            ->withEssays(5) // This method is defined in your WordBucketFactory
+        bucket::factory(5)
+            ->withWords(5) // This method is defined in your bucketFactory
+            ->withEssays(5) // This method is defined in your bucketFactory
             ->create();
     }
 }

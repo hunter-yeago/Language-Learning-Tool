@@ -2,13 +2,13 @@
 
 use App\Http\Controllers\EssayController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\WordBucketController;
+use App\Http\Controllers\bucketController;
 use App\Http\Controllers\DictionaryController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\Essay;
-use App\Models\WordBucket;
+use App\Models\bucket;
 use Illuminate\Http\Request;
 
 Route::get('/', function () {
@@ -46,21 +46,21 @@ Route::get('/lookup-word/{word}', [DictionaryController::class, 'lookup']);
 // Go to CreateNewWordBank
 Route::get('/create-new-word-bank', function () {
 
-    $wordBuckets = WordBucket::with('words')->get();
+    $buckets = bucket::with('words')->get();
 
     return Inertia::render('CreateNewWordBank', [
-        'wordBuckets' => $wordBuckets,
+        'buckets' => $buckets,
     ]);
 
-})->middleware(['auth', 'verified'])->name('wordbuckets');
+})->middleware(['auth', 'verified'])->name('buckets');
 
 Route::get('/word-bucket-dashboard', function (Request $request) {
 
-    $wordBuckets = WordBucket::with('words')->get();
+    $buckets = bucket::with('words')->get();
     $bucketID = $request->query('bucketID');
 
-    return Inertia::render('WordBucketsDashboard', [
-        'wordBuckets' => $wordBuckets,
+    return Inertia::render('bucketsDashboard', [
+        'buckets' => $buckets,
         'bucketID' => $bucketID,
     ]);
 
@@ -84,10 +84,10 @@ Route::get('/start-adding-words', function () {
 })->middleware('auth', 'verified')->name('start-adding-words');
 
 // Create Work Bucket
-Route::post('/word_buckets', [WordBucketController::class, 'store'])->name('store-wordbucket');
+Route::post('/buckets', [bucketController::class, 'store'])->name('store-bucket');
 
 // Add Words to Words Bucket
-Route::post('/word_buckets/{bucketID}/add-new-words', [WordBucketController::class, 'addWords'])->name('add-new-words');
+Route::post('/buckets/{bucketID}/add-new-words', [bucketController::class, 'addWords'])->name('add-new-words');
 
 
 Route::post('/start-essay', function (Request $request) {

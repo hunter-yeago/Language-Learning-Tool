@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\WordBucket;
+use App\Models\bucket;
 use App\Models\Word;
 use Illuminate\Http\Request;
 
-class WordBucketController extends Controller
+class bucketController extends Controller
 {
     /**
-     * Store a newly created WordBucket in the database.
+     * Store a newly created bucket in the database.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
@@ -22,19 +22,19 @@ class WordBucketController extends Controller
             'description' => 'nullable|string|max:500',
         ]);
 
-        // Create the WordBucket
-        $wordBucket = WordBucket::create([
+        // Create the bucket
+        $bucket = bucket::create([
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
         ]);
 
         // Redirect to the 'write-essay' route with a success message
-        return redirect()->route('word-bucket-dashboard', ['bucketID' => $wordBucket->id])
+        return redirect()->route('word-bucket-dashboard', ['bucketID' => $bucket->id])
             ->with('success', 'Words added successfully!');
     }
 
     /**
-     * Add words to an existing WordBucket.
+     * Add words to an existing bucket.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param int $bucketID
@@ -42,7 +42,7 @@ class WordBucketController extends Controller
      */
     public function addWords(Request $request, int $bucketID): \Illuminate\Http\RedirectResponse
     {
-        $wordBucket = WordBucket::findOrFail($bucketID);
+        $bucket = bucket::findOrFail($bucketID);
 
         // Validate the request data
         $validated = $request->validate([
@@ -50,9 +50,9 @@ class WordBucketController extends Controller
             'words.*' => 'required|string|max:255',
         ]);
 
-        // Add words to the WordBucket
+        // Add words to the bucket
         foreach ($validated['words'] as $word) {
-            $wordBucket->words()->create(['word' => $word]);
+            $bucket->words()->create(['word' => $word]);
         }
 
         return redirect()->route('word-bucket-dashboard', ['bucketID' => $bucketID])

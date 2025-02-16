@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\WordBucket;
+use App\Models\bucket;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class WordBucketFactory extends Factory
+class bucketFactory extends Factory
 {
-    protected $model = WordBucket::class;
+    protected $model = bucket::class;
 
     /**
      * Define the model's default state.
@@ -29,18 +29,18 @@ class WordBucketFactory extends Factory
      */
     public function withWords($count = 5)
     {
-        return $this->afterCreating(function (WordBucket $bucket) use ($count) {
+        return $this->afterCreating(function (bucket $bucket) use ($count) {
             \App\Models\Word::factory()
                 ->count($count)
-                ->create(['word_bucket_id' => $bucket->id]);
+                ->create(['bucket_id' => $bucket->id]);
         });
     }
     public function withEssays($count = 5)
     {
-        return $this->afterCreating(function (WordBucket $bucket) use ($count) {
+        return $this->afterCreating(function (bucket $bucket) use ($count) {
             \App\Models\Essay::factory()
                 ->count($count)
-                ->create(['word_bucket_id' => $bucket->id]);
+                ->create(['bucket_id' => $bucket->id]);
         });
     }
 }

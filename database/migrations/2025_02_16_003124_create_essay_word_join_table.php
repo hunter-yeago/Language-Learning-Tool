@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('word_buckets', function (Blueprint $table) {
+        Schema::create('essay_word_join', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('description')->nullable();
+            $table->foreignId('essay_id')->constrained();
+            $table->foreignId('word_id')->constrained();
+            $table->string('status');
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('word_buckets');
+        Schema::dropIfExists('essay_word_join');
     }
 };

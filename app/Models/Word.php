@@ -9,10 +9,10 @@ class Word extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['word', 'word_bucket_id'];
+    protected $fillable = ['word', 'bucket_id'];
 
-    public function wordBucket()
+    public function bucket()
     {
-        return $this->belongsTo(WordBucket::class);
+        return $this->belongsTo(bucket::class);
     }
 }

@@ -14,7 +14,7 @@ export default function CreateNewWordBank() {
             alert('Please provide a title for the Word Bank.');
             return;
         }
-        post('/word_buckets', {
+        post('/buckets', {
             onSuccess: () => alert('Word Bank created successfully!'),
         });
     };

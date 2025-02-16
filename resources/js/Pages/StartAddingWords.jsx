@@ -39,8 +39,8 @@ export default function StartAddingWords({ bucket, words }) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // console.log('api route', `/word_buckets/${bucket.id}/add-new-words`)
-        post(`/word_buckets/${bucket.id}/add-new-words`, {
+        // console.log('api route', `/buckets/${bucket.id}/add-new-words`)
+        post(`/buckets/${bucket.id}/add-new-words`, {
             data: { words: wordList },
             onSuccess: () => {
                 setWordList([]);

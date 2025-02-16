@@ -7,14 +7,14 @@ use Illuminate\Support\Facades\DB;
 
 class ResetAllWordRelatedData extends Command
 {
-    protected $signature = 'db:reset {--words : Only reset words and word_buckets tables}';
+    protected $signature = 'db:reset {--words : Only reset words and buckets tables}';
     protected $description = 'Reset the database tables';
 
     public function handle()
     {
         if ($this->option('words')) {
             // Truncate specific tables
-            DB::table('word_buckets')->truncate();
+            DB::table('buckets')->truncate();
             DB::table('words')->truncate();
             $this->info('Word buckets and words tables have been truncated.');
         } else {

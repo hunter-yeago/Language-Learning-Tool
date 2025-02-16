@@ -3,10 +3,10 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\WordBucket;
+use App\Models\bucket;
 use App\Models\Word;
 
-class WordBucketSeeder extends Seeder
+class bucketSeeder extends Seeder
 {
     public function run()
     {
@@ -24,12 +24,12 @@ class WordBucketSeeder extends Seeder
 
         // Loop through each bucket and create the corresponding records
         foreach ($buckets as $bucketData) {
-            $bucket = WordBucket::create(['title' => $bucketData['title']]);
+            $bucket = bucket::create(['title' => $bucketData['title']]);
 
             foreach ($bucketData['words'] as $word) {
                 Word::create([
                     'word' => $word,
-                    'word_bucket_id' => $bucket->id,
+                    'bucket_id' => $bucket->id,
                 ]);
             }
         }

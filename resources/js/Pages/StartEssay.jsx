@@ -26,6 +26,7 @@ export default function StartEssay({ bucket, words }) {
         // that's the point - I can't just increase the number of a word data attribute independelty
         // what did the student use in THIS essay?
         // maybe essays need some of this data?
+        // pending review
 
         // update times_used with used words
         const theUsedWordsOnSubmit = wordList.map((word) => {
@@ -35,8 +36,8 @@ export default function StartEssay({ bucket, words }) {
             
         })
 
-        // console.log('api route', `/word_buckets/${bucket.id}/add-new-words`)
-        // post(`/word_buckets/${bucket.id}/add-new-words`, {
+        // console.log('api route', `/buckets/${bucket.id}/add-new-words`)
+        // post(`/buckets/${bucket.id}/add-new-words`, {
         //     data: { words: wordList },
         //     onSuccess: () => {
         //         setWordList([]);

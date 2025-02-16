@@ -46,9 +46,9 @@ class User extends Authenticatable
         ];
     }
 
-    public function wordBuckets()
+    public function buckets()
     {
-        return $this->hasMany(WordBucket::class);
+        return $this->hasMany(bucket::class);
     }
 
     public function essays()

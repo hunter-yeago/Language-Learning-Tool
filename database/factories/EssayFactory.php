@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\WordBucket;
+use App\Models\bucket;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -22,7 +22,7 @@ class EssayFactory extends Factory
             // laravel will reach this point and say ah yes
             // we need a word bucket factory so I'll generate that
             // word bucket for oyu and then give you its id here
-            'word_bucket_id' => WordBucket::factory(),
+            'bucket_id' => bucket::factory(),
             'content' => fake()->paragraph(),
         ];
     }

@@ -2,14 +2,14 @@ import { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm } from '@inertiajs/react';
 
-export default function WriteEssay({ wordBuckets }) {
+export default function WriteEssay({ buckets }) {
 
     const [currentBucket, setCurrentBucket] = useState(null);
     const [wordList, setWordList] = useState([]);
 
     const handleBucketChange = (event) => {
         const bucketId = event.target.value;
-        const bucket = wordBuckets.find((b) => b.id === parseInt(bucketId));
+        const bucket = buckets.find((b) => b.id === parseInt(bucketId));
 
         if (bucket) {
             setCurrentBucket(bucket.title); // Save selected bucket title
@@ -74,7 +74,7 @@ export default function WriteEssay({ wordBuckets }) {
                                 required
                             >
                                 <option value="">-- Select a Word Bucket --</option>
-                                {wordBuckets.map((bucket) => (
+                                {buckets.map((bucket) => (
                                     <option key={bucket.id} value={bucket.id}>
                                         {bucket.title}
                                     </option>

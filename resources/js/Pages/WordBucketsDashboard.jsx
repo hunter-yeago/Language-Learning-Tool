@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm } from '@inertiajs/react';
 
-export default function WordBucketsDashboard({ wordBuckets, bucketID }) {
+export default function bucketsDashboard({ buckets, bucketID }) {
     const { data, setData, post, processing } = useForm({
         bucket: null,
         words: [],
@@ -15,8 +15,8 @@ export default function WordBucketsDashboard({ wordBuckets, bucketID }) {
 
     // Set the bucket when the component mounts, using the bucketID from query parameters
     useEffect(() => {
-        if (bucketID && wordBuckets) {
-            const selectedBucket = wordBuckets.find(b => b.id === parseInt(bucketID));
+        if (bucketID && buckets) {
+            const selectedBucket = buckets.find(b => b.id === parseInt(bucketID));
             if (selectedBucket) {
                 console.log(selectedBucket);
                 setCurrentBucket(selectedBucket);
@@ -26,11 +26,11 @@ export default function WordBucketsDashboard({ wordBuckets, bucketID }) {
                 });
             }
         }
-    }, [bucketID, wordBuckets]);
+    }, [bucketID, buckets]);
 
     function handleBucketChange(event) {
         const bucketId = event.target.value;
-        const bucket = wordBuckets.find(b => b.id === parseInt(bucketId)) || null;
+        const bucket = buckets.find(b => b.id === parseInt(bucketId)) || null;
 
         console.log(bucket);
         setCurrentBucket(bucket);
@@ -70,7 +70,7 @@ export default function WordBucketsDashboard({ wordBuckets, bucketID }) {
 
     function handleCreateNewBucket(e) {
         e.preventDefault();
-        post(route('store-wordbucket'), {
+        post(route('store-bucket'), {
             title: data.title,
             description: data.description,
         });
@@ -99,7 +99,7 @@ export default function WordBucketsDashboard({ wordBuckets, bucketID }) {
                             value={currentBucket?.id || ''} // Reflect the current bucket ID in the selector
                         >
                             <option value="" className="text-center">-- Select a Word Bucket --</option>
-                            {wordBuckets.map((bucket) => (
+                            {buckets.map((bucket) => (
                                 <option key={bucket.id} value={bucket.id}>{bucket.title}</option>
                             ))}
                         </select>
