@@ -31,15 +31,18 @@ export default function BucketsDashboard({ buckets, bucketID }) {
     function handleBucketChange(event) {
         const bucketId = event.target.value;
         const bucket = buckets.find(b => b.id === parseInt(bucketId)) || null;
-
-        console.log(bucket);
         setCurrentBucket(bucket);
-        setData({
-            bucket: bucket,
-            title: bucket.title,
-            description: bucket.description,
-            words: bucket ? bucket.words : [],
-        });
+
+        if (bucket) {
+            console.log('bucket: ', bucket);
+            setData({
+                bucket: bucket,
+                title: bucket.title,
+                description: bucket.description,
+                words: bucket ? bucket.words : [],
+            });
+        }
+
     }
 
     function handleStartEssay(e) {
@@ -70,6 +73,7 @@ export default function BucketsDashboard({ buckets, bucketID }) {
 
     function handleCreateNewBucket(e) {
         e.preventDefault();
+        
         post(route('store-bucket'), {
             title: data.title,
             description: data.description,
@@ -158,7 +162,7 @@ export default function BucketsDashboard({ buckets, bucketID }) {
                                                 id="title"
                                                 name="title"
                                                 className="w-full p-2 border rounded-md mb-4"
-                                                value={data.title}
+                                                value={data.title ?? ""}
                                                 onChange={e => setData('title', e.target.value)}
                                                 required
                                             />
@@ -169,7 +173,7 @@ export default function BucketsDashboard({ buckets, bucketID }) {
                                                 id="description"
                                                 name="description"
                                                 className="w-full p-2 border rounded-md"
-                                                value={data.description}
+                                                value={data.description ?? ""}
                                                 onChange={e => setData('description', e.target.value)}
                                             />
                                         </div>
