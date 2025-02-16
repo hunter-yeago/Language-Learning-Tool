@@ -18,7 +18,6 @@ class EssayController extends Controller
         // Validate the incoming data
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string|max:500',
             'bucket_id' => 'required|exists:buckets,id',  // Ensure the bucket exists
             'content' => 'required|string',  // Ensure essay content is provided
             'used_words' => 'required|array',  // Array of used words
@@ -27,10 +26,14 @@ class EssayController extends Controller
         // Create the essay record in the database
         $essay = Essay::create([
             'title' => $validated['title'],
-            'description' => $validated['description'] ?? null,
+            'content' => $validated['content'],
             'user_id' => Auth::id(),  // Assuming the user is authenticated
             'bucket_id' => $validated['bucket_id'],  // Associate with the correct bucket
         ]);
+
+        // dd($essay);
+        // echo 'the essay: ';
+        print_r($essay);
 
         // Get the bucket and its words
         $bucket = Bucket::find($validated['bucket_id']);

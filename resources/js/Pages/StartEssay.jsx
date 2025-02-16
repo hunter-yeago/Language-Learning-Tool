@@ -45,12 +45,13 @@ export default function StartEssay({ bucket, words }) {
             return word;
         });
 
+        console.log('the data', data);
         // Send the essay data to the backend
         post(route('store-essay'), {
             title: data.title,
             content: data.content,
             bucket_id: data.bucket_id, // Attach bucket ID to the essay
-            words: updatedWordList, // Optional: You can update the word list as well if needed
+            used_words: updatedWordList, // Optional: You can update the word list as well if needed
         });
     }
 
