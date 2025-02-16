@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\EssayController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\bucketController;
+use App\Http\Controllers\BucketController;
 use App\Http\Controllers\DictionaryController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -54,17 +54,17 @@ Route::get('/create-new-word-bank', function () {
 
 })->middleware(['auth', 'verified'])->name('buckets');
 
-Route::get('/word-bucket-dashboard', function (Request $request) {
+Route::get('/bucket-dashboard', function (Request $request) {
 
     $buckets = bucket::with('words')->get();
     $bucketID = $request->query('bucketID');
 
-    return Inertia::render('bucketsDashboard', [
+    return Inertia::render('BucketsDashboard', [
         'buckets' => $buckets,
         'bucketID' => $bucketID,
     ]);
 
-})->middleware(['auth', 'verified'])->name('word-bucket-dashboard');
+})->middleware(['auth', 'verified'])->name('bucket-dashboard');
 
 // Start Adding Words
 Route::post('/start-adding-words', function (Request $request) {
@@ -84,10 +84,10 @@ Route::get('/start-adding-words', function () {
 })->middleware('auth', 'verified')->name('start-adding-words');
 
 // Create Work Bucket
-Route::post('/buckets', [bucketController::class, 'store'])->name('store-bucket');
+Route::post('/buckets', [BucketController::class, 'store'])->name('store-bucket');
 
 // Add Words to Words Bucket
-Route::post('/buckets/{bucketID}/add-new-words', [bucketController::class, 'addWords'])->name('add-new-words');
+Route::post('/buckets/{bucketID}/add-new-words', [BucketController::class, 'addWords'])->name('add-new-words');
 
 
 Route::post('/start-essay', function (Request $request) {

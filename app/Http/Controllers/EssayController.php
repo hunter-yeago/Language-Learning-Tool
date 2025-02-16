@@ -29,7 +29,7 @@ class EssayController extends Controller
         ]);
 
         
-        // return redirect()->route('word-bucket-dashboard', ['bucketID' => $bucket->id])
+        // return redirect()->route('bucket-dashboard', ['bucketID' => $bucket->id])
         //     ->with('success', 'Words added successfully!');
     }
 

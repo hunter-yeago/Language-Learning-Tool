@@ -6,7 +6,7 @@ use App\Models\bucket;
 use App\Models\Word;
 use Illuminate\Http\Request;
 
-class bucketController extends Controller
+class BucketController extends Controller
 {
     /**
      * Store a newly created bucket in the database.
@@ -29,7 +29,7 @@ class bucketController extends Controller
         ]);
 
         // Redirect to the 'write-essay' route with a success message
-        return redirect()->route('word-bucket-dashboard', ['bucketID' => $bucket->id])
+        return redirect()->route('bucket-dashboard', ['bucketID' => $bucket->id])
             ->with('success', 'Words added successfully!');
     }
 
@@ -55,7 +55,7 @@ class bucketController extends Controller
             $bucket->words()->create(['word' => $word]);
         }
 
-        return redirect()->route('word-bucket-dashboard', ['bucketID' => $bucketID])
+        return redirect()->route('bucket-dashboard', ['bucketID' => $bucketID])
             ->with('success', 'Words added successfully!');
     }
 }

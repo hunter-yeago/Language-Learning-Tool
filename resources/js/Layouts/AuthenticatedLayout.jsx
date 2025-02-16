@@ -11,7 +11,7 @@ export default function AuthenticatedLayout({ header, children }) {
 
     const navigationLinks = [
         { href: route('dashboard'), label: 'Dashboard' },
-        { href: route('word-bucket-dashboard'), label: 'Word Buckets' },
+        { href: route('bucket-dashboard'), label: 'Word Buckets' },
         { href: route('dictionary'), label: 'Dictionary' },
     ];
 

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up()
 {
-    Schema::create('essay_word_links', function (Blueprint $table) {
+    Schema::create('essay_word_join', function (Blueprint $table) {
         $table->id();
         $table->foreignId('essay_id')->constrained();
         $table->foreignId('word_id')->constrained();

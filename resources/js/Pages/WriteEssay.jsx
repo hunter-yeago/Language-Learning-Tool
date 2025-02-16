@@ -64,11 +64,11 @@ export default function WriteEssay({ buckets }) {
                     </h1>
                     <form onSubmit={handleStartEssay} className="space-y-4">
                         <div>
-                            <label htmlFor="word-bucket" className="block text-sm font-medium mb-2">
+                            <label htmlFor="bucket" className="block text-sm font-medium mb-2">
                                 Select a Word Bucket:
                             </label>
                             <select
-                                id="word-bucket"
+                                id="bucket"
                                 onChange={handleBucketChange}
                                 className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 required
