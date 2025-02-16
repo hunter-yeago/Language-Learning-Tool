@@ -13,8 +13,7 @@ class Word extends Model
 
     public function essays()
     {
-        return $this->belongsToMany(Essay::class, 'essay_word_join')
-                    ->withPivot('attempts', 'times_used');  // Include pivot fields
+        return $this->belongsToMany(Essay::class, 'essay_word_join');
     }
 
 

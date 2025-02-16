@@ -33,10 +33,10 @@ class BucketFactory extends Factory
     {
         return $this->afterCreating(function (Bucket $bucket) use ($count) {
             
-            // Create words and attach them to the bucket through the pivot table (bucket_word)
+            // Create words and attach them to the bucket through the pivot table (bucket_word_join)
             $words = Word::factory()->count($count)->create();
 
-            // Attach the words to the bucket using the pivot table (bucket_word)
+            // Attach the words to the bucket using the pivot table (bucket_word_join)
             $bucket->words()->attach($words->pluck('id')->toArray());
         });
     }

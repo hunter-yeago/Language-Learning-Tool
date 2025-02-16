@@ -1,12 +1,11 @@
 <?php
-// app/Http/Controllers/EssayController.php
 
 namespace App\Http\Controllers;
 
 use App\Models\Essay;
 use App\Models\Bucket;
-use App\Models\Word; // Assuming Word is a separate model for your words
-use App\Models\EssayWordJoin; // This is the pivot table model
+use App\Models\BucketWordJoin;
+use App\Models\EssayWordJoin;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -17,8 +16,6 @@ class EssayController extends Controller
     public function store(Request $request)
     {
 
-        // dd($request->all());  // This will show all the data sent by the request
-        // First let's see what we're getting
         Log::info('Raw request data:', $request->all());
 
         try {
@@ -26,7 +23,7 @@ class EssayController extends Controller
                 'title' => 'required|string|max:255',
                 'bucket_id' => 'required|exists:buckets,id',
                 'content' => 'required|string',
-                'used_words' => 'array', // Add this back
+                'used_words' => 'array',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error('Validation failed:', [
@@ -36,72 +33,52 @@ class EssayController extends Controller
             throw $e;
         }
 
-        // dd('Made it past validation!', $validated);
-        // ... rest of your code
-
-        
-        // Create the essay record in the database
         $essay = Essay::create([
             'title' => $validated['title'],
-            'bucket_id' => $validated['bucket_id'],  // Associate with the correct bucket
+            'bucket_id' => $validated['bucket_id'],
             'content' => $validated['content'],
-            'user_id' => Auth::id(),  // Assuming the user is authenticated
+            'user_id' => Auth::id(),
         ]);
-        
-        
-        // dd($essay);
-        // echo 'the essay: ';
-        // print_r($essay);
 
-        // Get the bucket and its words
-        $bucket = Bucket::find($validated['bucket_id']);
-        $usedWords = $validated['used_words'];  // Array of words used in the essay
+        // $bucket = Bucket::find($validated['bucket_id']);
 
-        
-        // echo 'test';
-        // print_r($usedWords);
-
-        // Loop through the used words to update the `essay_word_join` table
-        foreach ($usedWords as $usedWord) {
-            // dd($usedWord);
-            // $word = Word::find($usedWord);  // Find the word by its ID
-            
-            // Ensure the word exists before proceeding
-                // dd($usedWord);
-                // Check if there's already an entry in the pivot table (essay_word_join)
+        foreach ($validated['used_words'] as $usedWord) {
+                
+        // Check if there's already an entry in the pivot table (essay_word_join)
             $entry = EssayWordJoin::firstOrCreate([
                 'essay_id' => $essay->id,
                 'word_id' => $usedWord["id"],
                 'status' => "awaiting_approval",
-                'times_used' => 1,
-                'attempts' => 1,
+                'used' => true,
+            ]);
+
+            $word_bank_entry = BucketWordJoin::firstOrCreate([
+                'word_id' => $usedWord["id"],
+                'bucket_id' => $validated["bucket_id"],
             ]);
             
-
-            // just set it to 1 and it works rather then increment
-            // the problem is that if its a new word that doesn't have a row
-            // if its an already used word then I need to send that data in here
-            // but for now, this is fine.
+            // so this needs to be updated update times_in_word_bank even for not used words.
+            // -- this will also sending ALL words along with used words
+            // I think I can send one array of words - and then tack on a "used" flag or not
+            // to keep the data simple and have only one array and handle all of this
+            $word_bank_entry->increment('times_used_in_essay');
+            $word_bank_entry->increment('times_in_word_bank');
                 
-            // Log the entry to see if it's being created correctly
             Log::info('EssayWordJoin entry:', $entry->toArray());
+            Log::info('EssayWordJoin word_bank_entry:', $word_bank_entry->toArray());
 
-            // Increment the 'times_used' and 'attempts'
-            // $entry->increment('times_used');
-            // $entry->increment('attempts');
+            // put these on the bucket_word_join -- MAKES WAY more sense. lol.
         }
 
         // Optionally, redirect to a dashboard or display success message
-        return redirect()->route('bucket-dashboard', ['bucketID' => $bucket->id])
-            ->with('success', 'Essay created successfully!');
+        // return redirect()->route('bucket-dashboard', ['bucketID' => $bucket->id])
+        //     ->with('success', 'Essay created successfully!');
     }
 
     public function index()
     {
-        // Fetch all essays from the database
         $essays = Essay::all();
 
-        // Return the data using Inertia
         return Inertia::render('Essays', [
             'essays' => $essays,
         ]);

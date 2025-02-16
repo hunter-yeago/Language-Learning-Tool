@@ -9,6 +9,8 @@ export default function StartEssay({ bucket, words }) {
     const [wordList, setWordList] = useState(words);
     const [usedWords, setUsedWords] = useState([]);
 
+    console.log('words', words)
+
     const { data, setData, post, processing } = useForm({
         title: '', // Manage essay title
         content: '', // Manage essay content
@@ -28,10 +30,10 @@ export default function StartEssay({ bucket, words }) {
 
     // Handle essay content change
     function handleTextChange(e) {
-        const newEssay = e.target.value;
-        setEssay(newEssay);
-        setData('content', newEssay);
-        const wordsInEssay = checkForUsedWords(newEssay);
+        // const newEssay = e.target.value;
+        setEssay(e.target.value);
+        setData('content', e.target.value);
+        const wordsInEssay = checkForUsedWords(e.target.value);
         setUsedWords(wordsInEssay);
         
         setData(prevData => {
@@ -43,9 +45,6 @@ export default function StartEssay({ bucket, words }) {
             console.log('Updated data:', newData);
             return newData;
         });
-        
-        
-        // setData('used_words', wordsInEssay);
     }
 
     // Check for used words in the essay using word boundaries
