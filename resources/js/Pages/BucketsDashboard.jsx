@@ -2,26 +2,35 @@ import { useEffect, useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm } from '@inertiajs/react';
 
-export default function BucketsDashboard({ buckets, bucketID }) {
+export default function BucketsDashboard({ essays, buckets, bucketID }) {
     const { data, setData, post, processing } = useForm({
-        bucket: null,
-        words: [],
-        title: '',
-        description: '',
+        bucket: {
+            id: null,
+            title: '',
+            description: '',
+            words: [],
+        },
+        essay: {
+            title: '',
+            content: '',
+            words: [],
+        },
     });
 
     const [currentBucket, setCurrentBucket] = useState(null);
+    const [currentEssay, setCurrentEssay] = useState(null);
     const [isCreatingNew, setIsCreatingNew] = useState(false);
 
-    // Set the bucket when the component mounts, using the bucketID from query parameters
+    // Set the bucket when the component mounts
     useEffect(() => {
         if (bucketID && buckets) {
             const selectedBucket = buckets.find(b => b.id === parseInt(bucketID));
             if (selectedBucket) {
-                console.log(selectedBucket);
                 setCurrentBucket(selectedBucket);
-                setData({
-                    bucket: selectedBucket,
+                setData('bucket', {
+                    id: selectedBucket.id,
+                    title: selectedBucket.title,
+                    description: selectedBucket.description,
                     words: selectedBucket.words,
                 });
             }
@@ -29,55 +38,68 @@ export default function BucketsDashboard({ buckets, bucketID }) {
     }, [bucketID, buckets]);
 
     function handleBucketChange(event) {
-        const bucketId = event.target.value;
-        const bucket = buckets.find(b => b.id === parseInt(bucketId)) || null;
-        setCurrentBucket(bucket);
+        const bucketId = parseInt(event.target.value);
+        const selectedBucket = buckets.find(b => b.id === bucketId) || null;
+        
+        setCurrentBucket(selectedBucket);
 
-        if (bucket) {
-            console.log('bucket: ', bucket);
-            setData({
-                bucket: bucket,
-                title: bucket.title,
-                description: bucket.description,
-                words: bucket ? bucket.words : [],
+        if (selectedBucket) {
+            setData('bucket', {
+                id: selectedBucket.id,
+                title: selectedBucket.title,
+                description: selectedBucket.description,
+                words: selectedBucket.words,
             });
         }
+    }
 
+    function handleEssayChange(event) {
+        const essayTitle = event.target.value;
+        const selectedEssay = essays.find(e => e.title === essayTitle) || null;
+
+        setCurrentEssay(selectedEssay);
+
+        if (selectedEssay) {
+            setData('essay', {
+                title: selectedEssay.title,
+                content: selectedEssay.content,
+                words: selectedEssay.words,
+            });
+        }
     }
 
     function handleStartEssay(e) {
         e.preventDefault();
-        if (currentBucket) {
+        if (data.essay.title && data.essay.bucketID) {
             post(route('start-essay'), {
-                // to do - title and bucket here shouldnt be the same
-                title: currentBucket.title,
-                description: currentBucket.description,
-                bucket: currentBucket.title,
-                words: currentBucket.words,
+                title: data.essay.title,
+                description: data.essay.description,
+                bucket_id: data.essay.bucketID,
             });
         }
     }
 
     function handleAddWords(e) {
         e.preventDefault();
-        if (currentBucket) {
+        if (data.bucket.id) {
             post(route('start-adding-words'), {
-                // to do - title and bucket here shouldnt be the same
-                title: currentBucket.title,
-                description: currentBucket.description,
-                bucket: currentBucket.title,
-                words: currentBucket.words,
+                bucket_id: data.bucket.id,
+                words: data.bucket.words,
             });
         }
     }
 
     function handleCreateNewBucket(e) {
         e.preventDefault();
-        
         post(route('store-bucket'), {
-            title: data.title,
-            description: data.description,
+            title: data.bucket.title,
+            description: data.bucket.description,
         });
+    }
+
+    function handleStartTutorReview(e){
+        post(route('tutor-essay-page'), { essay: data.essay });
+
     }
 
     return (
@@ -86,33 +108,47 @@ export default function BucketsDashboard({ buckets, bucketID }) {
         >
             <Head title="Word Buckets Dashboard" />
 
-            <section className="min-h-[500px] py-12 mx-auto max-w-7xl sm:px-6 lg:px-8 grid grid-cols-1 gap-6 md:grid-cols-2" aria-label="choose the word bucket you would like to edit or use to write an essay">
+            <section className="min-h-[500px] py-12 mx-auto max-w-7xl sm:px-6 lg:px-8 grid grid-cols-1 gap-6 md:grid-cols-2">
 
-                {/* Left Box - Word Bucket Selector and Buttons */}
+                {/* Left Box - Bucket & Essay Selectors */}
                 <article className="p-6 min-h-full bg-white shadow-sm sm:rounded-lg flex flex-col justify-between">
 
                     {/* Word Bucket Selector */}
                     <div>
-                        <h1 className="text-xl font-semibold text-center mb-6">Existing Word Buckets</h1>
+                        <h2 className="text-xl font-semibold text-center mb-6">Existing Word Buckets</h2>
                         <label htmlFor="bucket" className="block text-sm font-medium mb-2">Select a Word Bucket:</label>
                         <select
                             id="bucket"
                             onChange={handleBucketChange}
                             className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                             required
-                            value={currentBucket?.id || ''} // Reflect the current bucket ID in the selector
+                            value={currentBucket?.id || ''}
                         >
-                            <option value="" className="text-center">-- Select a Word Bucket --</option>
+                            <option value="">-- Select a Word Bucket --</option>
                             {buckets.map((bucket) => (
                                 <option key={bucket.id} value={bucket.id}>{bucket.title}</option>
                             ))}
                         </select>
+
+                        {/* Essay Selector */}
+                        <h2 className="text-xl font-semibold text-center mt-6 mb-2">Existing Essays</h2>
+                        <label htmlFor="essay" className="block text-sm font-medium mb-2">Select an Essay:</label>
+                        <select
+                            id="essay"
+                            onChange={handleEssayChange}
+                            className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            required
+                            value={currentEssay?.title || ''}
+                        >
+                            <option value="">-- Select an Essay --</option>
+                            {essays.map((essay, index) => (
+                                <option key={index} value={essay.title}>{essay.title}</option>
+                            ))}
+                        </select>
                     </div>
 
-                    {/*Button / Choices*/}
+                    {/* Action Buttons */}
                     <div className="flex gap-4 mt-6">
-
-                        {/*Add Words*/}
                         <button
                             onClick={handleAddWords}
                             disabled={processing}
@@ -121,7 +157,6 @@ export default function BucketsDashboard({ buckets, bucketID }) {
                             {processing ? 'Loading...' : 'Add Words'}
                         </button>
 
-                        {/*Start Essay*/}
                         <button
                             onClick={handleStartEssay}
                             disabled={processing}
@@ -129,18 +164,17 @@ export default function BucketsDashboard({ buckets, bucketID }) {
                         >
                             {processing ? 'Loading...' : 'Start Essay'}
                         </button>
-
                     </div>
                 </article>
 
-                {/* Right Box - Bucket Information */}
+                {/* Right Box - Bucket Info / Create New Bucket */}
                 <div className="bg-gray-50 p-6 rounded-md border border-gray-300">
                     {currentBucket ? (
                         <>
                             <h2 className="text-lg font-semibold text-center">You selected: {currentBucket.title}</h2>
                             <h3 className="text-md mt-4 font-medium">Words in this Bucket:</h3>
                             <ul className="flex flex-wrap gap-5 mt-2 list-disc">
-                                {currentBucket.words.length > 0 ? (
+                                {Array.isArray(currentBucket.words.length) && currentBucket.words.length > 0 ? (
                                     currentBucket.words.map((word, index) => (
                                         <li key={index} className="text-gray-700">{word.word}</li>
                                     ))
@@ -150,65 +184,46 @@ export default function BucketsDashboard({ buckets, bucketID }) {
                             </ul>
                         </>
                     ) : (
-                        <>
-                            {isCreatingNew ? (
-                                <div className="bg-gray-50 p-6 rounded-md border border-gray-300">
-                                    <h2 className="text-lg font-semibold text-center">New Word Bucket</h2>
-                                    <form onSubmit={handleCreateNewBucket}>
-                                        <div>
-                                            <label htmlFor="title" className="block text-sm font-medium mb-2">Title:</label>
-                                            <input
-                                                type="text"
-                                                id="title"
-                                                name="title"
-                                                className="w-full p-2 border rounded-md mb-4"
-                                                value={data.title ?? ""}
-                                                onChange={e => setData('title', e.target.value)}
-                                                required
-                                            />
-                                        </div>
-                                        <div>
-                                            <label htmlFor="description" className="block text-sm font-medium mb-2">Description (Optional):</label>
-                                            <textarea
-                                                id="description"
-                                                name="description"
-                                                className="w-full p-2 border rounded-md"
-                                                value={data.description ?? ""}
-                                                onChange={e => setData('description', e.target.value)}
-                                            />
-                                        </div>
-                                        <div className="flex gap-4 mt-6 justify-center">
-                                            <button
-                                                type="submit"
-                                                disabled={processing}
-                                                className="w-48 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                                            >
-                                                Create
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={() => setIsCreatingNew(false)}
-                                                className="w-48 p-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
-                                            >
-                                                Cancel
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            ) : (
-                                <div className="flex justify-center gap-6 items-center flex-col bg-gray-50 p-6 rounded-md border border-gray-300">
-                                    <h2 className="text-lg font-semibold text-center">New Word Bucket</h2>
-                                        <button
-                                            onClick={() => setIsCreatingNew(true)}
-                                            className="min-w-48 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                                        >
-                                            Create
-                                        </button>
-                                </div>
-                            )}
-                        </>
+                        isCreatingNew ? (
+                            <div className="bg-gray-50 p-6 rounded-md border border-gray-300">
+                                <h2 className="text-lg font-semibold text-center">New Word Bucket</h2>
+                                <form onSubmit={handleCreateNewBucket}>
+                                    <label htmlFor="title" className="block text-sm font-medium mb-2">Title:</label>
+                                    <input
+                                        type="text"
+                                        id="title"
+                                        className="w-full p-2 border rounded-md mb-4"
+                                        value={data.bucket.title}
+                                        onChange={e => setData('bucket', { ...data.bucket, title: e.target.value })}
+                                        required
+                                    />
+                                    <label htmlFor="description" className="block text-sm font-medium mb-2">Description (Optional):</label>
+                                    <textarea
+                                        id="description"
+                                        className="w-full p-2 border rounded-md"
+                                        value={data.bucket.description}
+                                        onChange={e => setData('bucket', { ...data.bucket, description: e.target.value })}
+                                    />
+                                    <div className="flex gap-4 mt-6 justify-center">
+                                        <button type="submit" disabled={processing} className="w-48 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Create</button>
+                                        <button type="button" onClick={() => setIsCreatingNew(false)} className="w-48 p-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        ) : (
+                            <div className="bg-gray-50 p-6 rounded-md border border-gray-300 flex justify-center">
+                                <button onClick={() => setIsCreatingNew(true)} className="min-w-48 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Create New Bucket</button>
+                            </div>
+                                
+                        )
                     )}
                 </div>
+
+                {currentEssay && 
+                    <div className="bg-gray-50 p-6 rounded-md border border-gray-300">
+                        <button onClick={() => handleStartTutorReview()} className="min-w-48 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Start Tutor Essay Review</button>
+                    </div>
+                }
             </section>
         </AuthenticatedLayout>
     );

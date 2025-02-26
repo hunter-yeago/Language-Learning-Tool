@@ -22,16 +22,16 @@ class BucketController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string|max:500',
         ]);
-
+        
         // $userId = Auth::id();
-
+        
         // Create the bucket
         $bucket = Bucket::create([
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
             'user_id' => Auth::id(),
         ]);
-
+        
         // Redirect to the 'write-essay' route with a success message
         return redirect()->route('bucket-dashboard', ['bucketID' => $bucket->id])
             ->with('success', 'Words added successfully!');

@@ -10,14 +10,9 @@ use Inertia\Inertia;
 use App\Models\Essay;
 use App\Models\bucket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
-    $essays = Essay::all();
-
-
-    // how to show data
-//    dd($essays);
-    // dd($essays[0]->title);
 
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -35,7 +30,7 @@ Route::get('/', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Go to Dashboard
+// Go to Dictionary
 Route::get('/dictionary', function () {
     return Inertia::render('Dictionary');
 })->middleware(['auth', 'verified'])->name('dictionary');
@@ -54,12 +49,25 @@ Route::get('/create-new-word-bank', function () {
 
 })->middleware(['auth', 'verified'])->name('buckets');
 
-Route::get('/bucket-dashboard', function (Request $request) {
+// Go to Tutor Essay Page
+Route::post('/tutor-essay-page', function (Request $request) {
+    
+    $essay = $request->input('essay');
+    return Inertia::render('TutorEssayPage', ['essay' => $essay]);
+})->middleware(['auth', 'verified'])->name('tutor-essay-page');
 
-    $buckets = Bucket::with('words')->get();
+
+Route::get('/bucket-dashboard', function (Request $request) {
+    
+    $essays = Essay::where('user_id', Auth::id())->with('words')->get();
+    $buckets = Bucket::where('user_id', Auth::id())->with('words')->get();
+    
+    // If a bucket param is passed in
     $bucketID = $request->query('bucketID');
+    // dd($buckets);
 
     return Inertia::render('BucketsDashboard', [
+        'essays' => $essays,
         'buckets' => $buckets,
         'bucketID' => $bucketID,
     ]);
