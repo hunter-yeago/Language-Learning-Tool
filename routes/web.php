@@ -78,6 +78,10 @@ Route::get('/bucket-dashboard', function (Request $request) {
 Route::post('/start-adding-words', function (Request $request) {
 
     $bucket = $request->input('bucket');
+    
+    // instead of passing this stuff from the frontend - shouldn't I just pass
+    // the bucket ID in the $request, and then go and grab the words and bucket from here 
+    // something like $buckets = Bucket::where('user_id', $request->input('bucketID'))->with('words')->get();
     $words = $request->input('words', []);
 
     // Return an Inertia response instead of a JSON response
