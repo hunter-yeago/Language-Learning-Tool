@@ -17,25 +17,21 @@ class BucketController extends Controller
      */
     public function store(Request $request)
     {
-
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string|max:500',
+            'bucket.title' => 'required|string|max:255',
+            'bucket.description' => 'nullable|string|max:500',
         ]);
-        
-        // $userId = Auth::id();
-        
-        // Create the bucket
+
         $bucket = Bucket::create([
-            'title' => $validated['title'],
-            'description' => $validated['description'] ?? null,
+            'title' => $validated['bucket']['title'],
+            'description' => $validated['bucket']['description'] ?? null,
             'user_id' => Auth::id(),
         ]);
-        
-        // Redirect to the 'write-essay' route with a success message
+
         return redirect()->route('bucket-dashboard', ['bucketID' => $bucket->id])
-            ->with('success', 'Words added successfully!');
+            ->with('success', 'Bucket created successfully!');
     }
+
 
     /**
      * Add words to an existing bucket.

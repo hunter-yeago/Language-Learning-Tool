@@ -88,6 +88,8 @@ export default function BucketsDashboard({ essays, buckets, bucketID }) {
     }
 
     function handleCreateNewBucket(e) {
+        console.log('firing');
+        console.log('data', data.bucket)
         e.preventDefault();
         post(route('store-bucket'), {
             title: data.bucket.title,
