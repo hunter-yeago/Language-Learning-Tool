@@ -117,6 +117,17 @@ Route::post('/start-essay', function (Request $request) {
 })->middleware(['auth', 'verified'])->name('start-essay');
 
 
+Route::get('/add-words-form', function (Request $request) {
+    $bucket = $request->input('bucket');
+    $words = $request->input('words', []);
+
+    return Inertia::render('AddWordsForm', [
+        'bucket' => $bucket,
+        'words' => $words,
+    ]);
+})->middleware(['auth', 'verified'])->name('add-words-form');
+
+
 
 // Auth
 Route::middleware('auth')->group(function () {
