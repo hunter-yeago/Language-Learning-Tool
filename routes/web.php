@@ -108,11 +108,13 @@ Route::get('/start-essay', function () {
 
 Route::post('/start-essay', function (Request $request) {
     $bucket = $request->input('bucket');
-    $words = $request->input('words', []);
+    // $words = $request->input('words', []);
+
+    // dd($bucket);
 
     return Inertia::render('StartEssay', [
         'bucket' => $bucket,
-        'words' => $words,
+        'words' => $bucket['words'],
     ]);
 })->middleware(['auth', 'verified'])->name('start-essay');
 

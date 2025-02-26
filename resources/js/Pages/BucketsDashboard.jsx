@@ -70,11 +70,9 @@ export default function BucketsDashboard({ essays, buckets, bucketID }) {
 
     function handleStartEssay(e) {
         e.preventDefault();
-        if (data.essay.title && data.essay.bucketID) {
+        if (data.bucket) {
             post(route('start-essay'), {
-                title: data.essay.title,
-                description: data.essay.description,
-                bucket_id: data.essay.bucketID,
+                bucket: data.bucket,
             });
         }
     }
@@ -174,7 +172,7 @@ export default function BucketsDashboard({ essays, buckets, bucketID }) {
                             <h2 className="text-lg font-semibold text-center">You selected: {currentBucket.title}</h2>
                             <h3 className="text-md mt-4 font-medium">Words in this Bucket:</h3>
                             <ul className="flex flex-wrap gap-5 mt-2 list-disc">
-                                {Array.isArray(currentBucket.words.length) && currentBucket.words.length > 0 ? (
+                                {Array.isArray(currentBucket.words) && currentBucket.words.length > 0 ? (
                                     currentBucket.words.map((word, index) => (
                                         <li key={index} className="text-gray-700">{word.word}</li>
                                     ))

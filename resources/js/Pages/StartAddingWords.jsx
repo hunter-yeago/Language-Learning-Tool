@@ -3,10 +3,6 @@ import { useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 export default function StartAddingWords({ bucket, words }) {
-    // console.log('bucket', bucket)
-    // console.log('bucketID', bucket.id)
-    // console.log('bucketName', bucket.title)
-    // console.log('words', words)
     const { data, setData, post, processing, errors } = useForm({
         words: [],
     });
@@ -39,7 +35,6 @@ export default function StartAddingWords({ bucket, words }) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // console.log('api route', `/buckets/${bucket.id}/add-new-words`)
         post(`/buckets/${bucket.id}/add-new-words`, {
             data: { words: wordList },
             onSuccess: () => {

@@ -16,11 +16,11 @@ export default function AddWords({ wordBuckets }) {
         const bucket = wordBuckets.find((b) => b.id === parseInt(bucketId));
 
         if (bucket) {
-            setCurrentBucket(bucket.title); // Save selected bucket title
-            setWordList(bucket.words);       // Save the words associated with the bucket
+            setCurrentBucket(bucket.title); 
+            setWordList(bucket.words);       
             setData({
-                bucket: bucket.title, // Set selected bucket data for submission
-                words: bucket.words, // Set selected words data for submission
+                bucket: bucket.title, 
+                words: bucket.words, 
             });
 
         } else {
@@ -34,13 +34,12 @@ export default function AddWords({ wordBuckets }) {
     };
 
     const handleStartEssay = (e) => {
-        e.preventDefault(); // Prevent default form submission
-
-        // Check if a bucket is selected
+        e.preventDefault(); 
+        
         if (currentBucket) {
             post('/add-words-form', {
-                bucket: currentBucket, // Pass the selected bucket title
-                words: wordList, // Pass the list of words
+                bucket: currentBucket, 
+                words: wordList, 
             });
         }
     };

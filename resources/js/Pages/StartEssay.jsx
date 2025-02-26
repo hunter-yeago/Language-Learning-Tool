@@ -9,28 +9,26 @@ export default function StartEssay({ bucket, words }) {
     const [wordList, setWordList] = useState(words);
     const [usedWords, setUsedWords] = useState([]);
 
-    console.log('words', words)
-
     const { data, setData, post, processing } = useForm({
-        title: '', // Manage essay title
-        content: '', // Manage essay content
-        bucket_id: bucket.id, // Bucket ID to associate with the essay
-        used_words: [], // Initialize as an empty array
+        title: '', 
+        content: '', 
+        bucket_id: bucket.id, 
+        used_words: [], 
     });
 
-    // Update word list when words prop changes
+    
     useEffect(() => {
         setWordList(words);
     }, [words]);
 
     function handleTitleChange(e) {
         setData('title', e.target.value);
-        setTitle(e.target.value); // Local state for title
+        setTitle(e.target.value); 
     }
 
-    // Handle essay content change
+    
     function handleTextChange(e) {
-        // const newEssay = e.target.value;
+        
         setEssay(e.target.value);
         setData('content', e.target.value);
         const wordsInEssay = checkForUsedWords(e.target.value);
@@ -42,30 +40,21 @@ export default function StartEssay({ bucket, words }) {
                 content: e.target.value,
                 used_words: wordsInEssay
             };
-            console.log('Updated data:', newData);
             return newData;
         });
     }
 
-    // Check for used words in the essay using word boundaries
+    
     function checkForUsedWords(userEssay) {
         return wordList.filter(word => {
-            const wordRegex = new RegExp(`\\b${word.word}\\b`, 'i'); // Case-insensitive word boundary matching
-            return wordRegex.test(userEssay); // Match the word anywhere in the essay text
+            const wordRegex = new RegExp(`\\b${word.word}\\b`, 'i'); 
+            return wordRegex.test(userEssay); 
         });
     }
 
-    // Handle form submit (create new essay)
+    
     function handleSubmit(e) {
         e.preventDefault();
-    
-        console.log('About to submit this data:', {
-            title: data.title,
-            content: data.content,
-            bucket_id: data.bucket_id,
-            used_words: data.used_words
-        });
-    
         post(route('store-essay'), data);
     }
 
@@ -85,7 +74,7 @@ export default function StartEssay({ bucket, words }) {
                         <input
                             type="text"
                             value={title}
-                            onChange={handleTitleChange} // Update the title in the form
+                            onChange={handleTitleChange} 
                             placeholder="Essay Title"
                             className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                         />
