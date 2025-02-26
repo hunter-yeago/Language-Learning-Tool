@@ -1,16 +1,22 @@
 <?php
 
-// app/Models/EssayWordJoin.php
-
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Model;
 
-class EssayWordJoin extends Pivot
+class EssayWordJoin extends Model
+
 {
-    protected $table = 'essay_word_join';  // Explicitly define the pivot table name
-    protected $fillable = ['essay_id', 'word_id', 'attempts', 'times_used', 'status'];  // Fillable fields
+    protected $table = 'essay_word_join';
+    protected $fillable = [ 'essay_id', 'word_id', 'status', 'used'];
 
-    // Explicitly define foreign keys to make sure they are recognized
-    protected $foreignKey = ['essay_id', 'word_id'];
+    public function essay()
+    {
+        return $this->belongsTo(Essay::class);
+    }
+
+    public function word()
+    {
+        return $this->belongsTo(Word::class);
+    }
 }

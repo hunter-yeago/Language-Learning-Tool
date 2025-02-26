@@ -21,7 +21,7 @@ class Bucket extends Model
     // Bucket.php
     public function words()
     {
-        return $this->belongsToMany(Word::class, 'bucket_word');
+        return $this->belongsToMany(Word::class, 'bucket_word_join');
     }
 
 }

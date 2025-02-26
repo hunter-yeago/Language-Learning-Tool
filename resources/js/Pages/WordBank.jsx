@@ -1,12 +1,8 @@
 export default function WordBank ({ words, usedWords }) {
 
-    // console.log('words', words)
-
     if (!Array.isArray(words) || words.length === 0) {
         return <p className="text-gray-500">No words available.</p>
     }
-
-    console.log('usedWords', usedWords)
 
     return (
         <>

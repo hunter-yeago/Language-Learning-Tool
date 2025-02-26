@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bucket_word', function (Blueprint $table) {
+        Schema::create('bucket_word_join', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('bucket_id')->constrained();
-            $table->foreignId('word_id')->constrained();
+            $table->foreignId('bucket_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('word_id')->constrained()->cascadeOnDelete();
+            $table->integer('times_used_in_essay')->default(0);
+            $table->integer('times_in_word_bank')->default(0);
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bucket_word');
+        Schema::dropIfExists('bucket_word_join');
     }
 };

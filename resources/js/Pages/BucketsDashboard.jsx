@@ -11,7 +11,7 @@ export default function BucketsDashboard({ buckets, bucketID }) {
     });
 
     const [currentBucket, setCurrentBucket] = useState(null);
-    const [isCreatingNew, setIsCreatingNew] = useState(false); // New state to toggle form visibility
+    const [isCreatingNew, setIsCreatingNew] = useState(false);
 
     // Set the bucket when the component mounts, using the bucketID from query parameters
     useEffect(() => {
