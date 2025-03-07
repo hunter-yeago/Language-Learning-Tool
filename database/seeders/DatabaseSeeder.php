@@ -19,7 +19,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
-        // Seed 5 CreateNewWordBank, each with 5 related Words
         // Bucket::factory(5)
         //     ->withWords(5) // This method is defined in your BucketFactory
         //     ->withEssays(5) // This method is defined in your BucketFactory

@@ -71,7 +71,7 @@ class EssayController extends Controller
         }
 
         // Optionally, redirect to a dashboard or display success message
-        // return redirect()->route('bucket-dashboard', ['bucketID' => $bucket->id])
+        // return redirect()->route('/', ['bucketID' => $bucket->id])
         //     ->with('success', 'Essay created successfully!');
     }
 

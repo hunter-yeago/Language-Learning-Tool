@@ -10,8 +10,7 @@ export default function AuthenticatedLayout({ header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
     const navigationLinks = [
-        { href: route('dashboard'), label: 'Dashboard' },
-        { href: route('bucket-dashboard'), label: 'Word Buckets' },
+        { href: route('/'), label: 'Dashboard' },
         { href: route('dictionary'), label: 'Dictionary' },
     ];
 

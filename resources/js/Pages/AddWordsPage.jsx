@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
-export default function StartAddingWords({ bucket, words }) {
+export default function AddWordsPage({ bucket, words }) {
     const { data, setData, post, processing, errors } = useForm({
         words: [],
     });

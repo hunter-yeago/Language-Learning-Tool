@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
 
-    return Inertia::render('Welcome', [
+    return Inertia::render('WelcomePage', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
@@ -22,118 +22,110 @@ Route::get('/', function () {
     ]);
 });
 
-// the Essay Contorller is doing the heavy lifting here
-Route::get('/essays', [EssayController::class, 'index'])->name('essays.index');
+// Pages
 
-// Go to Dashboard
-Route::get('/', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-// Go to Dictionary
-Route::get('/dictionary', function () {
-    return Inertia::render('Dictionary');
-})->middleware(['auth', 'verified'])->name('dictionary');
-
-//Dictionary
-Route::get('/lookup-word/{word}', [DictionaryController::class, 'lookup']);
-
-// Go to CreateNewWordBank
-Route::get('/create-new-word-bank', function () {
-
-    $buckets = Bucket::with('words')->get();
-
-    return Inertia::render('CreateNewWordBank', [
-        'buckets' => $buckets,
-    ]);
-
-})->middleware(['auth', 'verified'])->name('buckets');
-
-// Go to Tutor Essay Page
-Route::post('/tutor-essay-page', function (Request $request) {
-    
-    $essay = $request->input('essay');
-    return Inertia::render('TutorEssayPage', ['essay' => $essay]);
-})->middleware(['auth', 'verified'])->name('tutor-essay-page');
-
-
-Route::get('/bucket-dashboard', function (Request $request) {
+// Dashboard Page
+Route::get('/', function (Request $request) {
     
     $essays = Essay::where('user_id', Auth::id())->with('words')->get();
     $buckets = Bucket::where('user_id', Auth::id())->with('words')->get();
     
     // If a bucket param is passed in
     $bucketID = $request->query('bucketID');
-    // dd($buckets);
 
-    return Inertia::render('BucketsDashboard', [
+    return Inertia::render('Dashboard', [
         'essays' => $essays,
         'buckets' => $buckets,
         'bucketID' => $bucketID,
     ]);
 
-})->middleware(['auth', 'verified'])->name('bucket-dashboard');
+})->middleware(['auth', 'verified'])->name('/');
 
-// Start Adding Words
-Route::post('/start-adding-words', function (Request $request) {
-
-    $bucket = $request->input('bucket');
-    
-    // instead of passing this stuff from the frontend - shouldn't I just pass
-    // the bucket ID in the $request, and then go and grab the words and bucket from here 
-    // something like $buckets = Bucket::where('user_id', $request->input('bucketID'))->with('words')->get();
-    $words = $request->input('words', []);
-
-    // Return an Inertia response instead of a JSON response
-    return Inertia::render('StartAddingWords', [
-        'bucket' => $bucket,
-        'words' => $words,
-    ]);
-})->middleware(['auth', 'verified'])->name('start-adding-words');
-
-Route::get('/start-adding-words', function () {
-    return redirect()->route('add-words');
-})->middleware('auth', 'verified')->name('start-adding-words');
-
-// Create Work Bucket
-Route::post('/buckets', [BucketController::class, 'store'])->name('store-bucket');
-
-// Create Essay
-Route::post('/essays', [EssayController::class, 'store'])->name('store-essay');
-
-// Add Words to Words Bucket
-Route::post('/buckets/{bucketID}/add-new-words', [BucketController::class, 'addWords'])->name('add-new-words');
-
-// place holder to deal with get on /start-essay
-Route::get('/start-essay', function () {
-    return Inertia::render('Dictionary');
+// Dictionary Page
+Route::get('/dictionary', function () {
+    return Inertia::render('DictionaryPage');
 })->middleware(['auth', 'verified'])->name('dictionary');
 
+// Tutor Essay Page
+Route::post('/tutor-essay-page', function (Request $request) {
+    
+    $essay = $request->input('essay');
+    return Inertia::render('TutorEssayPage', ['essay' => $essay]);
+})->middleware(['auth', 'verified'])->name('tutor-essay-page');
 
-Route::post('/start-essay', function (Request $request) {
-    $bucket = $request->input('bucket');
-    // $words = $request->input('words', []);
+// Add Words Page
 
-    // dd($bucket);
+    // Start Adding Words Page
+    Route::post('/add-words-page', function (Request $request) {
 
-    return Inertia::render('StartEssay', [
-        'bucket' => $bucket,
-        'words' => $bucket['words'],
-    ]);
-})->middleware(['auth', 'verified'])->name('start-essay');
+        $bucket = $request->input('bucket');
+        
+        // instead of passing this stuff from the frontend - shouldn't I just pass
+        // the bucket ID in the $request, and then go and grab the words and bucket from here 
+        // something like $buckets = Bucket::where('user_id', $request->input('bucketID'))->with('words')->get();
+        $words = $request->input('words', []);
+
+        // Return an Inertia response instead of a JSON response
+        return Inertia::render('AddWordsPage', [
+            'bucket' => $bucket,
+            'words' => $words,
+        ]);
+    })->middleware(['auth', 'verified'])->name('add-words-page');
+
+    // Leaving Add Words Page
+    Route::get('/add-words-page', function () {
+        return redirect()->route('/');
+    })->middleware('auth', 'verified')->name('add-words-page');
+
+// Write Essay Page
+
+    // Go to Write Essay Page
+    Route::post('/write-essay', function (Request $request) {
+        $bucket = $request->input('bucket');
+        // $words = $request->input('words', []);
+
+        return Inertia::render('WriteEssayPage', [
+            'bucket' => $bucket,
+            'words' => $bucket['words'],
+        ]);
+    })->middleware(['auth', 'verified'])->name('write-essay');
+
+    // Leaving Write Essay Page
+    Route::get('/write-essay', function (Request $request) {
+
+        $essays = Essay::where('user_id', Auth::id())->with('words')->get();
+        $buckets = Bucket::where('user_id', Auth::id())->with('words')->get();
+        
+        // If a bucket param is passed in
+        $bucketID = $request->query('bucketID');
+
+        return Inertia::render('Dashboard', [
+            'essays' => $essays,
+            'buckets' => $buckets,
+            'bucketID' => $bucketID,
+        ]);
+
+    })->middleware(['auth', 'verified'])->name('dashboard');
 
 
-Route::get('/add-words-form', function (Request $request) {
-    $bucket = $request->input('bucket');
-    $words = $request->input('words', []);
-
-    return Inertia::render('AddWordsForm', [
-        'bucket' => $bucket,
-        'words' => $words,
-    ]);
-})->middleware(['auth', 'verified'])->name('add-words-form');
 
 
+// CRUD Routes
+
+    // Create Work Bucket
+    Route::post('/buckets', [BucketController::class, 'store'])->name('store-bucket');
+
+    // Add Words to Words Bucket
+    Route::post('/buckets/{bucketID}/add-new-words', [BucketController::class, 'addWords'])->name('add-new-words');
+
+    // Create Essay
+    Route::post('/essays', [EssayController::class, 'store'])->name('store-essay');
+
+    // Get Essays
+    Route::get('/essays', [EssayController::class, 'index'])->name('essays.index');
+
+    // Lookup Words in Dictionary
+    Route::get('/lookup-word/{word}', [DictionaryController::class, 'lookup']);
 
 // Auth
 Route::middleware('auth')->group(function () {

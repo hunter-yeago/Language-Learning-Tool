@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import {capitalizeFirstLetter} from "@/Utilities/capitalize_first_letter.js";
-export default function Dictionary() {
+export default function DictionaryPage() {
     const [wordToSearch, setWordToSearch] = useState('');
     const { data, setData, post, processing, errors } = useForm({
         word: ''

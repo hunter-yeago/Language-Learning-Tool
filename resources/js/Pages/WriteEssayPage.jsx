@@ -1,9 +1,9 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { useState, useEffect } from 'react';
 import { useForm } from '@inertiajs/react';
-import WordBank from "@/Pages/WordBank.jsx";
+import WordBank from "@/Components/word-bank/WordBank.jsx";
 
-export default function StartEssay({ bucket, words }) {
+export default function WriteEssayPage({ bucket, words }) {
     const [title, setTitle] = useState('');
     const [essay, setEssay] = useState('');
     const [wordList, setWordList] = useState(words);
