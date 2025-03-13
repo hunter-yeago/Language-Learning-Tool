@@ -112,17 +112,17 @@ Route::post('/tutor-essay-page', function (Request $request) {
 
 // CRUD Routes
 
-    // Create Work Bucket
-    Route::post('/buckets', [BucketController::class, 'store'])->name('store-bucket');
+// do I really need ->name() ?
 
-    // Add Words to Words Bucket
-    Route::post('/buckets/{bucketID}/add-new-words', [BucketController::class, 'addWords'])->name('add-new-words');
+Route::controller(BucketController::class)->group(function () {
+    Route::post('/buckets', 'store')->name('store-bucket');
+    Route::post('/buckets/{bucketID}/add-new-words', 'addWords')->name('add-new-words');
+});
 
-    // Create Essay
-    Route::post('/essays', [EssayController::class, 'store'])->name('store-essay');
-
-    // Get Essays
-    Route::get('/essays', [EssayController::class, 'index'])->name('essays.index');
+Route::controller(EssayController::class)->group(function () {
+    Route::get('/essays', 'index')->name('essays.index');
+    Route::post('/essays', 'store')->name('store-essay');
+});
 
     // Lookup Words in Dictionary
     Route::get('/lookup-word/{word}', [DictionaryController::class, 'lookup']);

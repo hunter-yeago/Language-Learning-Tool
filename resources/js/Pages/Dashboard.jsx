@@ -23,6 +23,7 @@ export default function Dashboard({ essays, buckets, bucketID }) {
             words: [],
         },
     });
+    // todo: do I really need to set up the inputs like this... could I instead use the name attributes on the html elements?
 
     const [currentBucket, setCurrentBucket] = useState(null);
     const [currentEssay, setCurrentEssay] = useState(null);

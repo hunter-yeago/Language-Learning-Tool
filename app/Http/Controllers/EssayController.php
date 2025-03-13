@@ -16,7 +16,7 @@ class EssayController extends Controller
     public function store(Request $request)
     {
 
-        Log::info('Raw request data:', $request->all());
+        // Log::info('Raw request data:', $request->all());
 
         try {
             $validated = $request->validate([
@@ -64,8 +64,8 @@ class EssayController extends Controller
             $word_bank_entry->increment('times_used_in_essay');
             $word_bank_entry->increment('times_in_word_bank');
                 
-            Log::info('EssayWordJoin entry:', $entry->toArray());
-            Log::info('EssayWordJoin word_bank_entry:', $word_bank_entry->toArray());
+            // Log::info('EssayWordJoin entry:', $entry->toArray());
+            // Log::info('EssayWordJoin word_bank_entry:', $word_bank_entry->toArray());
 
             // put these on the bucket_word_join -- MAKES WAY more sense. lol.
         }
