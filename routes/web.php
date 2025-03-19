@@ -46,10 +46,23 @@ Route::get('/dictionary', function () {
     return Inertia::render('DictionaryPage');
 })->middleware(['auth', 'verified'])->name('dictionary');
 
-// Tutor Essay Page
+// Tutor Essay - GET
+Route::get('/tutor-essay-page', function() {
+    $essay = session('tutor_essay');
+
+    if (!$essay) {
+        return redirect()->route('/');
+    }
+
+    return Inertia::render('TutorEssayPage', ['essay' => $essay]);
+})->middleware(['auth', 'verified']);
+
+// Tutor Essay Page - POST
 Route::post('/tutor-essay-page', function (Request $request) {
     
     $essay = $request->input('essay');
+    session(['tutor_essay' => $essay]);
+
     return Inertia::render('TutorEssayPage', ['essay' => $essay]);
 })->middleware(['auth', 'verified'])->name('tutor-essay-page');
 
