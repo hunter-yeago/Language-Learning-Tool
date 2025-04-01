@@ -61,9 +61,18 @@ Route::get('/tutor-essay-page', function() {
 Route::post('/tutor-essay-page', function (Request $request) {
     
     $essay = $request->input('essay');
+    $used_words = collect($essay['words'])->filter(fn($word) => $word['pivot']['used'])->values()->all();
+    $not_used_words = collect($essay['words'])->filter(fn($word) => !$word['pivot']['used'])->values()->all();
+
     session(['tutor_essay' => $essay]);
 
-    return Inertia::render('TutorEssayPage', ['essay' => $essay]);
+    return Inertia::render('TutorEssayPage', 
+        [ 
+            'essay' => $essay, 
+            'used_words' => $used_words, 
+            'not_used_words' => $not_used_words 
+        ], 
+    );
 })->middleware(['auth', 'verified'])->name('tutor-essay-page');
 
 // Add Words Page

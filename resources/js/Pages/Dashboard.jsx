@@ -60,9 +60,8 @@ export default function Dashboard({ essays, buckets, bucketID }) {
         }
     }
 
-    function handleEssayChange(essayTitle) {
-        const selectedEssay = essays.find(e => e.title === essayTitle) || null;
-
+    function handleEssayChange(title) {
+        const selectedEssay = essays.find(e => e.title === title) || null;
         setCurrentEssay(selectedEssay);
 
         if (selectedEssay) {
@@ -127,19 +126,24 @@ export default function Dashboard({ essays, buckets, bucketID }) {
                             onBucketChange={handleBucketChange} 
                         />
 
+                        <ActionButtons 
+                            onAddWords={handleAddWords} 
+                            onWriteEssayPage={handleWriteEssayPage} 
+                            processing={processing} 
+                        />
+
                         <h2 className="text-xl font-semibold text-center mt-6 mb-2">Existing Essays</h2>
                         <EssaySelector 
                             essays={essays} 
                             currentEssayTitle={currentEssay?.title} 
                             onEssayChange={handleEssayChange} 
                         />
+
+                        {currentEssay && (
+                            <TutorReviewButton onReview={handleStartTutorReview} />
+                        )}
                     </div>
 
-                    <ActionButtons 
-                        onAddWords={handleAddWords} 
-                        onWriteEssayPage={handleWriteEssayPage} 
-                        processing={processing} 
-                    />
                 </article>
 
                 {/* Right Box - Bucket Info / Create New Bucket */}
@@ -168,9 +172,7 @@ export default function Dashboard({ essays, buckets, bucketID }) {
                     )}
                 </div>
 
-                {currentEssay && (
-                    <TutorReviewButton onReview={handleStartTutorReview} />
-                )}
+                
             </section>
         </AuthenticatedLayout>
     );

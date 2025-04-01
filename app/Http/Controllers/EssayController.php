@@ -24,6 +24,7 @@ class EssayController extends Controller
                 'bucket_id' => 'required|exists:buckets,id',
                 'content' => 'required|string',
                 'used_words' => 'array',
+                'not_used_words' => 'array',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error('Validation failed:', [
@@ -68,6 +69,24 @@ class EssayController extends Controller
             // Log::info('EssayWordJoin word_bank_entry:', $word_bank_entry->toArray());
 
             // put these on the bucket_word_join -- MAKES WAY more sense. lol.
+        }
+        foreach ($validated['not_used_words'] as $usedWord) {
+                
+        // Check if there's already an entry in the pivot table (essay_word_join)
+            $entry = EssayWordJoin::firstOrCreate([
+                'essay_id' => $essay->id,
+                'word_id' => $usedWord["id"],
+                'status' => "attempted_but_unused",
+                'used' => false,
+            ]);
+
+            $word_bank_entry = BucketWordJoin::firstOrCreate([
+                'word_id' => $usedWord["id"],
+                'bucket_id' => $validated["bucket_id"],
+            ]);
+            
+            $word_bank_entry->increment('times_used_in_essay');
+            $word_bank_entry->increment('times_in_word_bank');
         }
 
         // Optionally, redirect to a dashboard or display success message

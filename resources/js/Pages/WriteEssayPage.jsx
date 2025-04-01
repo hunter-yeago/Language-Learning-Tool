@@ -7,15 +7,16 @@ export default function WriteEssayPage({ bucket, words }) {
     const [title, setTitle] = useState('');
     const [essay, setEssay] = useState('');
     const [wordList, setWordList] = useState(words);
-    const [usedWords, setUsedWords] = useState([]);
+    const [usedWords, setUsedWords] = useState([words]);
+    const [notUsedWords, setNotUsedWords] = useState([]);
 
     const { data, setData, post, processing } = useForm({
         title: '', 
         content: '', 
         bucket_id: bucket.id, 
-        used_words: [], 
+        used_words: [],
+        not_used_words: [], 
     });
-
     
     useEffect(() => {
         setWordList(words);
@@ -25,7 +26,6 @@ export default function WriteEssayPage({ bucket, words }) {
         setData('title', e.target.value);
         setTitle(e.target.value); 
     }
-
     
     function handleTextChange(e) {
         
@@ -33,25 +33,27 @@ export default function WriteEssayPage({ bucket, words }) {
         setData('content', e.target.value);
         const wordsInEssay = checkForUsedWords(e.target.value);
         setUsedWords(wordsInEssay);
+        setNotUsedWords(
+            words.filter(word => !usedWords.includes(word))
+        )
         
         setData(prevData => {
             const newData = {
                 ...prevData,
                 content: e.target.value,
-                used_words: wordsInEssay
+                used_words: wordsInEssay,
+                not_used_words: notUsedWords
             };
             return newData;
         });
     }
 
-    
     function checkForUsedWords(userEssay) {
         return wordList.filter(word => {
             const wordRegex = new RegExp(`\\b${word.word}\\b`, 'i'); 
             return wordRegex.test(userEssay); 
         });
     }
-
     
     function handleSubmit(e) {
         e.preventDefault();
