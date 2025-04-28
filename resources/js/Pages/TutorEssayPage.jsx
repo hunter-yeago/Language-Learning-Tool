@@ -3,6 +3,7 @@ import { getAssesmentColor, cycleAssessmentStatus} from '@/Utilities/tutor_utils
 import GeneralFeedback from '@/Components/tutor-essay-page/GeneralFeedback';
 import UnusedWord from '@/Components/tutor-essay-page/UnusedWord';
 import UsedWord from '@/Components/tutor-essay-page/Usedword';
+import WordBank from '@/Components/tutor-essay-page/WordBank';
 
 export default function TutorEssayPage({ essay, used_words, not_used_words }) {
   
@@ -159,21 +160,26 @@ export default function TutorEssayPage({ essay, used_words, not_used_words }) {
             {/* Essay content section with highlighted words */}
             <div className='flex flex-col gap-4 grow'>
 
-              <div>
                 <div className="mt-2 text-sm text-gray-600">
                   <p>Click on highlighted words to assess them: <span className="inline-block px-2 mx-1 bg-green-200 text-green-800 rounded">Correct</span> &rarr; <span className="inline-block px-2 mx-1 bg-yellow-200 text-yellow-800 rounded">Partially Correct</span> &rarr; <span className="inline-block px-2 mx-1 bg-red-200 text-red-800 rounded">Incorrect</span></p>
                   <p>Words with comments are marked with 💬</p>
                 </div>
 
-              {/* Word bank */}
+                <WordBank 
+                  essay={essay} 
+                  handleWordClick={handleWordClick} 
+                  wordComments={wordComments}  
+                  wordAssessments={wordAssessments}
+                />
+{/* 
                 <h3 className="text-lg font-semibold mb-2">Word Bank</h3>
                 
-                {/* Outer Container */}
                 <div className="border rounded-lg p-4 bg-gray-50">
 
-                  {/* Inner container */}
                   <ul className="flex flex-wrap gap-2">
                     {essay.words && essay.words.map((word, index) => {
+
+                      console.log('word comments', wordComments)
                       
                       if (word.pivot.used) {
                         return (
@@ -191,8 +197,7 @@ export default function TutorEssayPage({ essay, used_words, not_used_words }) {
                       
                     })}
                   </ul>
-                </div>
-              </div>
+                </div> */}
 
               <div className="border rounded-lg p-4 bg-gray-50">
                 <h3 className="text-lg font-semibold mb-2">{essay.title}</h3>
@@ -271,7 +276,6 @@ export default function TutorEssayPage({ essay, used_words, not_used_words }) {
                           {word.word} <AssessmentBadge type={wordAssessments[wordId]} />
                           <p className="text-sm mt-1">{wordComments[wordId]}</p>
                         </div>
-
                         
                         {/* Edit / Delete Buttons */}
                         <div className="flex gap-2">
