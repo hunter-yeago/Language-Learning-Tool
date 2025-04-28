@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { getAssesmentColor, cycleAssessmentStatus} from '@/Utilities/tutor_utils/assessment_utils';
+import GeneralFeedback from '@/Components/tutor-essay-page/GeneralFeedback';
+import UnusedWord from '@/Components/tutor-essay-page/UnusedWord';
+import UsedWord from '@/Components/tutor-essay-page/Usedword';
 
 export default function TutorEssayPage({ essay, used_words, not_used_words }) {
   
@@ -16,7 +19,7 @@ export default function TutorEssayPage({ essay, used_words, not_used_words }) {
   const [currentComment, setCurrentComment] = useState('');
   
   // Function to highlight used words in the essay
-  const highlightUsedWords = (text) => {
+  function highlightUsedWords (text) {
     if (!text || !essay.words || essay.words.length === 0) return <p>{text}</p>;
     
     let lastIndex = 0;
@@ -165,40 +168,29 @@ export default function TutorEssayPage({ essay, used_words, not_used_words }) {
               {/* Word bank */}
                 <h3 className="text-lg font-semibold mb-2">Word Bank</h3>
                 
-                {/* Word Outer Container */}
+                {/* Outer Container */}
                 <div className="border rounded-lg p-4 bg-gray-50">
 
-                  {/* Word inner container */}
-                  <div className="flex flex-wrap gap-2">
-                    {essay.words && essay.words.map((word) => {
-                      const assessment = wordAssessments[word.id];
-                      const hasComment = wordComments[word.id] && wordComments[word.id].trim() !== '';
+                  {/* Inner container */}
+                  <ul className="flex flex-wrap gap-2">
+                    {essay.words && essay.words.map((word, index) => {
                       
                       if (word.pivot.used) {
-
                         return (
-                          <span 
-                            key={word.id} 
-                            className={`border px-2 py-1 text-sm rounded-full cursor-pointer ${getAssesmentColor(assessment)}`}
-                            onClick={() => {handleWordClick(word.id)}}
-                            >
-                            {word.word}
-                            {hasComment && <span className="ml-1">💬</span>}
-                          </span>
+                          <UsedWord 
+                            number={index} 
+                            className={getAssesmentColor(wordAssessments[word.id])} 
+                            clickHandler={() => handleWordClick(word.id)} 
+                            hasComment={wordComments[word.id] && wordComments[word.id].trim() !== ''} 
+                            word={word}
+                          />
                         );
                       } 
                       
-                      else {
-                        return (
-                          <span 
-                            key={word.id} 
-                            className="bg-gray-100 text-gray-800 line-through px-2 py-1 text-sm rounded-full "
-                          >{word.word}</span>
-                        );
-                      }
+                      else return <UnusedWord number={index} word={word.word} />;
                       
                     })}
-                  </div>
+                  </ul>
                 </div>
               </div>
 
@@ -309,21 +301,8 @@ export default function TutorEssayPage({ essay, used_words, not_used_words }) {
             )}
           </div>
         </div>
-        
-        {/* General feedback section */}
-        <div className="w-full">
-          <h3 className="text-lg font-semibold mb-2">General Feedback</h3>
-          <div className="border rounded-lg p-4 bg-gray-50">
-            <textarea
-              rows="3"
-              placeholder="Enter general feedback for the student..."
-              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-            ></textarea>
-              <button className="mt-3 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-                Send Feedback
-              </button>
-          </div>
-        </div>
+
+        <GeneralFeedback />
     </div>
   );
 }
