@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { getAssesmentColor, cycleAssessmentStatus} from '@/Utilities/tutor_utils/assessment_utils';
 import GeneralFeedback from '@/Components/tutor-essay-page/GeneralFeedback';
-import UnusedWord from '@/Components/tutor-essay-page/UnusedWord';
-import UsedWord from '@/Components/tutor-essay-page/Usedword';
 import WordBank from '@/Components/tutor-essay-page/WordBank';
 
 export default function TutorEssayPage({ essay, used_words, not_used_words }) {
@@ -10,8 +8,10 @@ export default function TutorEssayPage({ essay, used_words, not_used_words }) {
   // State to track word assessments (right/wrong/partiallyCorrect)
   const [wordAssessments, setWordAssessments] = useState({});
 
-  // State to track comments for words
+  // track comments for words
   const [wordComments, setWordComments] = useState({});
+
+  // TODO - what is the differnete bctween active commen and current comment??
 
   // State to track which word is currently being commented on
   const [activeCommentWordId, setActiveCommentWordId] = useState(null);
@@ -171,33 +171,6 @@ export default function TutorEssayPage({ essay, used_words, not_used_words }) {
                   wordComments={wordComments}  
                   wordAssessments={wordAssessments}
                 />
-{/* 
-                <h3 className="text-lg font-semibold mb-2">Word Bank</h3>
-                
-                <div className="border rounded-lg p-4 bg-gray-50">
-
-                  <ul className="flex flex-wrap gap-2">
-                    {essay.words && essay.words.map((word, index) => {
-
-                      console.log('word comments', wordComments)
-                      
-                      if (word.pivot.used) {
-                        return (
-                          <UsedWord 
-                            number={index} 
-                            className={getAssesmentColor(wordAssessments[word.id])} 
-                            clickHandler={() => handleWordClick(word.id)} 
-                            hasComment={wordComments[word.id] && wordComments[word.id].trim() !== ''} 
-                            word={word}
-                          />
-                        );
-                      } 
-                      
-                      else return <UnusedWord number={index} word={word.word} />;
-                      
-                    })}
-                  </ul>
-                </div> */}
 
               <div className="border rounded-lg p-4 bg-gray-50">
                 <h3 className="text-lg font-semibold mb-2">{essay.title}</h3>

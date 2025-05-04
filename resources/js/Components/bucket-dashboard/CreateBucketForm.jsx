@@ -1,10 +1,25 @@
-export default function CreateBucketForm({ bucketData, onUpdateBucketData, onSubmit, onCancel, processing }) {
-    function handleTitleChange(e) {
-        onUpdateBucketData({ ...bucketData, title: e.target.value });
-    }
+import { useState } from "react";
+
+export default function CreateBucketForm({ bucketData, setData, onSubmit, onCancel, processing }) {
+
+    const [isCreatingNew, setIsCreatingNew] = useState(false);
     
-    function handleDescriptionChange(e) {
-        onUpdateBucketData({ ...bucketData, description: e.target.value });
+    function handleChange(e) {
+        const { name, value } = e.target;
+        setData('bucket', { ...bucketData, [name]: value });
+    }
+
+    if(!isCreatingNew) {
+        return (
+            <div className="bg-gray-50 p-6 rounded-md border border-gray-300 flex justify-center">
+            <button 
+                onClick={() => setIsCreatingNew(true)} 
+                className="min-w-48 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            >
+                Create New Bucket
+            </button>
+        </div>
+        )
     }
 
     return (
@@ -15,17 +30,19 @@ export default function CreateBucketForm({ bucketData, onUpdateBucketData, onSub
                 <input
                     type="text"
                     id="title"
+                    name="title"
                     className="w-full p-2 border rounded-md mb-4"
                     value={bucketData.title}
-                    onChange={handleTitleChange}
+                    onChange={handleChange}
                     required
                 />
                 <label htmlFor="description" className="block text-sm font-medium mb-2">Description (Optional):</label>
                 <textarea
                     id="description"
+                    name="description"
                     className="w-full p-2 border rounded-md"
                     value={bucketData.description}
-                    onChange={handleDescriptionChange}
+                    onChange={handleChange}
                 />
                 <div className="flex gap-4 mt-6 justify-center">
                     <button 

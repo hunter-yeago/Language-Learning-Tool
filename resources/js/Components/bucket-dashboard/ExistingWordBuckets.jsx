@@ -1,11 +1,26 @@
-export default function BucketSelector({ buckets, currentBucketId, onBucketChange }) {
+export default function ExistingWordBuckets({ buckets, currentBucketId, setCurrentBucket, setData }) {
+
     function handleChange(event) {
         const bucketId = parseInt(event.target.value);
-        onBucketChange(bucketId);
+        const selectedBucket = buckets.find(b => b.id === bucketId) || null;
+        
+        setCurrentBucket(selectedBucket);
+
+        if (selectedBucket) {
+            setData('bucket', {
+                id: selectedBucket.id,
+                title: selectedBucket.title,
+                description: selectedBucket.description,
+                words: selectedBucket.words,
+            });
+        }
     }
 
     return (
         <div>
+
+        <h2 className="text-xl font-semibold text-center mb-6">Existing Word Buckets</h2>
+
             <label htmlFor="bucket" className="block text-sm font-medium mb-2">Select a Word Bucket:</label>
             <select
                 id="bucket"
