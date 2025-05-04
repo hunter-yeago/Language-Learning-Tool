@@ -1,6 +1,14 @@
 import { useState } from "react";
 
-export default function CreateBucketForm({ bucketData, setData, onSubmit, onCancel, processing }) {
+export default function CreateBucketForm({ bucketData, setData, post, data, onCancel, processing }) {
+
+    function handleCreateNewBucket(e) {
+        e.preventDefault();
+        post(route('store-bucket'), {
+            title: data.bucket.title,
+            description: data.bucket.description,
+        });
+    }
     
     const [isCreatingNew, setIsCreatingNew] = useState(false);
     
@@ -25,7 +33,7 @@ export default function CreateBucketForm({ bucketData, setData, onSubmit, onCanc
     return (
         <div className="bg-gray-50 p-6 rounded-md border border-gray-300">
             <h2 className="text-lg font-semibold text-center">New Word Bucket</h2>
-            <form onSubmit={onSubmit}>
+            <form onSubmit={handleCreateNewBucket}>
                 <label htmlFor="title" className="block text-sm font-medium mb-2">Title:</label>
                 <input
                     type="text"

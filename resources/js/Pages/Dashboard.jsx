@@ -37,15 +37,6 @@ export default function Dashboard({ essays, buckets, bucketID }) {
         }
     }, [bucketID, buckets]);
 
-
-    function handleCreateNewBucket(e) {
-        e.preventDefault();
-        post(route('store-bucket'), {
-            title: data.bucket.title,
-            description: data.bucket.description,
-        });
-    }
-
     return (
         <AuthenticatedLayout
             header={<h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>}
@@ -78,7 +69,8 @@ export default function Dashboard({ essays, buckets, bucketID }) {
                     {!currentBucket && <CreateBucketForm 
                         bucketData={data.bucket} 
                         setData={setData} 
-                        onSubmit={handleCreateNewBucket} 
+                        post={post}
+                        data={data}
                         onCancel={() => setIsCreatingNew(false)} 
                         processing={processing} 
                     />} 
