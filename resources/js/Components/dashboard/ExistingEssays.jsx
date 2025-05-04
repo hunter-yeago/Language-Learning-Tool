@@ -1,31 +1,31 @@
 import { useState } from "react";
 import ActionButton from "./ActionButton";
 
-export default function ExistingEssays({ essays, setData, handleStartTutorReview, processing }) {
+export default function ExistingEssays({ essays, setData, data, post }) {
 
     const [currentEssay, setCurrentEssay] = useState(null);
 
     function handleChange(event) {
-        const title = event.target.value;
+        
+        // handle switch to default input
+        if (!event.target.value) {
+            setCurrentEssay(null);
+            return
+        };
 
-        const selectedEssay = essays.find(e => e.title === title) || null;
+        const selectedEssay = essays.find(e => e.title === event.target.value) || null;
         setCurrentEssay(selectedEssay);
-
-        if (selectedEssay) {
-            setData('essay', {
-                title: selectedEssay.title,
-                content: selectedEssay.content,
-                words: selectedEssay.words,
-            });
-        }
+        setData('essay', {
+            title: selectedEssay.title,
+            content: selectedEssay.content,
+            words: selectedEssay.words,
+        });
     }
 
     return (
-        <div>
+        <section className="flex flex-col items-center gap-4" aria-label="choose your essay here">
+            <label htmlFor="essay" className="text-xl font-semibold text-center">Existing Essays</label>
 
-            <h2 className="text-xl font-semibold text-center mt-6 mb-2">Existing Essays</h2>
-
-            <label htmlFor="essay" className="block text-sm font-medium mb-2">Select an Essay:</label>
             <select
                 id="essay"
                 onChange={handleChange}
@@ -40,16 +40,13 @@ export default function ExistingEssays({ essays, setData, handleStartTutorReview
             </select>
 
             {currentEssay && (
-                <div className="flex justify-center gap-4 mt-6">
-                    <ActionButton 
-                        onClick={handleStartTutorReview} 
-                        processing={processing} 
-                        color="blue"
-                        title="Write Essay"
-                    />
-                </div>
-
+                <ActionButton 
+                    onClick={() => post(route('tutor-essay-page'), { essay: data.essay })} 
+                    processing={processing} 
+                    color="blue"
+                    text="Write Essay"
+                />
             )}
-        </div>
+        </section>
     );
 }

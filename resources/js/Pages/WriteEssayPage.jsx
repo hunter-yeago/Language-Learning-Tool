@@ -49,7 +49,7 @@ export default function WriteEssayPage({ bucket, words }) {
 
     return (
         <AuthenticatedLayout header={<h2 className="text-2xl font-semibold text-gray-800">Write Your Essay</h2>}>
-            <div className="flex items-center justify-center mt-12 max-w-[1200px]">
+            <div className="flex items-center justify-center max-w-[1200px]">
                 <div className="flex flex-col items-center gap-2 w-full max-w-md p-6 bg-white shadow-md rounded-lg">
                     <h3 className="text-lg font-semibold mb-4">Bucket: {bucket.title}</h3>
 

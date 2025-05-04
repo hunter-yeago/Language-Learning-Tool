@@ -1,4 +1,6 @@
-export default function ExistingWordBuckets({ buckets, currentBucketId, setCurrentBucket, setData }) {
+import ActionButton from "./ActionButton";
+
+export default function ExistingWordBuckets({ buckets, currentBucketId, setCurrentBucket, setData, data, post, processing }) {
 
     function handleChange(event) {
         const bucketId = parseInt(event.target.value);
@@ -16,12 +18,28 @@ export default function ExistingWordBuckets({ buckets, currentBucketId, setCurre
         }
     }
 
+    function handleWriteEssayPage(e) {
+        e.preventDefault();
+        if (data.bucket) {
+            post(route('write-essay'), {
+                bucket: data.bucket,
+            });
+        }
+    }
+
+    function handleAddWords(e) {
+        e.preventDefault();
+        if (data.bucket.id) {
+            post(route('add-words-page'), {
+                bucket_id: data.bucket.id,
+                words: data.bucket.words,
+            });
+        }
+    }
+
     return (
-        <div>
-
-        <h2 className="text-xl font-semibold text-center mb-6">Existing Word Buckets</h2>
-
-            <label htmlFor="bucket" className="block text-sm font-medium mb-2">Select a Word Bucket:</label>
+        <section className="flex flex-col gap-4">
+            <label htmlFor="bucket" className="text-xl font-semibold text-center">Existing Word Buckets</label>
             <select
                 id="bucket"
                 onChange={handleChange}
@@ -34,6 +52,22 @@ export default function ExistingWordBuckets({ buckets, currentBucketId, setCurre
                     <option key={bucket.id} value={bucket.id}>{bucket.title}</option>
                 ))}
             </select>
-        </div>
+
+            <div className="flex justify-center gap-4">
+                <ActionButton
+                    onClick={handleAddWords} 
+                    processing={processing} 
+                    color="green"
+                    text="Add Words"
+                />
+
+                <ActionButton 
+                    onClick={handleWriteEssayPage} 
+                    processing={processing} 
+                    color="blue"
+                    text="Write Essay"
+                />
+            </div>
+        </section>
     );
 }

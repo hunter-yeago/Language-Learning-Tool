@@ -29,7 +29,7 @@ export default function DictionarySearchForm({ setWords }) {
 
     return (
         <form
-            className="max-w-2xl mx-auto mt-10 p-6 bg-white shadow-md rounded-md space-y-4"
+            className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-md space-y-4"
             onSubmit={searchDictionary}
         >
             <label className="block text-lg font-medium text-gray-700">Search Dictionary:</label>
