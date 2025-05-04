@@ -1,4 +1,3 @@
-// LexemeCard.jsx
 import React from "react";
 import { capitalizeFirstLetter } from "@/Utilities/capitalize_first_letter";
 

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm } from '@inertiajs/react';
-import ExistingWordBuckets from '@/Components/bucket-dashboard/ExistingWordBuckets';
-import ExistingEssays from '@/Components/bucket-dashboard/ExistingEssays';
-import ActionButton from '@/Components/bucket-dashboard/ActionButton';
-import BucketDisplay from '@/components/bucket-dashboard/BucketDisplay';
-import CreateBucketForm from '@/components/bucket-dashboard/CreateBucketForm';
+import ExistingWordBuckets from '@/Components/dashboard/ExistingWordBuckets';
+import ExistingEssays from '@/Components/dashboard/ExistingEssays';
+import ActionButton from '@/Components/dashboard/ActionButton';
+import BucketDisplay from '@/Components/dashboard/BucketDisplay';
+import CreateBucketForm from '@/Components/dashboard/CreateBucketForm';
 
 export default function Dashboard({ essays, buckets, bucketID }) {
     const { data, setData, post, processing } = useForm({
@@ -71,9 +71,9 @@ export default function Dashboard({ essays, buckets, bucketID }) {
 
     return (
         <AuthenticatedLayout
-            header={<h2 className="text-2xl font-semibold text-gray-800">Dashboard</h2>}
+            header={<h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>}
         >
-            <Head title="Dashboard"/>
+        <Head title="Dashboard"/>
 
             <section className="min-h-[500px] py-12 mx-auto max-w-7xl sm:px-6 lg:px-8 grid grid-cols-1 gap-6 md:grid-cols-2">
 
@@ -110,7 +110,6 @@ export default function Dashboard({ essays, buckets, bucketID }) {
                     />
                 </article>
 
-                {/* Right Box - Bucket Info / Create New Bucket */}
                 <aside className="bg-gray-50 p-6 rounded-md border border-gray-300">
                     {currentBucket && <BucketDisplay bucket={currentBucket} />} 
                     {!currentBucket && <CreateBucketForm 

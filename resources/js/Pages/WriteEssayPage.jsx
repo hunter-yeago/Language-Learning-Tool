@@ -1,15 +1,11 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import WordBank from "@/Components/word-bank/WordBank.jsx";
 
 export default function WriteEssayPage({ bucket, words }) {
     const [title, setTitle] = useState('');
-    const [essay, setEssay] = useState('');
-    const [wordList, setWordList] = useState(words);
     const [usedWords, setUsedWords] = useState([words]);
-    const [notUsedWords, setNotUsedWords] = useState([]);
-
     const { data, setData, post, processing } = useForm({
         title: '', 
         content: '', 
@@ -17,10 +13,6 @@ export default function WriteEssayPage({ bucket, words }) {
         used_words: [],
         not_used_words: [], 
     });
-    
-    useEffect(() => {
-        setWordList(words);
-    }, [words]);
 
     function handleTitleChange(e) {
         setData('title', e.target.value);
@@ -29,27 +21,22 @@ export default function WriteEssayPage({ bucket, words }) {
     
     function handleTextChange(e) {
         
-        setEssay(e.target.value);
-        setData('content', e.target.value);
-        const wordsInEssay = checkForUsedWords(e.target.value);
-        setUsedWords(wordsInEssay);
-        setNotUsedWords(
-            words.filter(word => !usedWords.includes(word))
-        )
-        
+        setUsedWords(checkForUsedWords(e.target.value));
         setData(prevData => {
             const newData = {
                 ...prevData,
                 content: e.target.value,
-                used_words: wordsInEssay,
-                not_used_words: notUsedWords
+                used_words: checkForUsedWords(e.target.value),
+                not_used_words: words.filter(word => !usedWords.includes(word))
             };
             return newData;
         });
     }
 
+    // 'i' — case-insensitive match
+    // \\b — word boundary (ensures "benevolent" matches only as a full word, not inside "benevolently")
     function checkForUsedWords(userEssay) {
-        return wordList.filter(word => {
+        return words.filter(word => {
             const wordRegex = new RegExp(`\\b${word.word}\\b`, 'i'); 
             return wordRegex.test(userEssay); 
         });
@@ -67,7 +54,7 @@ export default function WriteEssayPage({ bucket, words }) {
                     <h3 className="text-lg font-semibold mb-4">Bucket: {bucket.title}</h3>
 
                     <WordBank
-                        words={wordList}
+                        words={words}
                         usedWords={usedWords}
                         wordBankTitle={bucket.title}
                     />
@@ -82,7 +69,6 @@ export default function WriteEssayPage({ bucket, words }) {
                         />
 
                         <textarea
-                            value={essay}
                             onChange={handleTextChange}
                             rows="10"
                             placeholder="Start writing your essay here..."
