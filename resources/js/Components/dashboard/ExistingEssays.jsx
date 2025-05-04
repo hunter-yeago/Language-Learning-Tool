@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ActionButton from "./ActionButton";
 
-export default function ExistingEssays({ essays, setData, data, post }) {
+export default function ExistingEssays({ essays, setData, data, post, processing }) {
 
     const [currentEssay, setCurrentEssay] = useState(null);
 
