@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { capitalizeFirstLetter } from '@/Utilities/capitalize_first_letter.js';
+import { capitalizeFirstLetter } from '@/Utilities/strings/capitalize_first_letter.js';
 import LexemeCard from '@/Components/dictionary/LexemeCard';
 import { findPluralForm } from '@/Utilities/dictionary/dictionary';
 import DictionarySearchForm from '@/Components/dictionary/DictionarySearchForm';

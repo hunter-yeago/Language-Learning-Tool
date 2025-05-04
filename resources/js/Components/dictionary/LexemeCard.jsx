@@ -1,5 +1,5 @@
 import React from "react";
-import { capitalizeFirstLetter } from "@/Utilities/capitalize_first_letter";
+import { capitalizeFirstLetter } from "@/Utilities/strings/capitalize_first_letter";
 
 export default function LexemeCard({ lexeme, pluralForm }) {
     return (

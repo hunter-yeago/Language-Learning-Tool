@@ -1,4 +1,4 @@
-import { capitalizeFirstLetter } from "../capitalize_first_letter";
+import { capitalizeFirstLetter } from "../strings/capitalize_first_letter";
 
 export function findPluralForm(lexemes) {
   for (const lexeme of lexemes) {
