@@ -5,7 +5,7 @@ import WordBank from "@/Components/word-bank/WordBank.jsx";
 
 export default function WriteEssayPage({ bucket, words }) {
     const [title, setTitle] = useState('');
-    const [usedWords, setUsedWords] = useState([words]);
+    const [WordButtons, setWordButtons] = useState([words]);
     const { data, setData, post, processing } = useForm({
         title: '', 
         content: '', 
@@ -21,13 +21,13 @@ export default function WriteEssayPage({ bucket, words }) {
     
     function handleTextChange(e) {
         
-        setUsedWords(checkForUsedWords(e.target.value));
+        setWordButtons(checkForWordButtons(e.target.value));
         setData(prevData => {
             const newData = {
                 ...prevData,
                 content: e.target.value,
-                used_words: checkForUsedWords(e.target.value),
-                not_used_words: words.filter(word => !usedWords.includes(word))
+                used_words: checkForWordButtons(e.target.value),
+                not_used_words: words.filter(word => !WordButtons.includes(word))
             };
             return newData;
         });
@@ -35,7 +35,7 @@ export default function WriteEssayPage({ bucket, words }) {
 
     // 'i' — case-insensitive match
     // \\b — word boundary (ensures "benevolent" matches only as a full word, not inside "benevolently")
-    function checkForUsedWords(userEssay) {
+    function checkForWordButtons(userEssay) {
         return words.filter(word => {
             const wordRegex = new RegExp(`\\b${word.word}\\b`, 'i'); 
             return wordRegex.test(userEssay); 
@@ -55,7 +55,7 @@ export default function WriteEssayPage({ bucket, words }) {
 
                     <WordBank
                         words={words}
-                        usedWords={usedWords}
+                        WordButtons={WordButtons}
                         wordBankTitle={bucket.title}
                     />
 

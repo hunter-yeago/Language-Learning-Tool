@@ -1,4 +1,4 @@
-export default function WordBank ({ words, usedWords }) {
+export default function WordBank ({ words, WordButtons }) {
 
     if (!Array.isArray(words) || words.length === 0) return <p className="text-gray-500">No words available.</p>
 
@@ -8,7 +8,7 @@ export default function WordBank ({ words, usedWords }) {
                 {
                     words.map((word, index) => (
                         <li key={index}
-                        className={`${usedWords.includes(word) ? 'line-through' : 'text-green-900'}`}
+                        className={`${WordButtons.includes(word) ? 'line-through' : 'text-green-900'}`}
                     >
                         {word.word}
                     </li>

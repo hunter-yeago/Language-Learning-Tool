@@ -91,14 +91,14 @@ export default function Dashboard({ essays, buckets, bucketID }) {
                             onClick={handleAddWords} 
                             processing={processing} 
                             color="green"
-                            title="Add Words"
+                            text="Add Words"
                         />
 
                         <ActionButton 
                             onClick={handleWriteEssayPage} 
                             processing={processing} 
                             color="blue"
-                            title="Write Essay"
+                            text="Write Essay"
                         />
                     </div>
 

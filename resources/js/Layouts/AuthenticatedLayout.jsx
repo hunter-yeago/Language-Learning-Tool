@@ -81,7 +81,7 @@ export default function AuthenticatedLayout({ header, children }) {
                     </div>
                 </header>
             }
-            <main className="max-w-[min(90%,800px)] mx-auto">{children}</main>
+            <main className="max-w-[min(90%,1000px)] mx-auto">{children}</main>
         </div>
     );
 }

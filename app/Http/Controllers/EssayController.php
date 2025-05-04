@@ -43,18 +43,18 @@ class EssayController extends Controller
 
         // $bucket = Bucket::find($validated['bucket_id']);
 
-        foreach ($validated['used_words'] as $usedWord) {
+        foreach ($validated['used_words'] as $WordButton) {
                 
         // Check if there's already an entry in the pivot table (essay_word_join)
             $entry = EssayWordJoin::firstOrCreate([
                 'essay_id' => $essay->id,
-                'word_id' => $usedWord["id"],
+                'word_id' => $WordButton["id"],
                 'status' => "awaiting_approval",
                 'used' => true,
             ]);
 
             $word_bank_entry = BucketWordJoin::firstOrCreate([
-                'word_id' => $usedWord["id"],
+                'word_id' => $WordButton["id"],
                 'bucket_id' => $validated["bucket_id"],
             ]);
             
@@ -70,18 +70,18 @@ class EssayController extends Controller
 
             // put these on the bucket_word_join -- MAKES WAY more sense. lol.
         }
-        foreach ($validated['not_used_words'] as $usedWord) {
+        foreach ($validated['not_used_words'] as $WordButton) {
                 
         // Check if there's already an entry in the pivot table (essay_word_join)
             $entry = EssayWordJoin::firstOrCreate([
                 'essay_id' => $essay->id,
-                'word_id' => $usedWord["id"],
+                'word_id' => $WordButton["id"],
                 'status' => "attempted_but_unused",
                 'used' => false,
             ]);
 
             $word_bank_entry = BucketWordJoin::firstOrCreate([
-                'word_id' => $usedWord["id"],
+                'word_id' => $WordButton["id"],
                 'bucket_id' => $validated["bucket_id"],
             ]);
             
