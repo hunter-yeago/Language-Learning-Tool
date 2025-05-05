@@ -49,11 +49,12 @@ class EssayController extends Controller
             $entry = EssayWordJoin::firstOrCreate([
                 'essay_id' => $essay->id,
                 'word_id' => $WordButton["id"],
-                'status' => "awaiting_approval",
+                'grade' => "never_used_in_word_bank",
                 'used' => true,
             ]);
 
             $word_bank_entry = BucketWordJoin::firstOrCreate([
+                'grade' => "never_used_in_word_bank",
                 'word_id' => $WordButton["id"],
                 'bucket_id' => $validated["bucket_id"],
             ]);
@@ -76,13 +77,14 @@ class EssayController extends Controller
             $entry = EssayWordJoin::firstOrCreate([
                 'essay_id' => $essay->id,
                 'word_id' => $WordButton["id"],
-                'status' => "attempted_but_unused",
                 'used' => false,
+                'grade' => "attempted_but_unused",
             ]);
 
             $word_bank_entry = BucketWordJoin::firstOrCreate([
                 'word_id' => $WordButton["id"],
                 'bucket_id' => $validated["bucket_id"],
+                'grade' => "attempted_but_unused",
             ]);
             
             $word_bank_entry->increment('times_used_in_essay');

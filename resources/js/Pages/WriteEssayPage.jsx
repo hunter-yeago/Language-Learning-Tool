@@ -33,14 +33,22 @@ export default function WriteEssayPage({ bucket, words }) {
         });
     }
 
+    // some voodoo magic about having an issue with a smiley likek thi :) in the word bank
+    function escapeRegex(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+    
+
     // 'i' — case-insensitive match
     // \\b — word boundary (ensures "benevolent" matches only as a full word, not inside "benevolently")
     function checkForWordButtons(userEssay) {
         return words.filter(word => {
-            const wordRegex = new RegExp(`\\b${word.word}\\b`, 'i'); 
-            return wordRegex.test(userEssay); 
+            const escapedWord = escapeRegex(word.word);
+            const wordRegex = new RegExp(`\\b${escapedWord}\\b`, 'i');
+            return wordRegex.test(userEssay);
         });
     }
+    
     
     function handleSubmit(e) {
         e.preventDefault();

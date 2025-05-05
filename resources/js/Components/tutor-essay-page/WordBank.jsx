@@ -16,11 +16,12 @@ export default function WordBank({ essay, setWordData, wordComments, wordgrades 
 
   function handleWordClick (wordId) {
     setWordData(prev => {
-      const word = prev[wordId] || { grade: undefined, comment: '' };
+      const word = prev[wordId] || { id: undefined, grade: undefined, comment: '' };
       return {
         ...prev,
         [wordId]: {
           ...word,
+          id: wordId,
           grade: cycleGrade(word.grade)
         }
       };

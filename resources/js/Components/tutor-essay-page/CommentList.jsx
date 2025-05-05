@@ -28,7 +28,7 @@ export default function CommentList({ essay, wordData, currentComment, setCurren
                 <span>
                   {data.grade === "correct" && "- Correct"}
                   {data.grade === "incorrect" && "- Incorrect"}
-                  {data.grade === "partiallyCorrect" && "- Partially Correct"}
+                  {data.grade === "partially_correct" && "- Partially Correct"}
                 </span>
               </p>
               <div className="flex gap-2">
