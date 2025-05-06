@@ -22,25 +22,28 @@ export default function TutorEssayPage({ essay, used_words, not_used_words }) {
         },
     });
   
-  const [wordData, setWordData] = useState({});
+  const [wordData, setWordData] = useState(essay.words);
+
+  console.log('the updated wor ddata', wordData)
   const [newData, setNewData] = useState(essay.words);
   const [activeWordId, setActiveWordId] = useState(null);
   const wordComments = {};
   const wordGrades = {};
 
-  console.log('essay words', essay.words)
+  // console.log('essay words', essay.words)
 
-  console.log('theworddata', wordData)
-  console.log('newData', newData)
+  // console.log('theworddata', wordData)
+  // console.log('newData', newData)
   // console.log('essay', essay)
   // console.log('used_words', used_words)
   // console.log('not_used_words', not_used_words)
 
+
   for (const [key, value] of Object.entries(wordData)) {
-    if (value.comment?.trim()) {
+    if (value?.comment?.trim()) {
       wordComments[key] = value.comment;
     }
-    wordGrades[key] = value.grade;
+    wordGrades[key] = value?.grade;
   }
 
   // word - id, status/grade

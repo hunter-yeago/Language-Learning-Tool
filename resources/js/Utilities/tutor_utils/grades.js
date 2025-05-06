@@ -14,7 +14,9 @@ export function getGradeColor(grade) {
 
 export function cycleGrade(grade) {
 
-  if (!grade) return 'correct';
+  if (!grade || grade === "never_used_in_word_bank") return 'correct';
+  else if (grade === 'correct') return 'partially_correct';
+  else if (grade === 'correct') return 'partially_correct';
   else if (grade === 'correct') return 'partially_correct';
   else if (grade === 'partially_correct') return 'incorrect';
   

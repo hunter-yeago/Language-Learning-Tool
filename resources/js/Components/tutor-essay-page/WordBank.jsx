@@ -14,19 +14,23 @@ export default function WordBank({ essay, setWordData, wordComments, wordgrades 
     );
   }
 
-  function handleWordClick (wordId) {
+  function handleWordClick(wordId) {
     setWordData(prev => {
-      const word = prev[wordId] || { id: undefined, grade: undefined, comment: '' };
-      return {
-        ...prev,
-        [wordId]: {
-          ...word,
-          id: wordId,
-          grade: cycleGrade(word.grade)
+      return prev.map(word => {
+        if (word?.id === wordId) {
+          return {
+            ...word,
+            pivot: {
+              ...word.pivot,
+              grade: cycleGrade(word.pivot.grade)
+            }
+          };
         }
-      };
+        return word;
+      });
     });
-  };
+  }
+  
 
   return (
     <section className="w-full" aria-label={`word bank for the ${essay.title} essay`}>

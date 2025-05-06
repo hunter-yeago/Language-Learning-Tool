@@ -15,7 +15,8 @@ class Essay extends Model
 
     public function words()
     {
-        return $this->belongsToMany(Word::class, 'essay_word_join')->withPivot('used');
+        // add information from a pivot table that gets sent with the essay?
+        return $this->belongsToMany(Word::class, 'essay_word_join')->withPivot(['used', 'grade']);
     }
 
     public function user()

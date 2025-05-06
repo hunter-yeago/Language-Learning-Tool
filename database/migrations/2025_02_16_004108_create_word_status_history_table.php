@@ -15,7 +15,7 @@ return new class extends Migration
         $table->id();
         $table->foreignId('word_id')->constrained();
         $table->foreignId('essay_id')->constrained();
-        $table->string('status');
+        $table->string('grade');
         $table->timestamp('timestamp');
         $table->timestamps();
     });

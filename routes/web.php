@@ -50,6 +50,8 @@ Route::get('/dictionary', function () {
 Route::get('/tutor-essay-page', function() {
     $essay = session('tutor_essay');
 
+    // dd($essay['words    ']);
+
     if (!$essay) {
         return redirect()->route('/');
     }
