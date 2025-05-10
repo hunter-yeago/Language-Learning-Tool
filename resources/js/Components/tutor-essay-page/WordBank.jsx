@@ -2,7 +2,7 @@ import { cycleGrade } from "@/Utilities/tutor_utils/grades";
 import Instructions from "./Instructions";
 import WordBankItem from "./WordBankItem";
 
-export default function WordBank({ essay, setWordData, wordComments, wordgrades }) {
+export default function WordBank({ essay, setWordData, wordData }) {
   const hasWords = Array.isArray(essay.words) && essay.words.length > 0;
 
   if (!hasWords) {
@@ -39,13 +39,11 @@ export default function WordBank({ essay, setWordData, wordComments, wordgrades 
         <Instructions />
       </div>
       <ul className="border items-center rounded-lg p-4 flex flex-wrap gap-2">
-        {essay.words.map(word => (
+        {wordData.map(word => (
           <WordBankItem
             key={word.id}
             word={word}
             handleWordClick={handleWordClick}
-            wordComments={wordComments}
-            wordgrades={wordgrades}
           />
         ))}
       </ul>
