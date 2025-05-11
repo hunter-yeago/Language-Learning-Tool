@@ -1,14 +1,6 @@
 import ActionButton from './ActionButton'
 
-export default function ExistingWordBuckets({
-  buckets,
-  currentBucketId,
-  setCurrentBucket,
-  setData,
-  data,
-  post,
-  processing,
-}) {
+export default function ExistingWordBuckets({ buckets, currentBucketId, setCurrentBucket, setData, data, post, processing }) {
   function handleChange(event) {
     const bucketId = parseInt(event.target.value)
     const selectedBucket = buckets.find((b) => b.id === bucketId) || null
@@ -26,7 +18,7 @@ export default function ExistingWordBuckets({
   }
 
   return (
-    <section className="flex items-center gap-4">
+    <section className="flex items-center justify-between gap-4">
       <label htmlFor="bucket" className="text-xl font-semibold text-center">
         Buckets
       </label>

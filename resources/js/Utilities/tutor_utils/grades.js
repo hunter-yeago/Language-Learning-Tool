@@ -1,33 +1,51 @@
+export const gradeConfig = {
+  correct: {
+    label: 'Correct',
+    background: 'bg-green-200',
+    text: 'text-green-800',
+  },
+  partially_correct: {
+    label: 'Partially Correct',
+    background: 'bg-yellow-200',
+    text: 'text-yellow-800',
+  },
+  incorrect: {
+    label: 'Incorrect',
+    background: 'bg-red-200',
+    text: 'text-red-800',
+  },
+  used_in_essay: {
+    label: 'Ungraded',
+    background: 'bg-blue-200',
+    text: 'text-blue-800',
+  },
+  attempted_but_not_used: {
+    label: 'Unused',
+    background: 'bg-gray-200',
+    text: 'text-gray-800',
+  },
+  not_attempted: {
+    label: 'Unused',
+    background: 'bg-gray-200',
+    text: 'text-gray-800',
+  },
+}
+
 export function getGradeColor(grade) {
-  if (grade === 'correct') {
-    return 'bg-green-200 text-green-800'
-  } else if (grade === 'partially_correct') {
-    return 'bg-yellow-200 text-yellow-800'
-  } else if (grade === 'incorrect') {
-    return 'bg-red-200 text-red-800'
-  } else {
-    return ''
-  }
+  const g = gradeConfig[grade]
+  return g ? `${g.background} ${g.text}` : ''
 }
 
 export function getGradeBackgroundColor(grade) {
-  if (grade === 'correct') {
-    return 'bg-green-200'
-  } else if (grade === 'partially_correct') {
-    return 'bg-yellow-200'
-  } else if (grade === 'incorrect') {
-    return 'bg-red-200'
-  } else {
-    return ''
-  }
+  return gradeConfig[grade]?.background || ''
+}
+
+export function getGradeLabel(grade) {
+  return gradeConfig[grade]?.label || grade
 }
 
 export function cycleGrade(grade) {
-  if (!grade || grade === 'never_used_in_word_bank') return 'correct'
-  else if (grade === 'correct') return 'partially_correct'
-  else if (grade === 'correct') return 'partially_correct'
-  else if (grade === 'correct') return 'partially_correct'
-  else if (grade === 'partially_correct') return 'incorrect'
-
-  return undefined
+  const gradeCycle = Object.keys(gradeConfig)
+  const currentIndex = gradeCycle.indexOf(grade)
+  return gradeCycle[(currentIndex + 1) % gradeCycle.length]
 }
