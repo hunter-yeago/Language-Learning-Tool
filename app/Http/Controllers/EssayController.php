@@ -16,6 +16,7 @@ class EssayController extends Controller
     public function store(Request $request)
     {
 
+        // same problem when adding new words
         // TODO PROBLEM - if you write a second essay. and some words have already been used
         // but you don't use them in the second essay... now they are unused!
         // check to see if it's already been set or is "not_attempted" or whatever
