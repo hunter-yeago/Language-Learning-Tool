@@ -24,7 +24,6 @@ export default function Dashboard({ essays, buckets, bucketID }) {
   })
 
   const [currentBucket, setCurrentBucket] = useState(null)
-
   const [visibleCount, setVisibleCount] = useState(30)
   const [search, setSearch] = useState('')
   const [gradeFilter, setGradeFilter] = useState('')
@@ -33,18 +32,41 @@ export default function Dashboard({ essays, buckets, bucketID }) {
   // Get all grade keys (correct, partially_correct, etc.)
   const gradeKeys = Object.keys(gradeConfig)
 
-  // Example: Sort or filter words by grades
-  const filteredWords = currentBucket?.words
+  // Function to sort by created_at (newest to oldest)
+  const sortByCreatedAtNewest = (a, b) => new Date(b.created_at) - new Date(a.created_at)
+
+  // Function to sort by created_at (oldest to newest)
+  const sortByCreatedAtOldest = (a, b) => new Date(a.created_at) - new Date(b.created_at)
+
+  // Function to sort by grade
+  const sortByGrade = (a, b, reverse = false) => {
+    const aGradeIndex = gradeKeys.indexOf(a.pivot.grade)
+    const bGradeIndex = gradeKeys.indexOf(b.pivot.grade)
+    const comparison = aGradeIndex - bGradeIndex
+
+    return reverse ? -comparison : comparison // Reverse the comparison if needed
+  }
+
+  // Sort words based on the selected option
+  const sortedWords = currentBucket?.words
     ?.filter((word) => word.word.toLowerCase().includes(search.toLowerCase()))
     ?.filter((word) => {
       if (!gradeFilter) return true
       return word.pivot.grade === gradeFilter
     })
     ?.sort((a, b) => {
-      // Example: Sort by grade appearance order in gradeConfig
-      const aGradeIndex = gradeKeys.indexOf(a.pivot.grade)
-      const bGradeIndex = gradeKeys.indexOf(b.pivot.grade)
-      return aGradeIndex - bGradeIndex
+      switch (sortOption) {
+        case 'grade-asc':
+          return sortByGrade(a, b, true) // Ascending order
+        case 'grade-desc':
+          return sortByGrade(a, b, false) // Descending order
+        case 'created-newest':
+          return sortByCreatedAtNewest(a, b)
+        case 'created-oldest':
+          return sortByCreatedAtOldest(a, b)
+        default:
+          return 0
+      }
     })
 
   // Set the bucket when the component mounts
@@ -81,7 +103,7 @@ export default function Dashboard({ essays, buckets, bucketID }) {
     }
   }
 
-  console.log('the current buce', currentBucket)
+  console.log('the current bucket', currentBucket)
 
   return (
     <AuthenticatedLayout header={<h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>}>
@@ -108,7 +130,6 @@ export default function Dashboard({ essays, buckets, bucketID }) {
 
               <div className="flex gap-2">
                 <ActionButton onClick={handleAddWords} processing={processing} color="green" text="Add Words" />
-
                 <ActionButton onClick={handleWriteEssayPage} processing={processing} color="blue" text="Write Essay" />
               </div>
             </div>
@@ -143,10 +164,10 @@ export default function Dashboard({ essays, buckets, bucketID }) {
                 </select>
               </div>
 
-              {filteredWords.length ? (
+              {sortedWords.length ? (
                 <>
                   <ul className="border p-2 grid grid-cols-2 md:grid-cols-4 gap-3 text-gray-800 mt-4">
-                    {filteredWords.slice(0, visibleCount).map((word) => (
+                    {sortedWords.slice(0, visibleCount).map((word) => (
                       <li
                         key={word.id}
                         className={`border rounded px-3 py-2 text-center ${word.pivot.grade}
@@ -157,7 +178,7 @@ export default function Dashboard({ essays, buckets, bucketID }) {
                     ))}
                   </ul>
 
-                  {filteredWords.length > visibleCount && (
+                  {sortedWords.length > visibleCount && (
                     <button onClick={() => setVisibleCount(visibleCount + 30)} className="mt-4 px-4 py-2 text-sm bg-blue-100 rounded hover:bg-blue-200">
                       Load More
                     </button>
