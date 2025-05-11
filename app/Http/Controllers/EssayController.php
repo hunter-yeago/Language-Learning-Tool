@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Essay;
-use App\Models\Bucket;
 use App\Models\BucketWordJoin;
 use App\Models\EssayWordJoin;
 use Inertia\Inertia;
@@ -16,8 +15,34 @@ class EssayController extends Controller
     public function store(Request $request)
     {
 
+        // TODO bucket dashboard 
+
+        // - clicking on a word shows you more information
+        // dictionary data
+        // essays its been used in
+        // Comments from the essays
+        // maybe I can even grab the 30 charachters before and after where it was used
+            // in that essay
+        // bucket dashboard - style up the essays a bit with some more data
+
+        // TODO student-tutor relationship
+        // Essay Status - Graded / Sent to Tutor / Not Sent to Tutor
+        //TODO - Tutor Review / Student Essay
+        // the student essay will likely look pretty similar to the current tutor review page
+        // tutor review - actually send the data. confirm that word bucket data is updated.
+        // build a system of - you have a new esasy that's been reviewed by your tutor!
+        
+        // TODO create system for an essay -
+        // essay - (send to nobody)
+        // essay - send to tutor immediately
+        // essay - share it online
+        // When the essays get their own dedicated page
+        // it will be easier to think about how I can manage
+        // or implement the ability to be given feedback 
+        // on a single essay from multiple people.
+
         // same problem when adding new words
-        // TODO PROBLEM - if you write a second essay. and some words have already been used
+        // BUG - if you write a second essay. and some words have already been used
         // but you don't use them in the second essay... now they are unused!
         // check to see if it's already been set or is "not_attempted" or whatever
         // or maybe I need to check to see if its the same grade.

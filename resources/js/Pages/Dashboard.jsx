@@ -27,7 +27,7 @@ export default function Dashboard({ essays, buckets, bucketID }) {
   const [visibleCount, setVisibleCount] = useState(30)
   const [search, setSearch] = useState('')
   const [gradeFilter, setGradeFilter] = useState('')
-  const [sortOption, setSortOption] = useState('grade-desc')
+  const [sortOption, setSortOption] = useState('created-newest')
 
   // Function to sort by created_at (newest to oldest)
   const sortByCreatedAtNewest = (a, b) => new Date(b.created_at) - new Date(a.created_at)
@@ -107,114 +107,120 @@ export default function Dashboard({ essays, buckets, bucketID }) {
     <AuthenticatedLayout header={<h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>}>
       <Head title="Dashboard" />
 
-      <article className="border p-6 min-h-full bg-white shadow-md rounded-lg flex flex-col gap-10">
-        <ExistingWordBuckets
-          buckets={buckets}
-          currentBucketId={currentBucket?.id}
-          setCurrentBucket={setCurrentBucket}
-          data={data}
-          post={post}
-          setData={setData}
-          processing={processing}
-        />
-      </article>
+      <section className="flex flex-col gap-3">
+        <article className="border p-6 min-h-full bg-white shadow-md rounded-lg flex flex-col gap-10">
+          <ExistingWordBuckets
+            buckets={buckets}
+            currentBucketId={currentBucket?.id}
+            setCurrentBucket={setCurrentBucket}
+            data={data}
+            post={post}
+            setData={setData}
+            processing={processing}
+          />
+        </article>
 
-      <article className="border p-6 min-h-full bg-white shadow-md rounded-lg flex flex-col gap-6">
-        {currentBucket ? (
-          <>
-            <div className="flex justify-between gap-4">
-              <h2 className="w-fit text-xl font-bold text-gray-800">{currentBucket.title}</h2>
-              <GradeProgressBar words={currentBucket.words} />
+        <article className="border p-6 min-h-full bg-white shadow-md rounded-lg flex flex-col gap-6">
+          {currentBucket ? (
+            <>
+              <div className="flex items-center justify-between gap-4">
+                <h2 className="w-fit text-xl font-bold text-gray-800">Bucket: {currentBucket.title}</h2>
+                <GradeProgressBar words={currentBucket.words} />
 
-              <div className="flex gap-2">
-                <ActionButton onClick={handleAddWords} processing={processing} color="green" text="Add Words" />
-                <ActionButton onClick={handleWriteEssayPage} processing={processing} color="blue" text="Write Essay" />
-              </div>
-            </div>
-
-            {/* Word Filters */}
-            <section className="space-y-2">
-              <h3 className="font-semibold text-gray-700">Words in this Bucket</h3>
-              <Instructions />
-              <div className="flex items-center gap-4">
-                {/* Text Word Filter */}
-                <input
-                  type="text"
-                  placeholder="Search words..."
-                  className="border px-3 py-1 rounded w-full max-w-sm"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-                <select className="border px-3 py-1 rounded w-full max-w-sm" name="grades" id="grades" onChange={(e) => setGradeFilter(e.target.value)}>
-                  <option value="">All</option>
-                  <option value="correct">Correct</option>
-                  <option value="partially_correct">Partially Correct</option>
-                  <option value="incorrect">Incorrect</option>
-                  <option value="used_in_essay">Waiting for Grade</option>
-                  <option value="not_attempted">Unused</option>
-                </select>
-
-                <select className="border px-3 py-1 rounded w-full max-w-sm" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
-                  <option value="grade-desc">Grade</option>
-                  <option value="grade-asc">Grade (Reverse)</option>
-                  <option value="created-newest">Newest First</option>
-                  <option value="created-oldest">Oldest First</option>
-                </select>
+                <div className="flex gap-2">
+                  <ActionButton onClick={handleAddWords} processing={processing} color="green" text="Add Words" />
+                  <ActionButton onClick={handleWriteEssayPage} processing={processing} color="blue" text="Write Essay" />
+                </div>
               </div>
 
-              {sortedWords.length ? (
-                <>
-                  <ul className="border p-2 grid grid-cols-2 md:grid-cols-4 gap-3 text-gray-800 mt-4">
-                    {sortedWords.slice(0, visibleCount).map((word) => (
-                      <li
-                        key={word.id}
-                        className={`border rounded px-3 py-2 text-center ${word.pivot.grade}
-                            ${getGradeBackgroundColor(word.pivot.grade)}`}
-                      >
-                        {word.word}
+              {/* Word Filters */}
+              <section className="space-y-2">
+                <h3 className="font-semibold text-gray-700">Words in this Bucket</h3>
+                <Instructions />
+                <div className="flex items-center gap-4">
+                  {/* Text Word Filter */}
+                  <input
+                    type="text"
+                    placeholder="Search words..."
+                    className="border px-3 py-1 rounded w-full max-w-sm"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                  <select className="border px-3 py-1 rounded w-full max-w-sm" name="grades" id="grades" onChange={(e) => setGradeFilter(e.target.value)}>
+                    <option value="">All</option>
+                    <option value="correct">Correct</option>
+                    <option value="partially_correct">Partially Correct</option>
+                    <option value="incorrect">Incorrect</option>
+                    <option value="used_in_essay">Waiting for Grade</option>
+                    <option value="not_attempted">Unused</option>
+                  </select>
+
+                  <select className="border px-3 py-1 rounded w-full max-w-sm" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+                    <option value="created-newest">Newest</option>
+                    <option value="created-oldest">Oldest</option>
+                    {gradeFilter === '' && (
+                      <>
+                        <option value="grade-desc">Grade</option>
+                        <option value="grade-asc">Grade (Reverse)</option>
+                      </>
+                    )}
+                  </select>
+                </div>
+
+                {sortedWords.length ? (
+                  <>
+                    <ul className="border p-2 grid grid-cols-2 md:grid-cols-4 gap-3 text-gray-800 mt-4">
+                      {sortedWords.slice(0, visibleCount).map((word) => (
+                        <li
+                          key={word.id}
+                          className={`border rounded px-3 py-2 text-center ${word.pivot.grade}
+                              ${getGradeBackgroundColor(word.pivot.grade)}`}
+                        >
+                          {word.word}
+                        </li>
+                      ))}
+                    </ul>
+
+                    {sortedWords.length > visibleCount && (
+                      <button onClick={() => setVisibleCount(visibleCount + 30)} className="mt-4 px-4 py-2 text-sm bg-blue-100 rounded hover:bg-blue-200">
+                        Load More
+                      </button>
+                    )}
+                  </>
+                ) : (
+                  <p className="text-sm text-gray-500 italic">No matching words found.</p>
+                )}
+              </section>
+
+              {/* Essay List */}
+              <section className="">
+                <h3 className="font-semibold text-gray-700 mb-2">Essays</h3>
+                {filteredEssays.length ? (
+                  <ul className="grid grid-cols-2 gap-3">
+                    {filteredEssays.map((essay) => (
+                      <li key={essay.id} className="border p-3 rounded bg-gray-50">
+                        <div className="font-medium">{essay.title}</div>
+                        <p className="text-sm text-gray-600 line-clamp-2">{essay.content}</p>
                       </li>
                     ))}
                   </ul>
-
-                  {sortedWords.length > visibleCount && (
-                    <button onClick={() => setVisibleCount(visibleCount + 30)} className="mt-4 px-4 py-2 text-sm bg-blue-100 rounded hover:bg-blue-200">
-                      Load More
-                    </button>
-                  )}
-                </>
-              ) : (
-                <p className="text-sm text-gray-500 italic">No matching words found.</p>
-              )}
-            </section>
-
-            {/* Essay List */}
-            <section className="">
-              <h3 className="font-semibold text-gray-700 mb-2">Essays</h3>
-              {filteredEssays.length ? (
-                <ul className="grid grid-cols-2 gap-3">
-                  {filteredEssays.map((essay) => (
-                    <li key={essay.id} className="border p-3 rounded bg-gray-50">
-                      <div className="font-medium">{essay.title}</div>
-                      <p className="text-sm text-gray-600 line-clamp-2">{essay.content}</p>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-sm text-gray-500 italic">No essays yet.</p>
-              )}
-            </section>
-          </>
-        ) : (
-          <CreateBucketForm
-            bucketData={data.bucket}
-            setData={setData}
-            post={post}
-            data={data}
-            onCancel={() => setCurrentBucket(null)}
-            processing={processing}
-          />
-        )}
-      </article>
+                ) : (
+                  <p className="text-sm text-gray-500 italic">No essays yet.</p>
+                )}
+              </section>
+            </>
+          ) : (
+            <CreateBucketForm
+              bucketData={data.bucket}
+              setData={setData}
+              post={post}
+              data={data}
+              onCancel={() => setCurrentBucket(null)}
+              processing={processing}
+            />
+          )}
+        </article>
+      </section>
     </AuthenticatedLayout>
   )
 }
