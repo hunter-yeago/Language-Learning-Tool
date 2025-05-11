@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->foreignId('user_id')->constrained();
-            $table->string('description')->nullable();
+            $table->string('description')->default('No description has been set for this bucket');
             $table->timestamps();
         });
     }

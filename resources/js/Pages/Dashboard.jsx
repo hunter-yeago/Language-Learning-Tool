@@ -4,6 +4,7 @@ import { Head, useForm } from '@inertiajs/react'
 import ExistingWordBuckets from '@/Components/dashboard/ExistingWordBuckets'
 import BucketDisplay from '@/Components/dashboard/BucketDisplay'
 import CreateBucketForm from '@/Components/dashboard/CreateBucketForm'
+import ActionButton from '@/Components/dashboard/ActionButton'
 
 export default function Dashboard({ essays, buckets, bucketID }) {
   const { data, setData, post, processing } = useForm({
@@ -38,8 +39,6 @@ export default function Dashboard({ essays, buckets, bucketID }) {
       return true
     })
 
-  console.log('the current bucket', currentBucket)
-
   // Set the bucket when the component mounts
   useEffect(() => {
     const previousBucket = buckets.find((b) => b.id === parseInt(bucketID))
@@ -53,6 +52,28 @@ export default function Dashboard({ essays, buckets, bucketID }) {
       })
     }
   }, [bucketID, buckets])
+
+  function handleWriteEssayPage(e) {
+    e.preventDefault()
+    if (data.bucket) {
+      post(route('write-essay'), {
+        bucket: data.bucket,
+        bucketID: data.bucket.id,
+      })
+    }
+  }
+
+  function handleAddWords(e) {
+    e.preventDefault()
+    if (data.bucket.id) {
+      post(route('add-words-page'), {
+        bucket_id: data.bucket.id,
+        words: data.bucket.words,
+      })
+    }
+  }
+
+  console.log('the current buce', currentBucket)
 
   return (
     <AuthenticatedLayout
@@ -77,10 +98,27 @@ export default function Dashboard({ essays, buckets, bucketID }) {
       <article className="border p-6 min-h-full bg-white shadow-md rounded-lg flex flex-col gap-6">
         {currentBucket ? (
           <>
-            <h2 className="text-xl font-bold text-gray-800">
-              {currentBucket.title}
-            </h2>
-            <p className="text-gray-600">{currentBucket.description}</p>
+            <div className="flex justify-between gap-4">
+              <h2 className="w-fit text-xl font-bold text-gray-800">
+                {currentBucket.title}
+              </h2>
+
+              <div className="flex gap-2">
+                <ActionButton
+                  onClick={handleAddWords}
+                  processing={processing}
+                  color="green"
+                  text="Add Words"
+                />
+
+                <ActionButton
+                  onClick={handleWriteEssayPage}
+                  processing={processing}
+                  color="blue"
+                  text="Write Essay"
+                />
+              </div>
+            </div>
 
             {/* Word Filters */}
             <section className="space-y-2">
@@ -101,7 +139,7 @@ export default function Dashboard({ essays, buckets, bucketID }) {
                     checked={notUsed}
                     onChange={() => {
                       setNotUsed(!notUsed)
-                      setOnlyUsed(false) // turn off the other
+                      setOnlyUsed(false)
                     }}
                   />
                   Only unused

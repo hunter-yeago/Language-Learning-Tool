@@ -16,6 +16,22 @@ class EssayController extends Controller
     public function store(Request $request)
     {
 
+        // TODO PROBLEM - if you write a second essay. and some words have already been used
+        // but you don't use them in the second essay... now they are unused!
+        // check to see if it's already been set or is "not_attempted" or whatever
+        // or maybe I need to check to see if its the same grade.
+        // well there's used / unused.
+        // yeah. I mean... so there's words that are used or unused
+        // and then they have a grade
+        // so basically I only want to go from not_attempted to 
+        // attempted_but_not_used or attempted_and_used
+        // or attmpted_but_not_used to attmpted_and_used
+        // problem: right now 
+        // it only can go up -- 
+        // not_attempted => attempted_and_used
+        // not_attempted => attempted_but_not_used
+        // or attempted_but_not_used => attempted_and_used
+
         // Log::info('Raw request data:', $request->all());
 
         try {
@@ -115,6 +131,8 @@ class EssayController extends Controller
         // Optionally, redirect to a dashboard or display success message
         // return redirect()->route('/', ['bucketID' => $bucket->id])
         //     ->with('success', 'Essay created successfully!');
+        return redirect()->route('/', ['bucketID' => $validated['bucket_id']])
+            ->with('success', 'Essay saved');
     }
 
     public function index()

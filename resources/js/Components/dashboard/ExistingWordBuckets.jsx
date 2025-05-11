@@ -25,34 +25,15 @@ export default function ExistingWordBuckets({
     }
   }
 
-  function handleWriteEssayPage(e) {
-    e.preventDefault()
-    if (data.bucket) {
-      post(route('write-essay'), {
-        bucket: data.bucket,
-      })
-    }
-  }
-
-  function handleAddWords(e) {
-    e.preventDefault()
-    if (data.bucket.id) {
-      post(route('add-words-page'), {
-        bucket_id: data.bucket.id,
-        words: data.bucket.words,
-      })
-    }
-  }
-
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex items-center gap-4">
       <label htmlFor="bucket" className="text-xl font-semibold text-center">
-        Existing Word Buckets
+        Buckets
       </label>
       <select
         id="bucket"
         onChange={handleChange}
-        className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="pl-4 pr-10 w-fit border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
         required
         value={currentBucketId || ''}
       >
@@ -63,22 +44,6 @@ export default function ExistingWordBuckets({
           </option>
         ))}
       </select>
-
-      <div className="flex justify-center gap-4">
-        <ActionButton
-          onClick={handleAddWords}
-          processing={processing}
-          color="green"
-          text="Add Words"
-        />
-
-        <ActionButton
-          onClick={handleWriteEssayPage}
-          processing={processing}
-          color="blue"
-          text="Write Essay"
-        />
-      </div>
     </section>
   )
 }

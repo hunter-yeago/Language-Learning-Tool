@@ -123,11 +123,13 @@ Route::post('/tutor-essay-page', function (Request $request) {
     // Go to Write Essay Page
     Route::post('/write-essay', function (Request $request) {
         $bucket = $request->input('bucket');
+        $bucketID = $request->input('bucketID');
         // $words = $request->input('words', []);
 
         return Inertia::render('WriteEssayPage', [
             'bucket' => $bucket,
             'words' => $bucket['words'],
+            'bucketID' => $bucketID
         ]);
     })->middleware(['auth', 'verified'])->name('write-essay');
 
@@ -162,7 +164,7 @@ Route::controller(BucketController::class)->group(function () {
 
 Route::controller(EssayController::class)->group(function () {
     Route::get('/essays', 'index')->name('essays.index');
-    Route::post('/essays', 'store')->name('store-essay');
+    Route::post('/essays/write-essay', 'store')->name('store-essay');
 });
 
     // Lookup Words in Dictionary

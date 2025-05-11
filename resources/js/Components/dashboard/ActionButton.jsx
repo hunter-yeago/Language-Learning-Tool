@@ -3,7 +3,7 @@ export default function ActionButton({ onClick, processing, color, text }) {
     <button
       onClick={onClick}
       disabled={processing}
-      className={`w-full max-w-[150px] p-2 bg-${color}-500 text-white rounded-md hover:bg-${color}-600`}
+      className={`max-w-[150px] p-3 bg-${color}-500 text-white rounded-md hover:bg-${color}-600`}
     >
       {processing ? 'Loading...' : text}
     </button>
