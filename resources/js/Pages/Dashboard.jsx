@@ -5,6 +5,7 @@ import ExistingWordBuckets from '@/Components/dashboard/ExistingWordBuckets'
 import BucketDisplay from '@/Components/dashboard/BucketDisplay'
 import CreateBucketForm from '@/Components/dashboard/CreateBucketForm'
 import ActionButton from '@/Components/dashboard/ActionButton'
+import { getGradeBackgroundColor } from '@/Utilities/tutor_utils/grades'
 
 export default function Dashboard({ essays, buckets, bucketID }) {
   const { data, setData, post, processing } = useForm({
@@ -159,11 +160,12 @@ export default function Dashboard({ essays, buckets, bucketID }) {
 
               {filteredWords.length ? (
                 <>
-                  <ul className="grid grid-cols-2 md:grid-cols-3 gap-3 text-gray-800 mt-4">
+                  <ul className="grid grid-cols-2 md:grid-cols-4 gap-3 text-gray-800 mt-4">
                     {filteredWords.slice(0, visibleCount).map((word) => (
                       <li
                         key={word.id}
-                        className="border rounded px-3 py-2 bg-gray-50"
+                        className={`border rounded px-3 py-2 bg-gray-50 text-center 
+                            ${getGradeBackgroundColor(word.pivot.grade)}`}
                       >
                         {word.word}
                       </li>
@@ -187,12 +189,10 @@ export default function Dashboard({ essays, buckets, bucketID }) {
             </section>
 
             {/* Essay List */}
-            <section>
-              <h3 className="font-semibold text-gray-700 mb-2">
-                Essays Using This Bucket
-              </h3>
+            <section className="">
+              <h3 className="font-semibold text-gray-700 mb-2">Essays</h3>
               {essays.length ? (
-                <ul className="space-y-3">
+                <ul className="grid grid-cols-2 gap-3">
                   {essays.map((essay) => (
                     <li
                       key={essay.id}

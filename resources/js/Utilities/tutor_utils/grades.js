@@ -10,6 +10,18 @@ export function getGradeColor(grade) {
   }
 }
 
+export function getGradeBackgroundColor(grade) {
+  if (grade === 'correct') {
+    return 'bg-green-200'
+  } else if (grade === 'partially_correct') {
+    return 'bg-yellow-200'
+  } else if (grade === 'incorrect') {
+    return 'bg-red-200'
+  } else {
+    return ''
+  }
+}
+
 export function cycleGrade(grade) {
   if (!grade || grade === 'never_used_in_word_bank') return 'correct'
   else if (grade === 'correct') return 'partially_correct'
