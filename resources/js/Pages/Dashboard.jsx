@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import { Head, useForm } from '@inertiajs/react'
 import ExistingWordBuckets from '@/Components/dashboard/ExistingWordBuckets'
+import { Head, useForm } from '@inertiajs/react'
 import CreateBucketForm from '@/Components/dashboard/CreateBucketForm'
 import ActionButton from '@/Components/dashboard/ActionButton'
 import { getGradeBackgroundColor, gradeConfig } from '@/Utilities/tutor_utils/grades'
@@ -82,6 +82,9 @@ export default function Dashboard({ essays, buckets, bucketID }) {
       })
     }
   }, [bucketID, buckets])
+
+  // Filter essays to only show those associated with the current bucket
+  const filteredEssays = essays.filter((essay) => essay.bucket_id === currentBucket?.id)
 
   function handleWriteEssayPage(e) {
     e.preventDefault()
@@ -192,9 +195,9 @@ export default function Dashboard({ essays, buckets, bucketID }) {
             {/* Essay List */}
             <section className="">
               <h3 className="font-semibold text-gray-700 mb-2">Essays</h3>
-              {essays.length ? (
+              {filteredEssays.length ? (
                 <ul className="grid grid-cols-2 gap-3">
-                  {essays.map((essay) => (
+                  {filteredEssays.map((essay) => (
                     <li key={essay.id} className="border p-3 rounded bg-gray-50">
                       <div className="font-medium">{essay.title}</div>
                       <p className="text-sm text-gray-600 line-clamp-2">{essay.content}</p>
