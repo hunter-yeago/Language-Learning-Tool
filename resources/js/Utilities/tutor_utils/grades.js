@@ -1,25 +1,21 @@
 export function getGradeColor(grade) {
-
   if (grade === 'correct') {
-    return "bg-green-200 text-green-800";
+    return 'bg-green-200 text-green-800'
   } else if (grade === 'partially_correct') {
-    return "bg-yellow-200 text-yellow-800";
+    return 'bg-yellow-200 text-yellow-800'
   } else if (grade === 'incorrect') {
-    return "bg-red-200 text-red-800";
+    return 'bg-red-200 text-red-800'
   } else {
-    return ""
+    return ''
   }
-
 }
 
 export function cycleGrade(grade) {
+  if (!grade || grade === 'never_used_in_word_bank') return 'correct'
+  else if (grade === 'correct') return 'partially_correct'
+  else if (grade === 'correct') return 'partially_correct'
+  else if (grade === 'correct') return 'partially_correct'
+  else if (grade === 'partially_correct') return 'incorrect'
 
-  if (!grade || grade === "never_used_in_word_bank") return 'correct';
-  else if (grade === 'correct') return 'partially_correct';
-  else if (grade === 'correct') return 'partially_correct';
-  else if (grade === 'correct') return 'partially_correct';
-  else if (grade === 'partially_correct') return 'incorrect';
-  
-  return undefined;
-
+  return undefined
 }
