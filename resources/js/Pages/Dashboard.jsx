@@ -29,9 +29,6 @@ export default function Dashboard({ essays, buckets, bucketID }) {
   const [gradeFilter, setGradeFilter] = useState('')
   const [sortOption, setSortOption] = useState('grade-desc')
 
-  // Get all grade keys (correct, partially_correct, etc.)
-  const gradeKeys = Object.keys(gradeConfig)
-
   // Function to sort by created_at (newest to oldest)
   const sortByCreatedAtNewest = (a, b) => new Date(b.created_at) - new Date(a.created_at)
 
@@ -40,8 +37,8 @@ export default function Dashboard({ essays, buckets, bucketID }) {
 
   // Function to sort by grade
   const sortByGrade = (a, b, reverse = false) => {
-    const aGradeIndex = gradeKeys.indexOf(a.pivot.grade)
-    const bGradeIndex = gradeKeys.indexOf(b.pivot.grade)
+    const aGradeIndex = Object.keys(gradeConfig).indexOf(a.pivot.grade)
+    const bGradeIndex = Object.keys(gradeConfig).indexOf(b.pivot.grade)
     const comparison = aGradeIndex - bGradeIndex
 
     return reverse ? -comparison : comparison // Reverse the comparison if needed
@@ -105,8 +102,6 @@ export default function Dashboard({ essays, buckets, bucketID }) {
       })
     }
   }
-
-  console.log('the current bucket', currentBucket)
 
   return (
     <AuthenticatedLayout header={<h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>}>
