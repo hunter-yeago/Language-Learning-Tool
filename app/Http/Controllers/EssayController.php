@@ -43,21 +43,31 @@ class EssayController extends Controller
 
         // $bucket = Bucket::find($validated['bucket_id']);
 
-        foreach ($validated['used_words'] as $WordButton) {
+        foreach ($validated['used_words'] as $word) {
                 
-        // Check if there's already an entry in the pivot table (essay_word_join)
-            $entry = EssayWordJoin::firstOrCreate([
+            EssayWordJoin::updateOrInsert(
+            
+                // find the record
+            [
                 'essay_id' => $essay->id,
-                'word_id' => $WordButton["id"],
-                'grade' => "never_used_in_word_bank",
-                'used' => true,
-            ]);
+                'word_id' => $word["id"],
+            ],
+            
+            // update it
+            ['grade' => 'used_in_essay']);
 
-            $word_bank_entry = BucketWordJoin::firstOrCreate([
-                'grade' => "never_used_in_word_bank",
-                'word_id' => $WordButton["id"],
-                'bucket_id' => $validated["bucket_id"],
-            ]);
+
+            $word_bank_entry = BucketWordJoin::updateOrInsert(
+                
+                // find record
+                [
+                    'word_id' => $word["id"],
+                    'bucket_id' => $validated["bucket_id"],
+                ],
+                
+                // update it
+                ['grade' => 'used_in_essay']
+            );
             
             // so this needs to be updated update times_in_word_bank even for not used words.
             // -- this will also sending ALL words along with used words
@@ -71,21 +81,32 @@ class EssayController extends Controller
 
             // put these on the bucket_word_join -- MAKES WAY more sense. lol.
         }
-        foreach ($validated['not_used_words'] as $WordButton) {
+        foreach ($validated['not_used_words'] as $word) {
                 
         // Check if there's already an entry in the pivot table (essay_word_join)
-            $entry = EssayWordJoin::firstOrCreate([
+            EssayWordJoin::updateOrInsert(
+            
+            // find the record
+            [
                 'essay_id' => $essay->id,
-                'word_id' => $WordButton["id"],
-                'used' => false,
-                'grade' => "attempted_but_unused",
-            ]);
+                'word_id' => $word["id"],
+            ],
+            
+            // update it
+            ['grade' => 'attempted_but_not_used']);
 
-            $word_bank_entry = BucketWordJoin::firstOrCreate([
-                'word_id' => $WordButton["id"],
-                'bucket_id' => $validated["bucket_id"],
-                'grade' => "attempted_but_unused",
-            ]);
+
+            $word_bank_entry = BucketWordJoin::updateOrInsert(
+                
+                // find record
+                [
+                    'word_id' => $word["id"],
+                    'bucket_id' => $validated["bucket_id"],
+                ],
+                
+                // update it
+                ['grade' => 'attempted_but_not_used']
+            );
             
             $word_bank_entry->increment('times_used_in_essay');
             $word_bank_entry->increment('times_in_word_bank');

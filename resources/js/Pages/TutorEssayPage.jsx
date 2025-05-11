@@ -23,7 +23,7 @@ export default function TutorEssayPage({ essay, used_words, not_used_words }) {
     });
   
   const [wordData, setWordData] = useState(essay.words);
-  const [activeWordId, setActiveWordId] = useState(null);
+  const [activeWord, setActiveWord] = useState(null);
 
 
   function handleSubmit(e) {
@@ -47,14 +47,14 @@ export default function TutorEssayPage({ essay, used_words, not_used_words }) {
           wordData={wordData}
         />
 
-        <StudentEssay essay={essay} wordData={wordData} setActiveWordId={setActiveWordId} />
+        <StudentEssay essay={essay} wordData={wordData} setActiveWord={setActiveWord} />
 
         <Comments
           essay={essay}
           wordData={wordData}
           setWordData={setWordData}
-          activeWordId={activeWordId}
-          setActiveWordId={setActiveWordId}
+          activeWord={activeWord}
+          setActiveWord={setActiveWord}
         />
 
         <GeneralFeedback />

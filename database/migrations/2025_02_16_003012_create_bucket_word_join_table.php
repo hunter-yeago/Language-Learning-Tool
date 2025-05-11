@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('word_id')->constrained()->cascadeOnDelete();
             $table->integer('times_used_in_essay')->default(0);
             $table->integer('times_in_word_bank')->default(0);
-            $table->string('grade')->default('not_graded');
+            $table->string('grade')->default('not_attempted');
             $table->timestamps();
         });
     }

@@ -41,6 +41,23 @@ Route::get('/', function (Request $request) {
 
 })->middleware(['auth', 'verified'])->name('/');
 
+// Tutor Review Page
+Route::get('/tutor-review', function (Request $request) {
+    
+    $essays = Essay::where('user_id', Auth::id())->with('words')->get();
+    $buckets = Bucket::where('user_id', Auth::id())->with('words')->get();
+    
+    // If a bucket param is passed in
+    $bucketID = $request->query('bucketID');
+
+    return Inertia::render('TutorReviewPage', [
+        'essays' => $essays,
+        'buckets' => $buckets,
+        'bucketID' => $bucketID,
+    ]);
+
+})->middleware(['auth', 'verified'])->name('tutor-review');
+
 // Dictionary Page
 Route::get('/dictionary', function () {
     return Inertia::render('DictionaryPage');

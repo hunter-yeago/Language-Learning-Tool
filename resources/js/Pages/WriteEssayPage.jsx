@@ -52,6 +52,7 @@ export default function WriteEssayPage({ bucket, words }) {
     
     function handleSubmit(e) {
         e.preventDefault();
+        console.log('used words', data.used_words)
         post(route('store-essay'), data);
     }
 

@@ -17,11 +17,11 @@ class Bucket extends Model
         return $this->belongsTo(User::class);
     }
 
-    // A word bank has many words
-    // Bucket.php
     public function words()
     {
-        return $this->belongsToMany(Word::class, 'bucket_word_join');
+        return $this->belongsToMany(Word::class, 'bucket_word_join')
+            ->withPivot('grade');
     }
+
 
 }

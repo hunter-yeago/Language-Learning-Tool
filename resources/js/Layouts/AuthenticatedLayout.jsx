@@ -11,6 +11,7 @@ export default function AuthenticatedLayout({ header, children }) {
 
     const navigationLinks = [
         { href: route('/'), label: 'Dashboard' },
+        { href: route('tutor-review'), label: 'Tutor Review' },
         { href: route('dictionary'), label: 'Dictionary' },
     ];
 

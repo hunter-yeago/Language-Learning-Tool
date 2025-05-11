@@ -44,7 +44,7 @@ export default function ExistingEssays({ essays, setData, data, post, processing
                     onClick={() => post(route('tutor-essay-page'), { essay: data.essay })} 
                     processing={processing} 
                     color="blue"
-                    text="Write Essay"
+                    text="Review Essay"
                 />
             )}
         </section>
