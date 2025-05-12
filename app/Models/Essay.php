@@ -11,12 +11,12 @@ class Essay extends Model
     protected $table = "essays";
     
     // only these two can be mass assigned
-    protected $fillable = ['title', 'content', 'user_id', 'bucket_id'];
+    protected $fillable = ['title', 'content', 'user_id', 'bucket_id', 'tutor_id'];
 
     public function words()
     {
-        // add information from a pivot table that gets sent with the essay?
-        return $this->belongsToMany(Word::class, 'essay_word_join')->withPivot(['used', 'grade']);
+        // add information from a pivot table that gets sent with the essay
+        return $this->belongsToMany(Word::class, 'essay_word_join')->withPivot(['grade']);
     }
 
     public function user()
@@ -31,6 +31,6 @@ class Essay extends Model
 
     public function tutor()
     {
-        return $this->belongsTo(Tutor::class); // Assuming 'Tutor' is your tutor model
+            return $this->belongsTo(User::class, 'tutor_id');
     }
 }

@@ -1,46 +1,29 @@
-import { useState } from 'react'
-import { useForm } from '@inertiajs/react'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
+import { Head } from '@inertiajs/react'
 
-export default function TutorDashboardPage() {
-  const { data, setData, post, processing } = useForm({
-    tutor: {
-      id: null,
-      name: '',
-    },
-  })
-
-  const [tutor, setTutor] = useState(null)
-
-  // Example function to simulate setting tutor info and submitting it
-  const handleSetTutor = () => {
-    // Simulate setting tutor data
-    const tutorData = { id: 1, name: 'John Doe' }
-    setData('tutor', tutorData)
-    setTutor(tutorData)
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    post(route('submit-tutor-info'), { data: tutor })
-  }
-
+export default function TutorDashboardPage({ essays }) {
   return (
     <AuthenticatedLayout header={<h1 className="text-2xl font-semibold text-gray-800">Tutor Dashboard</h1>}>
-      <section className="p-6 bg-white shadow-md rounded-lg">
-        <button onClick={handleSetTutor} className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
-          Set Tutor Information
-        </button>
+      <Head title="Tutor Review" />
 
-        {tutor && (
-          <div className="mt-4">
-            <h2 className="font-semibold text-gray-700">Tutor Information</h2>
-            <p>Name: {tutor.name}</p>
-            <button onClick={handleSubmit} className="mt-2 px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600" disabled={processing}>
-              Submit Tutor Info
-            </button>
-          </div>
-        )}
+      <section className="flex flex-col gap-3">
+        <article className="border p-6 min-h-full bg-white shadow-md rounded-lg flex flex-col gap-6">
+          <h2 className="text-xl font-bold text-gray-800">User Essays</h2>
+
+          {essays.length ? (
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {essays.map((essay) => (
+                <li key={essay.id} className="border p-4 rounded bg-gray-50 shadow-sm">
+                  <h3 className="font-semibold mb-1">{essay.title}</h3>
+                  <p className="text-sm text-gray-600 whitespace-pre-wrap">{essay.content}</p>
+                  <p className="text-xs text-gray-400 mt-2">Submitted: {new Date(essay.created_at).toLocaleString()}</p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-gray-500 italic">No essays submitted by this user.</p>
+          )}
+        </article>
       </section>
     </AuthenticatedLayout>
   )

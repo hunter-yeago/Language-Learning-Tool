@@ -13,6 +13,7 @@ export default function AuthenticatedLayout({ header, children }) {
     { href: route('/'), label: 'Dashboard' },
     { href: route('tutor-review'), label: 'Tutor Review' },
     { href: route('dictionary'), label: 'Dictionary' },
+    { href: route('tutor-dashboard'), label: 'Tutor Dashoard' },
   ]
 
   const toggleNavigation = () => setShowingNavigationDropdown((prev) => !prev)

@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 
 class EssayAssignedToTutor extends Notification
 {
@@ -37,11 +38,13 @@ class EssayAssignedToTutor extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+
+        Log::info('Sending notification to tutor', ['tutor' => $notifiable->id]);
+
         return (new MailMessage)
-                    ->line('You have been assigned a new essay to review.')
-                    ->line('Essay Title: ' . $this->essay->title)
-                    ->action('Review Essay', url('/essays/'.$this->essay->id))
-                    ->line('Thank you for using our application!');
+            ->line('You have been assigned a new essay to review.')
+            ->line('Essay Title: ' . $this->essay->title)
+            ->action('Review Essay', url('/essays/'.$this->essay->id));
     }
 
     /**
