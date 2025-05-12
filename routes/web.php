@@ -24,6 +24,22 @@ Route::get('/', function () {
 
 // Pages
 
+// Tutor Review
+Route::get('/tutor-dashboard', function (Request $request) {
+
+    $essays = Essay::where('user_id', Auth::id())->with('words')->get();
+    $buckets = Bucket::where('user_id', Auth::id())->with('words')->get();
+
+    $bucketID = $request->query('bucketID');
+
+    return Inertia::render('TutorDashboardPage', [
+        'essays' => $essays,
+        'buckets' => $buckets,
+        'bucketID' => $bucketID,
+    ]);
+})->middleware(['auth', 'verified'])->name('tutor-dashboard');
+
+
 // Dashboard Page
 Route::get('/', function (Request $request) {
     
