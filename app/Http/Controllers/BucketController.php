@@ -24,7 +24,7 @@ class BucketController extends Controller
 
         $bucket = Bucket::create([
             'title' => $validated['bucket']['title'],
-            'description' => $validated['bucket']['description'] ?? null,
+            'description' => $validated['bucket']['description'] ?? "",
             'user_id' => Auth::id(),
         ]);
 

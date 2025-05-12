@@ -56,4 +56,26 @@ class User extends Authenticatable
         return $this->hasMany(Essay::class);
     }
 
+    public function tutors()
+    {
+        return $this->belongsToMany(User::class, 'student_tutor', 'student_id', 'tutor_id');
+    }
+
+    public function students()
+    {
+        return $this->belongsToMany(User::class, 'student_tutor', 'tutor_id', 'student_id');
+    }
+
+    public function isTutor(): bool
+    {
+        return $this->role === 'tutor';
+    }
+
+    public function isStudent(): bool
+    {
+        return $this->role === 'student';
+    }
+
+
+
 }

@@ -28,4 +28,9 @@ class Essay extends Model
     {
         return $this->belongsTo(Bucket::class);
     }
+
+    public function tutor()
+    {
+        return $this->belongsTo(Tutor::class); // Assuming 'Tutor' is your tutor model
+    }
 }

@@ -18,10 +18,11 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('testing123'), // Hash the password
         ]);
 
-
-        // Bucket::factory(5)
-        //     ->withWords(5) // This method is defined in your BucketFactory
-        //     ->withEssays(5) // This method is defined in your BucketFactory
-        //     ->create();
+        User::factory()->create([
+            'name' => 'tutor',
+            'email' => 'tutor@tutor.com',
+            'role' => 'tutor',
+            'password' => Hash::make('tutor123'), // Hash the password
+        ]);
     }
 }

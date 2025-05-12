@@ -6,15 +6,8 @@
 // essays its been used in
 // Comments from the essays
 // maybe I can even grab the 30 charachters before and after where it was used
-  // in that essay
+// in that essay
 // bucket dashboard - style up the essays a bit with some more data
-
-// TODO student-tutor relationship
-// Essay Status - Graded / Sent to Tutor / Not Sent to Tutor
-//TODO - Tutor Review / Student Essay
-// the student essay will likely look pretty similar to the current tutor review page
-// tutor review - actually send the data. confirm that word bucket data is updated.
-// build a system of - you have a new esasy that's been reviewed by your tutor!
 
 // TODO create system for an essay -
 // essay - (send to nobody)
