@@ -1,11 +1,7 @@
 import { getGradeColor } from '@/Utilities/tutor_utils/grades'
-import {
-  buildHighlightedSegments,
-  filterOverlappingMatches,
-  getMatchingWordPositions,
-} from '@/Utilities/tutor_utils/tutor'
+import { buildHighlightedSegments, filterOverlappingMatches, getMatchingWordPositions } from '@/Utilities/tutor_utils/tutor'
 
-export default function StudentEssay({ essay, wordData }) {
+export default function StudentEssay({ essay, data }) {
   function highlightWordButtons(text) {
     if (!text || !essay.words?.length) return <p>{text}</p>
 
@@ -20,14 +16,9 @@ export default function StudentEssay({ essay, wordData }) {
             return <span key={idx}>{segment.content}</span>
           }
 
-          const word = wordData[segment.wordId] || {}
+          const word = data[segment.wordId] || {}
           return (
-            <button
-              key={`${segment.wordId}-${idx}`}
-              className={`px-2 py-1 rounded-full border ${
-                word.grade ? getGradeColor(word.grade) : 'border-gray-300'
-              }`}
-            >
+            <button key={`${segment.wordId}-${idx}`} className={`px-2 py-1 rounded-full border ${word.grade ? getGradeColor(word.grade) : 'border-gray-300'}`}>
               {segment.content}
             </button>
           )
@@ -37,10 +28,7 @@ export default function StudentEssay({ essay, wordData }) {
   }
 
   return (
-    <section
-      className="w-full border rounded-lg p-4 bg-gray-50"
-      aria-label="the essay"
-    >
+    <section className="w-full border rounded-lg p-4 bg-gray-50" aria-label="the essay">
       <h3 className="text-lg font-semibold mb-2">{essay.title}</h3>
       {highlightWordButtons(essay.content)}
     </section>

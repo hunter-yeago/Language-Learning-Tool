@@ -3,28 +3,18 @@ import CommentEditor from './CommentEditor'
 import CommentList from './CommentList'
 import CommentWords from './CommentWords'
 
-export default function Comments({ essay, wordData, setWordData }) {
+export default function Comments({ essay, data, setData }) {
   const [tempData, setTempData] = useState('')
   const [currentComment, setCurrentComment] = useState(null)
 
   return (
-    <section
-      className="w-full flex flex-col gap-3"
-      aria-label={`comments for the ${essay.title} essay`}
-    >
+    <section className="w-full flex flex-col gap-3" aria-label={`comments for the ${essay.title} essay`}>
       <div className="flex items-center gap-2">
         <h3 className="text-lg font-semibold">Comments</h3>
-        <p className="text-sm text-gray-600">
-          {' '}
-          - Click on a word to leave a comment
-        </p>
+        <p className="text-sm text-gray-600">- Click on a word to leave a comment</p>
       </div>
 
-      <CommentWords
-        essay={essay}
-        wordData={wordData}
-        setCurrentComment={setCurrentComment}
-      />
+      <CommentWords essay={essay} data={data} setCurrentComment={setCurrentComment} />
 
       <CommentEditor
         essay={essay}
@@ -32,18 +22,11 @@ export default function Comments({ essay, wordData, setWordData }) {
         setCurrentComment={setCurrentComment}
         tempData={tempData}
         setTempData={setTempData}
-        wordData={wordData}
-        setWordData={setWordData}
+        data={data}
+        setData={setData}
       />
 
-      <CommentList
-        essay={essay}
-        wordData={wordData}
-        currentComment={currentComment}
-        setCurrentComment={setCurrentComment}
-        setWordData={setWordData}
-        setTempData={setTempData}
-      />
+      <CommentList essay={essay} data={data} currentComment={currentComment} setCurrentComment={setCurrentComment} setTempData={setTempData} />
     </section>
   )
 }

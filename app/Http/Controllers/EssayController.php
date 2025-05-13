@@ -119,6 +119,12 @@ class EssayController extends Controller
                 ->with('success', 'Essay saved and sent to tutor.');
     }
 
+    public function gradeEssay(Request $request) {
+
+        dd($request);
+
+    }
+
     private function shouldUpdateGrade(?string $existing, string $new): bool
     {
         $transitions = [

@@ -20,7 +20,7 @@ class Bucket extends Model
     public function words()
     {
         return $this->belongsToMany(Word::class, 'bucket_word_join')
-            ->withPivot('grade');
+            ->withPivot(['grade', 'comment']);
     }
 
 

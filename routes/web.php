@@ -96,16 +96,14 @@ Route::get('/tutor-essay-page', function() {
 Route::post('/tutor-essay-page', function (Request $request) {
     
     $essay = $request->input('essay');
-    $used_words = collect($essay['words'])->filter(fn($word) => $word['pivot']['used'])->values()->all();
-    $not_used_words = collect($essay['words'])->filter(fn($word) => !$word['pivot']['used'])->values()->all();
+    $words = $essay['words'];
 
     session(['tutor_essay' => $essay]);
 
     return Inertia::render('TutorEssayPage', 
         [ 
             'essay' => $essay, 
-            'used_words' => $used_words, 
-            'not_used_words' => $not_used_words 
+            'words' => $words
         ], 
     );
 })->middleware(['auth', 'verified'])->name('tutor-essay-page');
@@ -181,6 +179,7 @@ Route::controller(BucketController::class)->group(function () {
 Route::controller(EssayController::class)->group(function () {
     Route::get('/essays', 'index')->name('essays.index');
     Route::post('/essays/write-essay', 'store')->name('store-essay');
+    Route::post('/update-bucket-and-essay', 'gradeEssay')->name('update-bucket-and-essay');
 });
 
     // Lookup Words in Dictionary
