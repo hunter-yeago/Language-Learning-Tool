@@ -11,7 +11,7 @@ class Essay extends Model
     protected $table = "essays";
     
     // only these two can be mass assigned
-    protected $fillable = ['title', 'content', 'user_id', 'bucket_id', 'tutor_id'];
+    protected $fillable = ['title', 'content', 'user_id', 'bucket_id', 'tutor_id', 'feedback'];
 
     public function words()
     {

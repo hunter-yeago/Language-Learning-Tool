@@ -1,4 +1,4 @@
-export default function GeneralFeedback() {
+export default function GeneralFeedback({ setData, data }) {
   return (
     <div className="w-full mt-4">
       {/* Title */}
@@ -10,11 +10,9 @@ export default function GeneralFeedback() {
           rows="4"
           placeholder="Enter general feedback for the student..."
           className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+          value={data.feedback}
+          onChange={(e) => setData('feedback', e.target.value)}
         ></textarea>
-
-        <div className="flex justify-end mt-2">
-          <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Save</button>
-        </div>
       </div>
     </div>
   )

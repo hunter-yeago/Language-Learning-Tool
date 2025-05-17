@@ -25,9 +25,10 @@ Route::get('/', function () {
 // Tutor Review
 Route::get('/tutor-dashboard', function (Request $request) {
 
-    $essays = Essay::where('tutor_id', Auth::id())
-                    ->where('status', 'submitted')
-                    ->with('words')->get();
+    $essays = Essay::
+          where('tutor_id', Auth::id())
+        ->where('status', 'submitted')
+        ->with('words')->get();
 
     return Inertia::render('TutorDashboardPage', [
         'essays' => $essays,
@@ -37,7 +38,6 @@ Route::get('/tutor-dashboard', function (Request $request) {
 
 // Dashboard Page
 Route::get('/', function (Request $request) {
-    
     
     $essays = Essay::where('user_id', Auth::id())->with('words')->get();
     $buckets = Bucket::where('user_id', Auth::id())->with('words')->get();
@@ -78,13 +78,17 @@ Route::get('/dictionary', function () {
 // Tutor Essay - GET
 Route::get('/tutor-essay-page', function() {
     
-    $essay = session('tutor_essay');
+    // $essay = $request->input('essay');
+    // $words = $essay['words'];
 
-    if (!$essay) {
-        return redirect()->route('/');
-    }
+    // session(['tutor_essay' => $essay]);
 
-    return Inertia::render('TutorEssayPage', ['essay' => $essay]);
+    // return Inertia::render('TutorEssayPage', 
+    //     [ 
+    //         'essay' => $essay, 
+    //         'words' => $words
+    //     ], 
+    // );
 })->middleware(['auth', 'verified']);
 
 // Tutor Essay Page - POST

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bucket;
 use App\Models\Essay;
 use App\Models\BucketWordJoin;
 use App\Models\EssayWordJoin;
@@ -39,12 +40,12 @@ class EssayController extends Controller
             'title' => $validated['title'],
             'bucket_id' => $validated['bucket_id'],
             'content' => $validated['content'],
+            'feedback' => '',
             'user_id' => Auth::id(),
             'tutor_id' => $validated['tutor_id'],  // Assign tutor to essay
             'status' => 'submitted',  // Set the initial status to 'submitted'
         ]);
 
-        
 
         // Attach used words to the essay
         foreach ($validated['used_words'] as $word) {
@@ -53,22 +54,24 @@ class EssayController extends Controller
                 'essay_id' => $essay->id,
                 'word_id' => $word["id"],
             ]);
-            if ($this->shouldUpdateGrade($essayWordJoin->grade, 'used_in_essay')) {
-                $essayWordJoin->grade = 'used_in_essay';
-            }
+                if ($this->shouldUpdateGradeDuringWriteEssay($essayWordJoin->grade)) {
+                    $essayWordJoin->grade = 'used_in_essay'; // or 'attempted_but_not_used' in second loop
+                }
             // Ensure only update if the grade has changed
-            if ($essayWordJoin->isDirty('grade')) {
+            // if ($essayWordJoin->isDirty('grade')) {
                 $essayWordJoin->save();
-            }
+            // }
 
             // BucketWordJoin
             $bucketWordJoin = BucketWordJoin::firstOrCreate([
                 'word_id' => $word["id"],
                 'bucket_id' => $validated["bucket_id"],
             ]);
-            if ($this->shouldUpdateGrade($bucketWordJoin->grade, 'used_in_essay')) {
-                $bucketWordJoin->grade = 'used_in_essay';
-            }
+            // if ($this->shouldUpdateGradeDuringWriteEssay($bucketWordJoin->grade, 'used_in_essay')) {
+                if ($this->shouldUpdateGradeDuringWriteEssay($bucketWordJoin->grade)) {
+                    $bucketWordJoin->grade = 'used_in_essay'; // or 'attempted_but_not_used'
+                }
+            // }
             // Ensure only update if the grade has changed
             if ($bucketWordJoin->isDirty('grade')) {
                 $bucketWordJoin->increment('times_used_in_essay');
@@ -84,9 +87,11 @@ class EssayController extends Controller
                 'essay_id' => $essay->id,
                 'word_id' => $word["id"],
             ]);
-            if ($this->shouldUpdateGrade($essayWordJoin->grade, 'attempted_but_not_used')) {
-                $essayWordJoin->grade = 'attempted_but_not_used';
+            
+            if ($this->shouldUpdateGradeDuringWriteEssay($essayWordJoin->grade)) {
+                $essayWordJoin->grade = 'attempted_but_not_used'; // or 'attempted_but_not_used' in second loop
             }
+
             // Ensure only update if the grade has changed
             if ($essayWordJoin->isDirty('grade')) {
                 $essayWordJoin->save();
@@ -97,9 +102,11 @@ class EssayController extends Controller
                 'word_id' => $word["id"],
                 'bucket_id' => $validated["bucket_id"],
             ]);
-            if ($this->shouldUpdateGrade($bucketWordJoin->grade, 'attempted_but_not_used')) {
+
+            if ($this->shouldUpdateGradeDuringWriteEssay($bucketWordJoin->grade)) {
                 $bucketWordJoin->grade = 'attempted_but_not_used';
             }
+
             // Ensure only update if the grade has changed
             if ($bucketWordJoin->isDirty('grade')) {
                 $bucketWordJoin->increment('times_used_in_essay');
@@ -123,17 +130,25 @@ class EssayController extends Controller
                 ->with('success', 'Essay saved and sent to tutor.');
     }
 
+    private function shouldUpdateGradeDuringWriteEssay($previous_grade): bool {
 
+        if ($previous_grade === "correct" || $previous_grade === "partially_correct" || $previous_grade === "incorrect" || $previous_grade === "used_in_essay") {
+            return false;
+        } else {
+            return true;
+        }
 
-    private function shouldUpdateGrade(?string $existing, string $new): bool
+    }
+
+    private function shouldUpdateGrade(?string $previous_grade): bool
     {
-        $transitions = [
-            'not_attempted' => ['attempted_but_not_used', 'used_in_essay'],
-            'attempted_but_not_used' => ['used_in_essay'],
-            null => ['attempted_but_not_used', 'used_in_essay'], // no grade yet
-        ];
+        // temporarily not updating grade here so that they don't get overriden
+        if ($previous_grade === "used_in_essay") { 
+            return true; 
+        }
 
-        return in_array($new, $transitions[$existing] ?? []);
+        return false;
+
     }
 
     public function index()
@@ -160,13 +175,14 @@ class EssayController extends Controller
 
     public function gradeEssay(Request $request) {
 
-        // dd($request->words);
+    // dd('GRADE ESSAY REQUEST:', $request->all());
 
         try {
             $validated = $request->validate([
             'essay_id' => 'required',
             'words' => 'required',
-            ]);
+            'feedback' => 'required',
+        ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error('Validation failed:', [
                 'errors' => $e->errors(),
@@ -174,24 +190,56 @@ class EssayController extends Controller
             ]);
             throw $e;
         }
+        
+        // Update Essay
+        $essay = Essay::findOrFail($request->essay_id);
+        $essay->feedback = $validated['feedback'];
+        $essay->status = "graded";
+        $essay->save();
 
-        // dd($validated['words']);
+        // update bucket
+        $bucket = Bucket::findOrFail($essay->bucket_id);
         
         // update word grades
         foreach($validated['words'] as $word) {
 
-            $essayWordJoin = EssayWordJoin::
-                where('essay_id', $validated['essay_id'])
-                ->where('word_id', $word['id'])
+            // Bucket
+
+            $bucketWordJoin = BucketWordJoin::
+                where('bucket_id', (int) ($essay->bucket_id))
+                ->where('word_id', (int) $word['id'])
                 ->first();
 
-                // it seeems like its creating a new entry in the essay word join rather than
-                // updating the current one
+          if (isset($word['pivot']['grade']) && $this->shouldUpdateGrade($bucketWordJoin->grade)) {
+                $bucketWordJoin->grade = $word['pivot']['grade'];
+            }
 
-            // is this firing?
-            // if ($this->shouldUpdateGrade($essayWordJoin->grade, 'used_in_essay')) {
-                $essayWordJoin->grade = $word['pivot']['grade'];
-            // }
+
+            // update only if comment is not null
+            if ($word['pivot']['comment']) {
+                $bucketWordJoin->comment = $word['pivot']['comment'];
+            }
+
+            // Ensure only update if the grade has changed
+            if ($bucketWordJoin->isDirty('grade') || $bucketWordJoin->isDirty('comment')) {
+                $bucketWordJoin->save();
+            }
+
+            
+            // Essay
+
+            $essayWordJoin = EssayWordJoin::
+                where('essay_id', (int) $validated['essay_id'])
+                ->where('word_id', (int) $word['id'])
+                ->first();
+
+            if (
+    isset($word['pivot']['grade']) &&
+    $this->shouldUpdateGrade($essayWordJoin->grade)
+) {
+    $essayWordJoin->grade = $word['pivot']['grade'];
+}
+
 
             // update only if comment is not null
             if ($word['pivot']['comment']) {
@@ -203,10 +251,6 @@ class EssayController extends Controller
                 $essayWordJoin->save();
             }
         }
-
-        $essay = Essay::findOrFail($request->essay_id);
-        $essay->status = "graded";
-        $essay->save();
 
         return redirect()->route('tutor-dashboard')->with('success', 'Essay graded!');
     }

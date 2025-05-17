@@ -2,7 +2,7 @@ import { cycleGrade } from '@/Utilities/tutor_utils/grades'
 import Instructions from './Instructions'
 import WordBankItem from './WordBankItem'
 
-export default function WordBank({ essay, setData, data }) {
+export default function WordBank({ essay, setData, words }) {
   const hasWords = Array.isArray(essay.words) && essay.words.length > 0
 
   if (!hasWords) {
@@ -16,7 +16,7 @@ export default function WordBank({ essay, setData, data }) {
 
   function handleWordClick(wordId) {
     // Update words directly in the form data
-    const updatedWords = data.map((word) => {
+    const updatedWords = words.map((word) => {
       if (word?.id === wordId) {
         return {
           ...word,
@@ -39,7 +39,7 @@ export default function WordBank({ essay, setData, data }) {
         <Instructions />
       </div>
       <ul className="border items-center rounded-lg p-4 flex flex-wrap gap-2">
-        {data.map((word) => (
+        {words.map((word) => (
           <WordBankItem key={word.id} word={word} handleWordClick={handleWordClick} />
         ))}
       </ul>

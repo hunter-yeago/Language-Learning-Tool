@@ -17,7 +17,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
             $table->foreignId('bucket_id')->constrained();
             $table->text('content');
-            $table->foreignId('tutor_id')->nullable()->constrained('users'); // Assuming tutors are users
+            $table->text('feedback')->default('');
+            $table->foreignId('tutor_id')->nullable()->constrained('users');
             $table->enum('status', ['submitted', 'under_review', 'graded', 'returned'])->default('submitted');
             $table->timestamps();
         });
