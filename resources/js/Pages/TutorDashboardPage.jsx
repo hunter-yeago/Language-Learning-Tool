@@ -2,6 +2,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Head } from '@inertiajs/react'
 
 export default function TutorDashboardPage({ essays }) {
+  console.log('the essays', essays)
   return (
     <AuthenticatedLayout header={<h1 className="text-2xl font-semibold text-gray-800">Tutor Dashboard</h1>}>
       <Head title="Tutor Review" />

@@ -39,8 +39,6 @@ class EssayAssignedToTutor extends Notification
     public function toMail(object $notifiable): MailMessage
     {
 
-        Log::info('Sending notification to tutor', ['tutor' => $notifiable->id]);
-
         return (new MailMessage)
             ->line('You have been assigned a new essay to review.')
             ->line('Essay Title: ' . $this->essay->title)

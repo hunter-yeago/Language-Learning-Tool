@@ -31,6 +31,6 @@ class Essay extends Model
 
     public function tutor()
     {
-            return $this->belongsTo(User::class, 'tutor_id');
+        return $this->belongsTo(User::class, 'tutor_id');
     }
 }

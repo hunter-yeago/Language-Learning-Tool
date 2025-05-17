@@ -27,7 +27,10 @@ Route::get('/', function () {
 // Tutor Review
 Route::get('/tutor-dashboard', function (Request $request) {
 
-    $essays = Essay::where('user_id', Auth::id())->with('words')->get();
+    $essays = Essay::where('tutor_id', Auth::id())
+                    ->where('status', 'submitted')
+                    ->with('words')->get();
+
     $buckets = Bucket::where('user_id', Auth::id())->with('words')->get();
 
     $bucketID = $request->query('bucketID');
@@ -42,6 +45,7 @@ Route::get('/tutor-dashboard', function (Request $request) {
 
 // Dashboard Page
 Route::get('/', function (Request $request) {
+    
     
     $essays = Essay::where('user_id', Auth::id())->with('words')->get();
     $buckets = Bucket::where('user_id', Auth::id())->with('words')->get();

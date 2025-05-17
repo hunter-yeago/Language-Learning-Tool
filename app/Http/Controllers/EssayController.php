@@ -43,6 +43,8 @@ class EssayController extends Controller
             'status' => 'submitted',  // Set the initial status to 'submitted'
         ]);
 
+        
+
         // Attach used words to the essay
         foreach ($validated['used_words'] as $word) {
             // EssayWordJoin
@@ -108,12 +110,13 @@ class EssayController extends Controller
         // Send notification to the tutor (send after essay is created)
         $tutor = $essay->tutor; // Get the tutor assigned to the essay
 
-        // Check if tutor exists
         if ($tutor) {
             $tutor->notify(new EssayAssignedToTutor($essay)); // Send the notification
         } else {
             Log::warning('Tutor not found for essay: ' . $essay->id);
         }
+
+
 
         return redirect()->route('/', ['bucketID' => $validated['bucket_id']])
                 ->with('success', 'Essay saved and sent to tutor.');
