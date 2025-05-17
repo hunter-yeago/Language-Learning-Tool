@@ -9,6 +9,8 @@ export default function WordBankItem({ word, handleWordClick }) {
       </li>
     )
 
+  console.log('word', word)
+
   return (
     <li key={word.id}>
       <WordButton color={getGradeColor(word.pivot.grade)} clickHandler={() => handleWordClick(word.id)} word={word.word} />

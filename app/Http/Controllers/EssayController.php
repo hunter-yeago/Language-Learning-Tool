@@ -54,9 +54,20 @@ class EssayController extends Controller
                 'essay_id' => $essay->id,
                 'word_id' => $word["id"],
             ]);
-                if ($this->shouldUpdateGradeDuringWriteEssay($essayWordJoin->grade)) {
+            if ($this->shouldUpdateGradeDuringWriteEssay($essayWordJoin->grade)) {
+
+
+                $bucketWordJoinWord = BucketWordJoin::where('bucket_id', $essay->bucket_id)
+                ->where('word_id', $word['id'])->first();
+
+                // if there is already a global / bucket grade, override with that grade
+                if (isset($bucketWordJoinWord->grade)) {
+                    $essayWordJoin->grade = $bucketWordJoinWord->grade;
+                } else {
+                    // otherwise, use this essays grade
                     $essayWordJoin->grade = 'used_in_essay'; 
                 }
+            }
             // Ensure only update if the grade has changed
             // if ($essayWordJoin->isDirty('grade')) {
                 $essayWordJoin->save();
@@ -88,8 +99,18 @@ class EssayController extends Controller
                 'word_id' => $word["id"],
             ]);
             
+            // need to simplify this logic... a lot
             if ($this->shouldUpdateGradeDuringWriteEssay($essayWordJoin->grade)) {
-                $essayWordJoin->grade = 'attempted_but_not_used';
+                $bucketWordJoinWord = BucketWordJoin::where('bucket_id', $essay->bucket_id)
+                ->where('word_id', $word['id'])->first();
+
+                // if there is already a global / bucket grade, override with that grade
+                if (isset($bucketWordJoinWord->grade)) {
+                    $essayWordJoin->grade = $bucketWordJoinWord->grade;
+                } else {
+                    // otherwise, use this essays grade
+                    $essayWordJoin->grade = 'attempted_but_not_used'; 
+                }
             }
 
             // Ensure only update if the grade has changed
