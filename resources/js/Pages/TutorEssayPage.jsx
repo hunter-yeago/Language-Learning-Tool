@@ -7,14 +7,18 @@ import Comments from '@/Components/tutor-essay-page/Comments'
 import StudentEssay from '@/Components/tutor-essay-page/StudentEssay'
 
 export default function TutorEssayPage({ essay, words }) {
+  console.log('the essay', essay)
   const { data, setData, post, processing } = useForm({
     words,
+    essay_id: essay.id,
   })
 
   function handleSubmit(e) {
     e.preventDefault()
     post(route('update-bucket-and-essay'), {
+      // same data to change in bucket and essay
       words: data.words,
+      essay_id: data.essay_id,
     })
   }
 
@@ -28,7 +32,7 @@ export default function TutorEssayPage({ essay, words }) {
         <GeneralFeedback />
 
         <div className="flex justify-end mt-2">
-          <button onClick={handleSubmit} className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+          <button processing={processing} onClick={handleSubmit} className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
             Submit
           </button>
         </div>

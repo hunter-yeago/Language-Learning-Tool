@@ -10,6 +10,7 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class EssayController extends Controller
 {
@@ -122,11 +123,7 @@ class EssayController extends Controller
                 ->with('success', 'Essay saved and sent to tutor.');
     }
 
-    public function gradeEssay(Request $request) {
 
-        dd($request);
-
-    }
 
     private function shouldUpdateGrade(?string $existing, string $new): bool
     {
@@ -159,6 +156,59 @@ class EssayController extends Controller
         return Inertia::render('TutorEssays', [
             'essays' => $essays,
         ]);
+    }
+
+    public function gradeEssay(Request $request) {
+
+        // dd($request->words);
+
+        try {
+            $validated = $request->validate([
+            'essay_id' => 'required',
+            'words' => 'required',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Validation failed:', [
+                'errors' => $e->errors(),
+                'data' => $request->all()
+            ]);
+            throw $e;
+        }
+
+        // dd($validated['words']);
+        
+        // update word grades
+        foreach($validated['words'] as $word) {
+
+            $essayWordJoin = EssayWordJoin::
+                where('essay_id', $validated['essay_id'])
+                ->where('word_id', $word['id'])
+                ->first();
+
+                // it seeems like its creating a new entry in the essay word join rather than
+                // updating the current one
+
+            // is this firing?
+            // if ($this->shouldUpdateGrade($essayWordJoin->grade, 'used_in_essay')) {
+                $essayWordJoin->grade = $word['pivot']['grade'];
+            // }
+
+            // update only if comment is not null
+            if ($word['pivot']['comment']) {
+                $essayWordJoin->comment = $word['pivot']['comment'];
+            }
+
+            // Ensure only update if the grade has changed
+            if ($essayWordJoin->isDirty('grade') || $essayWordJoin->isDirty('comment')) {
+                $essayWordJoin->save();
+            }
+        }
+
+        $essay = Essay::findOrFail($request->essay_id);
+        $essay->status = "graded";
+        $essay->save();
+
+        return redirect()->route('tutor-dashboard')->with('success', 'Essay graded!');
     }
 
     public function updateStatus(Request $request, $id)

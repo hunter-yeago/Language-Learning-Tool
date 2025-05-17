@@ -22,8 +22,6 @@ Route::get('/', function () {
     ]);
 });
 
-// Pages
-
 // Tutor Review
 Route::get('/tutor-dashboard', function (Request $request) {
 
@@ -31,14 +29,8 @@ Route::get('/tutor-dashboard', function (Request $request) {
                     ->where('status', 'submitted')
                     ->with('words')->get();
 
-    $buckets = Bucket::where('user_id', Auth::id())->with('words')->get();
-
-    $bucketID = $request->query('bucketID');
-
     return Inertia::render('TutorDashboardPage', [
         'essays' => $essays,
-        'buckets' => $buckets,
-        'bucketID' => $bucketID,
     ]);
 })->middleware(['auth', 'verified'])->name('tutor-dashboard');
 
@@ -85,9 +77,8 @@ Route::get('/dictionary', function () {
 
 // Tutor Essay - GET
 Route::get('/tutor-essay-page', function() {
+    
     $essay = session('tutor_essay');
-
-    // dd($essay['words    ']);
 
     if (!$essay) {
         return redirect()->route('/');

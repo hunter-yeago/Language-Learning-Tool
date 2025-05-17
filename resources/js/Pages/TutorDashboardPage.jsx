@@ -1,8 +1,12 @@
+import ActionButton from '@/Components/dashboard/ActionButton'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import { Head } from '@inertiajs/react'
+import { Head, router } from '@inertiajs/react'
 
 export default function TutorDashboardPage({ essays }) {
-  console.log('the essays', essays)
+  function handleClick(essay) {
+    router.post('tutor-essay-page', { essay: essay })
+  }
+
   return (
     <AuthenticatedLayout header={<h1 className="text-2xl font-semibold text-gray-800">Tutor Dashboard</h1>}>
       <Head title="Tutor Review" />
@@ -18,6 +22,7 @@ export default function TutorDashboardPage({ essays }) {
                   <h3 className="font-semibold mb-1">{essay.title}</h3>
                   <p className="text-sm text-gray-600 whitespace-pre-wrap">{essay.content}</p>
                   <p className="text-xs text-gray-400 mt-2">Submitted: {new Date(essay.created_at).toLocaleString()}</p>
+                  <ActionButton onClick={() => handleClick(essay)} color="blue" text="Review Essay" />
                 </li>
               ))}
             </ul>
