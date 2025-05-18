@@ -9,17 +9,17 @@ export default function AuthenticatedLayout({ header, children }) {
   const user = usePage().props.auth.user
   const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false)
 
-  const navigationLinks = [
-    { href: route('/'), label: 'Dashboard' },
-    { href: route('tutor-review'), label: 'Tutor Review' },
-    { href: route('dictionary'), label: 'Dictionary' },
-    { href: route('tutor-dashboard'), label: 'Tutor Dashoard' },
-  ]
+  const navLinks =
+    user.role === 'tutor'
+      ? [{ href: route('tutor.dashboard'), label: 'Tutor Dashoard' }]
+      : [
+          { href: route('student.dashboard'), label: 'Dashboard' },
+          { href: route('dictionary'), label: 'Dictionary' },
+        ]
 
   const toggleNavigation = () => setShowingNavigationDropdown((prev) => !prev)
-
   const renderNavLinks = (isResponsive) =>
-    navigationLinks.map(({ href, label }) =>
+    navLinks.map(({ href, label }) =>
       isResponsive ? (
         <ResponsiveNavLink key={href} href={href} active={route().current(href)}>
           {label}

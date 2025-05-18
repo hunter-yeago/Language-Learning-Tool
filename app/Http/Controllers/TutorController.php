@@ -3,24 +3,35 @@
 namespace App\Http\Controllers;
 
 use App\Models\Essay;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use WpOrg\Requests\Auth;
 
 class TutorController extends Controller
 {
-    public function tutorIndex()
+    public function dashboard()
     {
-        $tutor = Auth::user(); // Assuming you're already authenticating the tutor
-        $notifications = $tutor->notifications()->latest()->get(); // Get the latest notifications
+        $essays = Essay::where('tutor_id', Auth::id())
+            ->where('status', 'submitted')
+            ->with('words')
+            ->get();
 
-        $essays = Essay::where('tutor_id', $tutor->id)->get(); // Get essays assigned to the tutor
-
-        return Inertia::render('TutorDashboard', [
-            'essays' => $essays,
-            'notifications' => $notifications,
-        ]);
+        return Inertia::render('TutorDashboardPage', compact('essays'));
     }
 
+    public function showEssayPage()
+    {
+        // If GET is unnecessary, consider removing this route
+        return redirect()->route('tutor.dashboard');
+    }
 
+    public function storeEssayPage(Request $request)
+    {
+        $essay = $request->input('essay');
+        $words = $essay['words'] ?? [];
+
+        session(['tutor_essay' => $essay]);
+
+        return Inertia::render('TutorEssayPage', compact('essay', 'words'));
+    }
 }

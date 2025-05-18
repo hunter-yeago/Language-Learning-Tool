@@ -66,16 +66,9 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'student_tutor', 'tutor_id', 'student_id');
     }
 
-    public function isTutor(): bool
+    public function hasRole($role): bool
     {
-        return $this->role === 'tutor';
+        return $this->role === $role;
     }
-
-    public function isStudent(): bool
-    {
-        return $this->role === 'student';
-    }
-
-
 
 }

@@ -1,194 +1,77 @@
 <?php
 
 use App\Http\Controllers\EssayController;
+use App\Http\Controllers\StudentDashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BucketController;
 use App\Http\Controllers\DictionaryController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\TutorController;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Models\Essay;
-use App\Models\bucket;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-Route::get('/', function () {
-
-    return Inertia::render('WelcomePage', [
+Route::get('login-redirect', function() {
+        return Inertia::render('Auth/Login', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
+
 });
 
-// Tutor Review
-Route::get('/tutor-dashboard', function (Request $request) {
+// Home
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-    $essays = Essay::
-          where('tutor_id', Auth::id())
-        ->where('status', 'submitted')
-        ->with('words')->get();
+// Tutor
+Route::middleware(['auth', 'verified', 'role:tutor'])
+    ->name('tutor.')
+    ->group(function () {
+    Route::get('/dashboard', [TutorController::class, 'dashboard'])->name('dashboard');
+    Route::get('/essay-page', [TutorController::class, 'showEssayPage'])->name('essay-page');
+    Route::post('/essay-page', [TutorController::class, 'storeEssayPage'])->name('essay-page.store');
 
-    return Inertia::render('TutorDashboardPage', [
-        'essays' => $essays,
-    ]);
-})->middleware(['auth', 'verified'])->name('tutor-dashboard');
-
-
-// Dashboard Page
-Route::get('/', function (Request $request) {
-    
-    $essays = Essay::where('user_id', Auth::id())->with('words')->get();
-    $buckets = Bucket::where('user_id', Auth::id())->with('words')->get();
-    
-    // If a bucket param is passed in
-    $bucketID = $request->query('bucketID');
-
-    return Inertia::render('Dashboard', [
-        'essays' => $essays,
-        'buckets' => $buckets,
-        'bucketID' => $bucketID,
-    ]);
-
-})->middleware(['auth', 'verified'])->name('/');
-
-// Tutor Review Page
-Route::get('/tutor-review', function (Request $request) {
-    
-    $essays = Essay::where('user_id', Auth::id())->with('words')->get();
-    $buckets = Bucket::where('user_id', Auth::id())->with('words')->get();
-    
-    // If a bucket param is passed in
-    $bucketID = $request->query('bucketID');
-
-    return Inertia::render('TutorReviewPage', [
-        'essays' => $essays,
-        'buckets' => $buckets,
-        'bucketID' => $bucketID,
-    ]);
-
-})->middleware(['auth', 'verified'])->name('tutor-review');
-
-// Dictionary Page
-Route::get('/dictionary', function () {
-    return Inertia::render('DictionaryPage');
-})->middleware(['auth', 'verified'])->name('dictionary');
-
-// Tutor Essay - GET
-Route::get('/tutor-essay-page', function() {
-    
-    // $essay = $request->input('essay');
-    // $words = $essay['words'];
-
-    // session(['tutor_essay' => $essay]);
-
-    // return Inertia::render('TutorEssayPage', 
-    //     [ 
-    //         'essay' => $essay, 
-    //         'words' => $words
-    //     ], 
-    // );
-})->middleware(['auth', 'verified']);
-
-// Tutor Essay Page - POST
-Route::post('/tutor-essay-page', function (Request $request) {
-    
-    $essay = $request->input('essay');
-    $words = $essay['words'];
-
-    session(['tutor_essay' => $essay]);
-
-    return Inertia::render('TutorEssayPage', 
-        [ 
-            'essay' => $essay, 
-            'words' => $words
-        ], 
-    );
-})->middleware(['auth', 'verified'])->name('tutor-essay-page');
-
-// Add Words Page
-
-    // Start Adding Words Page
-    Route::post('/add-words-page', function (Request $request) {
-
-        $bucket = $request->input('bucket');
-        
-        // instead of passing this stuff from the frontend - shouldn't I just pass
-        // the bucket ID in the $request, and then go and grab the words and bucket from here 
-        // something like $buckets = Bucket::where('user_id', $request->input('bucketID'))->with('words')->get();
-        $words = $request->input('words', []);
-
-        // Return an Inertia response instead of a JSON response
-        return Inertia::render('AddWordsPage', [
-            'bucket' => $bucket,
-            'words' => $words,
-        ]);
-    })->middleware(['auth', 'verified'])->name('add-words-page');
-
-    // Leaving Add Words Page
-    Route::get('/add-words-page', function () {
-        return redirect()->route('/');
-    })->middleware('auth', 'verified')->name('add-words-page');
-
-// Write Essay Page
-
-    // Go to Write Essay Page
-    Route::post('/write-essay', function (Request $request) {
-        $bucket = $request->input('bucket');
-        $bucketID = $request->input('bucketID');
-        // $words = $request->input('words', []);
-
-        return Inertia::render('WriteEssayPage', [
-            'bucket' => $bucket,
-            'words' => $bucket['words'],
-            'bucketID' => $bucketID
-        ]);
-    })->middleware(['auth', 'verified'])->name('write-essay');
-
-    // Leaving Write Essay Page
-    Route::get('/write-essay', function (Request $request) {
-
-        $essays = Essay::where('user_id', Auth::id())->with('words')->get();
-        $buckets = Bucket::where('user_id', Auth::id())->with('words')->get();
-        
-        // If a bucket param is passed in
-        $bucketID = $request->query('bucketID');
-
-        return Inertia::render('Dashboard', [
-            'essays' => $essays,
-            'buckets' => $buckets,
-            'bucketID' => $bucketID,
-        ]);
-
-    })->middleware(['auth', 'verified'])->name('dashboard');
-
-
-
-
-// CRUD Routes
-
-// do I really need ->name() ?
-
-Route::controller(BucketController::class)->group(function () {
-    Route::post('/buckets', 'store')->name('store-bucket');
-    Route::post('/buckets/{bucketID}/add-new-words', 'addWords')->name('add-new-words');
+    Route::post('/update-bucket-and-essay', [EssayController::class, 'gradeEssay'])->name('update-bucket-and-essay');
 });
 
-Route::controller(EssayController::class)->group(function () {
-    Route::get('/essays', 'index')->name('essays.index');
-    Route::post('/essays/write-essay', 'store')->name('store-essay');
-    Route::post('/update-bucket-and-essay', 'gradeEssay')->name('update-bucket-and-essay');
+// Student
+Route::middleware(['auth', 'verified', 'role:student'])
+    ->name('student.')
+    ->group(function () {
+    
+    Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('dashboard');
+
+    Route::post('/add-words-page', [StudentDashboardController::class, 'addWordsPage'])->name('add-words-page');
+    Route::get('/add-words-page', fn() => redirect()->route('student.dashboard'));
+
+    Route::post('/write-essay', [StudentDashboardController::class, 'writeEssayPage'])->name('write-essay');
+    Route::get('/write-essay', [StudentDashboardController::class, 'redirectToDashboard']);
+
+    Route::controller(BucketController::class)->group(function () {
+        Route::post('/buckets', 'store')->name('store-bucket');
+        Route::post('/buckets/{bucketID}/add-new-words', 'addWords')->name('add-new-words');
+    });
+
+    Route::controller(EssayController::class)->group(function () {
+        Route::get('/essays', 'index')->name('essays.index');
+        Route::post('/essays/write-essay', 'store')->name('store-essay');
+    });
 });
 
-    // Lookup Words in Dictionary
+// Dictionary
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dictionary', fn() => Inertia::render('DictionaryPage'))->name('dictionary');
     Route::get('/lookup-word/{word}', [DictionaryController::class, 'lookup']);
+});
 
-// Auth
+// Profile
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
 
 require __DIR__.'/auth.php';

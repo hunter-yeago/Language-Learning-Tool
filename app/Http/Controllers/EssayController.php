@@ -120,6 +120,7 @@ class EssayController extends Controller
 
     public function gradeEssay(Request $request)
     {
+
         try {
             $validated = $request->validate([
                 'essay_id' => 'required',
@@ -143,7 +144,7 @@ class EssayController extends Controller
             $this->updateWordGrades($essay, $word);
         }
 
-        return redirect()->route('tutor-dashboard')->with('success', 'Essay graded!');
+        return redirect()->route('tutor.dashboard')->with('success', 'Essay graded!');
     }
 
     private function updateWordGrades(Essay $essay, array $word)
