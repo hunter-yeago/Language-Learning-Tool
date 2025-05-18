@@ -26,16 +26,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // Tutor
 Route::middleware(['auth', 'verified', 'role:tutor'])->name('tutor.')->group(function () {
 
-    // Dashboard - note, having the same route name /dashbaord for both tutors and students
-    // even though they require different roles during auth
-    // was causing big problems - tutor.dashboard was resolving to student for some reason
     Route::get('/', [TutorController::class, 'index'])->name('tutor-dashboard');
-
-    // Essay Page
-    // Route::get('/essay-page', [TutorController::class, 'showEssayPage'])->name('essay-page');
     Route::get('/essay-page', [TutorController::class, 'startEssayReview'])->name('essay-page.store');
-
-    // Grade Essay
     Route::post('/update-bucket-and-essay', [EssayController::class, 'gradeEssay'])->name('update-bucket-and-essay');
 });
 
@@ -81,3 +73,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
 require __DIR__.'/auth.php';
+
+
+// notes
+// tutor dashboard
+// Dashboard - note, having the same route name /dashbaord for both tutors and students
+// even though they require different roles during auth
+// was causing big problems - tutor.dashboard was resolving to student for some reason
