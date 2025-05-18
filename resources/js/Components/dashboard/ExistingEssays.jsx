@@ -1,13 +1,7 @@
 import { useState } from 'react'
 import ActionButton from './ActionButton'
 
-export default function ExistingEssays({
-  essays,
-  setData,
-  data,
-  post,
-  processing,
-}) {
+export default function ExistingEssays({ essays, setData, data, post, processing }) {
   const [currentEssay, setCurrentEssay] = useState(null)
 
   function handleChange(event) {
@@ -17,8 +11,7 @@ export default function ExistingEssays({
       return
     }
 
-    const selectedEssay =
-      essays.find((e) => e.title === event.target.value) || null
+    const selectedEssay = essays.find((e) => e.title === event.target.value) || null
     setCurrentEssay(selectedEssay)
     setData('essay', {
       title: selectedEssay.title,
@@ -28,10 +21,7 @@ export default function ExistingEssays({
   }
 
   return (
-    <section
-      className="flex flex-col items-center gap-4"
-      aria-label="choose your essay here"
-    >
+    <section className="flex flex-col items-center gap-4" aria-label="choose your essay here">
       <label htmlFor="essay" className="text-xl font-semibold text-center">
         Existing Essays
       </label>
@@ -52,12 +42,7 @@ export default function ExistingEssays({
       </select>
 
       {currentEssay && (
-        <ActionButton
-          onClick={() => post(route('tutor-essay-page'), { essay: data.essay })}
-          processing={processing}
-          color="blue"
-          text="Review Essay"
-        />
+        <ActionButton onClick={() => post(route('tutor.essay-page'), { essay: data.essay })} processing={processing} color="blue" text="Review Essay" />
       )}
     </section>
   )

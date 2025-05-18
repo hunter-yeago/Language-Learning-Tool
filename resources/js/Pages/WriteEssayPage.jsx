@@ -63,7 +63,7 @@ export default function WriteEssayPage({ bucket, words }) {
 
   function handleSubmit(e) {
     e.preventDefault()
-    post(route('store-essay'), data)
+    post(route('student.store-essay'), data)
   }
 
   return (

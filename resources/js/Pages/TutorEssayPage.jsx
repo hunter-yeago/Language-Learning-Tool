@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import GeneralFeedback from '@/Components/tutor-essay-page/GeneralFeedback'
+
 import WordBank from '@/Components/tutor-essay-page/WordBank'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Head, useForm } from '@inertiajs/react'
 import Comments from '@/Components/tutor-essay-page/Comments'
 import StudentEssay from '@/Components/tutor-essay-page/StudentEssay'
+import GeneralFeedback from '@/Components/tutor-essay-page/GeneralFeedback'
 
 export default function TutorEssayPage({ essay, words }) {
   const { data, setData, post, processing } = useForm({
@@ -12,6 +13,8 @@ export default function TutorEssayPage({ essay, words }) {
     essay_id: essay.id,
     feedback: '',
   })
+
+  console.log('the words', words)
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -28,8 +31,8 @@ export default function TutorEssayPage({ essay, words }) {
       <Head title="Student Essay Review" />
       <div className="flex flex-col gap-6 p-6 bg-white shadow-md rounded-lg">
         <WordBank essay={essay} setData={setData} words={data.words} />
-        <StudentEssay essay={essay} data={data.words} />
-        <Comments essay={essay} data={data.words} setData={setData} />
+        <StudentEssay essay={essay} data={data.words} words={words} />
+        <Comments words={words} essay={essay} data={data.words} setData={setData} />
         <GeneralFeedback setData={setData} data={data} />
 
         <div className="flex justify-end mt-2">

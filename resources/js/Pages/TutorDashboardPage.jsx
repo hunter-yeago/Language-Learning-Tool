@@ -4,7 +4,7 @@ import { Head, router } from '@inertiajs/react'
 
 export default function TutorDashboardPage({ essays }) {
   function handleClick(essay) {
-    router.post('tutor-essay-page', { essay: essay })
+    router.get('/essay-page', { essay_id: essay.id })
   }
 
   return (

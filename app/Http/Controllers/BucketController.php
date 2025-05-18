@@ -28,7 +28,7 @@ class BucketController extends Controller
             'user_id' => Auth::id(),
         ]);
 
-        return redirect()->route('/', ['bucketID' => $bucket->id])
+        return redirect()->route('student.dashboard', ['bucketID' => $bucket->id])
             ->with('success', 'Bucket created successfully!');
     }
 
@@ -55,7 +55,7 @@ class BucketController extends Controller
             $bucket->words()->create(['word' => $word]);
         }
 
-        return redirect()->route('/', ['bucketID' => $bucketID])
+        return redirect()->route('student.dashboard', ['bucketID' => $bucketID])
             ->with('success', 'Words added successfully!');
     }
 }

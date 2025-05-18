@@ -86,7 +86,7 @@ export default function Dashboard({ essays, buckets, bucketID }) {
   function handleWriteEssayPage(e) {
     e.preventDefault()
     if (data.bucket) {
-      post(route('write-essay'), {
+      post(route('student.write-essay'), {
         bucket: data.bucket,
         bucketID: data.bucket.id,
       })
@@ -96,7 +96,7 @@ export default function Dashboard({ essays, buckets, bucketID }) {
   function handleAddWords(e) {
     e.preventDefault()
     if (data.bucket.id) {
-      post(route('add-words-page'), {
+      post(route('student.add-words-page'), {
         bucket_id: data.bucket.id,
         words: data.bucket.words,
       })

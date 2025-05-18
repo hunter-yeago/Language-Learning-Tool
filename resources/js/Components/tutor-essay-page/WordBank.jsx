@@ -3,7 +3,7 @@ import Instructions from './Instructions'
 import WordBankItem from './WordBankItem'
 
 export default function WordBank({ essay, setData, words }) {
-  const hasWords = Array.isArray(essay.words) && essay.words.length > 0
+  const hasWords = Array.isArray(words) && words.length > 0
 
   if (!hasWords) {
     return (

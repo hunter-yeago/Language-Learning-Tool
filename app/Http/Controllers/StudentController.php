@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
-class StudentDashboardController extends Controller
+class StudentController extends Controller
 {
 
     public function index(Request $request)
@@ -45,10 +45,5 @@ class StudentDashboardController extends Controller
             'words' => $bucket['words'],
             'bucketID' => $bucketID
         ]);
-    }
-
-    public function redirectToDashboard(Request $request)
-    {
-        return $this->dashboard($request);
     }
 }

@@ -3,7 +3,7 @@ import CommentEditor from './CommentEditor'
 import CommentList from './CommentList'
 import CommentWords from './CommentWords'
 
-export default function Comments({ essay, data, setData }) {
+export default function Comments({ essay, data, setData, words }) {
   const [tempData, setTempData] = useState('')
   const [currentComment, setCurrentComment] = useState(null)
 
@@ -14,7 +14,7 @@ export default function Comments({ essay, data, setData }) {
         <p className="text-sm text-gray-600">- Click on a word to leave a comment</p>
       </div>
 
-      <CommentWords essay={essay} data={data} setCurrentComment={setCurrentComment} />
+      <CommentWords words={words} essay={essay} data={data} setCurrentComment={setCurrentComment} />
 
       <CommentEditor
         essay={essay}

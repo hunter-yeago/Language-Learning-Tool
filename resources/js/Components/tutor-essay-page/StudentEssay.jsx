@@ -1,11 +1,11 @@
 import { getGradeColor } from '@/Utilities/tutor_utils/grades'
 import { buildHighlightedSegments, filterOverlappingMatches, getMatchingWordPositions } from '@/Utilities/tutor_utils/tutor'
 
-export default function StudentEssay({ essay, data }) {
+export default function StudentEssay({ essay, data, words }) {
   function highlightWordButtons(text) {
-    if (!text || !essay.words?.length) return <p>{text}</p>
+    if (!text || !words?.length) return <p>{text}</p>
 
-    const matches = getMatchingWordPositions(text, essay.words)
+    const matches = getMatchingWordPositions(text, words)
     const filtered = filterOverlappingMatches(matches)
     const segments = buildHighlightedSegments(text, filtered)
 

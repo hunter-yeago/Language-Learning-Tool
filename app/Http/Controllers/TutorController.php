@@ -9,7 +9,7 @@ use Inertia\Inertia;
 
 class TutorController extends Controller
 {
-    public function dashboard()
+    public function index()
     {
         $essays = Essay::where('tutor_id', Auth::id())
             ->where('status', 'submitted')
@@ -22,16 +22,27 @@ class TutorController extends Controller
     public function showEssayPage()
     {
         // If GET is unnecessary, consider removing this route
-        return redirect()->route('tutor.dashboard');
+        return redirect()->route('tutor.tutor-dashboard');
     }
 
-    public function storeEssayPage(Request $request)
+    public function startEssayReview(Request $request)
     {
-        $essay = $request->input('essay');
-        $words = $essay['words'] ?? [];
+        $essay_id = $request->input('essay_id');
 
-        session(['tutor_essay' => $essay]);
+        if (!$essay_id || !isset($essay_id)) {
+            return redirect()->route('tutor.tutor-dashboard');
+        }
 
-        return Inertia::render('TutorEssayPage', compact('essay', 'words'));
+        $essay = Essay::with('words')->find($essay_id);
+
+        if (!$essay) {
+            return redirect()->route('tutor.tutor-dashboard')->with('error', 'Essay not found');
+        }
+
+        return Inertia::render('TutorEssayPage', [
+            'essay' => $essay,
+            'words' => $essay->words,
+        ]);
     }
+
 }

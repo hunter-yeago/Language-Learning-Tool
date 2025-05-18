@@ -15,13 +15,12 @@ class HomeController extends Controller
         $user = Auth::user();
 
         if ($user->hasRole('tutor')) {
-            return redirect()->route('tutor.dashboard');
+            return redirect()->route('tutor.tutor-dashboard');
         }
 
         if ($user->hasRole('student')) {
-            return redirect()->route('student.dashboard');
+            return redirect()->route('student.student-dashboard');
         }
 
-        abort(403, 'Unauthorized');
     }
 }

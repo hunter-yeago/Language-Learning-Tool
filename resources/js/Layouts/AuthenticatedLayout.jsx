@@ -11,9 +11,9 @@ export default function AuthenticatedLayout({ header, children }) {
 
   const navLinks =
     user.role === 'tutor'
-      ? [{ href: route('tutor.dashboard'), label: 'Tutor Dashoard' }]
+      ? [{ href: route('tutor.tutor-dashboard'), label: 'Tutor Dashboard' }]
       : [
-          { href: route('student.dashboard'), label: 'Dashboard' },
+          { href: route('student.student-dashboard'), label: 'Dashboard' },
           { href: route('dictionary'), label: 'Dictionary' },
         ]
 
