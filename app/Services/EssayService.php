@@ -42,6 +42,8 @@ class EssayService
             ->where('word_id', $word['id'])
             ->first();
 
+            dd($essayWordJoin);
+
         if ($this->shouldUpdateGradeDuringWriteEssay($essayWordJoin->grade)) {
             $essayWordJoin->grade = $bucketWordJoinWord->grade ?? ($word['used'] ? 'used_in_essay' : 'attempted_but_not_used');
         }
@@ -54,6 +56,8 @@ class EssayService
             'word_id' => $word['id'],
             'bucket_id' => $essay->bucket_id,
         ]);
+
+        dd($essayWordJoin);
 
         if ($this->shouldUpdateGradeDuringWriteEssay($bucketWordJoin->grade)) {
             $bucketWordJoin->grade = $word['used'] ? 'used_in_essay' : 'attempted_but_not_used';
@@ -80,6 +84,7 @@ class EssayService
 
     private function updateWordGrades(Essay $essay, array $word)
     {
+        
         $bucketWordJoin = BucketWordJoin::where('bucket_id', $essay->bucket_id)
             ->where('word_id', $word['id'])
             ->first();

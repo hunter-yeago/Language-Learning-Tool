@@ -28,7 +28,7 @@ class TutorController extends Controller
 
         return Inertia::render('TutorDashboardPage', compact('essays'));
     }
-    
+
     public function update_essay(GradeEssayRequest $request)
     {
         $validated = $request->validated();
@@ -39,7 +39,7 @@ class TutorController extends Controller
             $validated['feedback']
         );
 
-        return redirect()->route('tutor.dashboard')->with('success', 'Essay graded!');
+        return redirect()->route('tutor.tutor-dashboard')->with('success', 'Essay graded!');
     }
 
     public function grade_essay(Request $request)

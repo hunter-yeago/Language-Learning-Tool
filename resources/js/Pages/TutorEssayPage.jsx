@@ -19,7 +19,7 @@ export default function TutorEssayPage({ essay, words }) {
   function handleSubmit(e) {
     e.preventDefault()
 
-    post(route('update-essay'), {
+    post(route('tutor.update-essay'), {
       essay_id: data.essay_id,
       words: data.words,
       feedback: data.feedback ?? '',

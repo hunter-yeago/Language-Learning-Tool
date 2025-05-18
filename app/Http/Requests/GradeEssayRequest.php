@@ -18,7 +18,7 @@ class GradeEssayRequest extends FormRequest
         return [
             'essay_id' => 'required|exists:essays,id',
             'words' => 'required|array',
-            'feedback' => 'required|string',
+            'feedback' => 'string',
         ];
     }
 }
