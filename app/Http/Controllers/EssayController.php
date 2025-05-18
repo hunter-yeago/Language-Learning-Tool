@@ -50,19 +50,6 @@ class EssayController extends Controller
         ]);
     }
 
-    public function gradeEssay(GradeEssayRequest $request)
-    {
-        $validated = $request->validated();
-
-        $essay = $this->essayService->gradeEssay(
-            Essay::findOrFail($validated['essay_id']),
-            $validated['words'],
-            $validated['feedback']
-        );
-
-        return redirect()->route('tutor.dashboard')->with('success', 'Essay graded!');
-    }
-
     public function updateStatus(Request $request, $id)
     {
         $validated = $request->validate([

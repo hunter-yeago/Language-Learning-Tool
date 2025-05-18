@@ -42,7 +42,7 @@ export default function ExistingEssays({ essays, setData, data, post, processing
       </select>
 
       {currentEssay && (
-        <ActionButton onClick={() => post(route('tutor.essay-page'), { essay: data.essay })} processing={processing} color="blue" text="Review Essay" />
+        <ActionButton onClick={() => post(route('tutor.grade-essay'), { essay: data.essay })} processing={processing} color="blue" text="Review Essay" />
       )}
     </section>
   )

@@ -27,8 +27,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::middleware(['auth', 'verified', 'role:tutor'])->name('tutor.')->group(function () {
 
     Route::get('/', [TutorController::class, 'index'])->name('tutor-dashboard');
-    Route::get('/essay-page', [TutorController::class, 'startEssayReview'])->name('essay-page.store');
-    Route::post('/update-bucket-and-essay', [EssayController::class, 'gradeEssay'])->name('update-bucket-and-essay');
+    Route::get('/grade-essay', [TutorController::class, 'grade_essay'])->name('grade-essay');
+    Route::post('/update-essay', [TutorController::class, 'update_essay'])->name('update-essay');
 });
 
 // Student
@@ -70,7 +70,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
 
 require __DIR__.'/auth.php';
 

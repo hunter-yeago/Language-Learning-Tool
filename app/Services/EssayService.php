@@ -66,7 +66,7 @@ class EssayService
         }
     }
 
-    public function gradeEssay(Essay $essay, array $words, string $feedback)
+    public function update_essay(Essay $essay, array $words, string $feedback)
     {
         $essay->update([
             'feedback' => $feedback,

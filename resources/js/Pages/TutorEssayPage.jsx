@@ -1,11 +1,11 @@
 import { useState } from 'react'
 
-import WordBank from '@/Components/tutor-essay-page/WordBank'
+import WordBank from '@/Components/tutor-grade-essay/WordBank'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Head, useForm } from '@inertiajs/react'
-import Comments from '@/Components/tutor-essay-page/Comments'
-import StudentEssay from '@/Components/tutor-essay-page/StudentEssay'
-import GeneralFeedback from '@/Components/tutor-essay-page/GeneralFeedback'
+import Comments from '@/Components/tutor-grade-essay/Comments'
+import StudentEssay from '@/Components/tutor-grade-essay/StudentEssay'
+import GeneralFeedback from '@/Components/tutor-grade-essay/GeneralFeedback'
 
 export default function TutorEssayPage({ essay, words }) {
   const { data, setData, post, processing } = useForm({
@@ -19,7 +19,7 @@ export default function TutorEssayPage({ essay, words }) {
   function handleSubmit(e) {
     e.preventDefault()
 
-    post(route('update-bucket-and-essay'), {
+    post(route('update-essay'), {
       essay_id: data.essay_id,
       words: data.words,
       feedback: data.feedback ?? '',
