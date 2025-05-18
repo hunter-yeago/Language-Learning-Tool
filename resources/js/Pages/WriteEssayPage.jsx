@@ -5,13 +5,12 @@ import WordBank from '@/Components/word-bank/WordBank.jsx'
 
 export default function WriteEssayPage({ bucket, words }) {
   const [title, setTitle] = useState('')
-  const [WordButtons, setWordButtons] = useState([words])
+  const [wordButtons, setWordButtons] = useState([])
   const { data, setData, post, processing } = useForm({
     title: '',
     content: '',
     bucket_id: bucket.id,
-    used_words: [],
-    not_used_words: [],
+    words: [],
     tutor_id: 2,
   })
 
@@ -21,15 +20,15 @@ export default function WriteEssayPage({ bucket, words }) {
   }
 
   function handleTextChange(e) {
-    setWordButtons(checkForWordButtons(e.target.value))
+    const usedWords = findUsedWords(e.target.value)
+    setWordButtons(usedWords)
+
     setData((prevData) => {
-      const newData = {
+      return {
         ...prevData,
         content: e.target.value,
-        used_words: checkForWordButtons(e.target.value),
-        not_used_words: words.filter((word) => !WordButtons.includes(word)),
+        words: getUpdatedWords(usedWords),
       }
-      return newData
     })
   }
 
@@ -38,18 +37,33 @@ export default function WriteEssayPage({ bucket, words }) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   }
 
+  function getUpdatedWords(usedWords) {
+    // Create a Set of used word IDs for faster lookup
+    const usedWordIds = new Set(usedWords.map((word) => word.id))
+
+    // Mark all words with used: true/false
+    return words.map((word) => ({
+      ...word,
+      used: usedWordIds.has(word.id),
+    }))
+  }
+
   // 'i' — case-insensitive match
   // \\b — word boundary (ensures "benevolent" matches only as a full word, not inside "benevolently")
-  function checkForWordButtons(userEssay) {
+  function findUsedWords(userEssay) {
+    // start filter
     return words.filter((word) => {
-      const escapedWord = escapeRegex(word.word)
-      const wordRegex = new RegExp(`\\b${escapedWord}\\b`, 'i')
+      // use regex to search for word
+      const wordRegex = new RegExp(`\\b${escapeRegex(word.word)}\\b`, 'i')
+
+      // callback - add the word to the new array if it matches
       return wordRegex.test(userEssay)
     })
   }
 
   function handleSubmit(e) {
     e.preventDefault()
+    console.log('the data', data)
     post(route('store-essay'), data)
   }
 
@@ -59,7 +73,7 @@ export default function WriteEssayPage({ bucket, words }) {
         <div className="flex flex-col items-center gap-2 w-full max-w-md p-6 bg-white shadow-md rounded-lg">
           <h3 className="text-lg font-semibold mb-4">Bucket: {bucket.title}</h3>
 
-          <WordBank words={words} WordButtons={WordButtons} wordBankTitle={bucket.title} />
+          <WordBank words={words} wordButtons={wordButtons} wordBankTitle={bucket.title} />
 
           <form onSubmit={handleSubmit} className="flex flex-col items-center gap-2 w-full">
             <input

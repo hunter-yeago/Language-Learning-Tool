@@ -23,10 +23,10 @@ class EssayController extends Controller
                 'title' => 'required|string|max:255',
                 'bucket_id' => 'required|exists:buckets,id',
                 'content' => 'required|string',
-                'used_words' => 'array',
-                'not_used_words' => 'array',
+                'words' => 'array',
                 'tutor_id' => 'required|exists:users,id', // Validate tutor assignment
             ]);
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error('Validation failed:', [
                 'errors' => $e->errors(),
@@ -34,6 +34,8 @@ class EssayController extends Controller
             ]);
             throw $e;
         }
+
+        dd($validated['words']);
 
         // Create the essay
         $essay = Essay::create([
