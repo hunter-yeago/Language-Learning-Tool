@@ -53,10 +53,10 @@ export default function Dashboard({ essays, buckets, bucketID }) {
     })
     ?.sort((a, b) => {
       switch (sortOption) {
-        case 'grade-asc':
-          return sortByGrade(a, b, true) // Ascending order
-        case 'grade-desc':
-          return sortByGrade(a, b, false) // Descending order
+        case 'grade-ascending':
+          return sortByGrade(a, b, true)
+        case 'grade-descending':
+          return sortByGrade(a, b, false)
         case 'created-newest':
           return sortByCreatedAtNewest(a, b)
         case 'created-oldest':
@@ -160,8 +160,8 @@ export default function Dashboard({ essays, buckets, bucketID }) {
                     <option value="created-oldest">Oldest</option>
                     {gradeFilter === '' && (
                       <>
-                        <option value="grade-desc">Grade</option>
-                        <option value="grade-asc">Grade (Reverse)</option>
+                        <option value="grade-descending">Grade</option>
+                        <option value="grade-ascending">Grade (Reverse)</option>
                       </>
                     )}
                   </select>

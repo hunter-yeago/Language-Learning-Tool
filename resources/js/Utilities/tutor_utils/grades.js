@@ -2,6 +2,7 @@
 // for example, if a student did not use a word in the essay, then it is not possible to cycle to the other states.
 // Additionally, we do not want it to be possbile to cycle to "attempted_but_not_used from a word that is marked incorrect"
 
+// TODO - add unused back in here
 export const gradeConfig = {
   correct: {
     label: 'Correct',
@@ -19,6 +20,15 @@ export const gradeConfig = {
     label: 'Incorrect',
     background: 'bg-red-200',
     text: 'text-red-800',
+    gradeable: true,
+  },
+
+  // so that tutor can reset the word when they are grading the students' essay
+  // this may be broken, I guess I'll find out someday!
+  not_used: {
+    label: 'Not Used',
+    background: 'bg-gray-200',
+    text: 'text-gray-800',
     gradeable: true,
   },
 }
