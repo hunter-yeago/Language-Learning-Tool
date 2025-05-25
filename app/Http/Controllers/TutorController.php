@@ -31,9 +31,11 @@ class TutorController extends Controller
 
     public function update_essay(GradeEssayRequest $request)
     {
-        $validated = $request->validated();
 
-        $essay = $this->essayService->update_essay(
+        $validated = $request->validated();
+        // dd($validated);
+
+        $this->essayService->update_essay(
             Essay::findOrFail($validated['essay_id']),
             $validated['words'],
             $validated['feedback']

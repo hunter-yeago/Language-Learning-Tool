@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 import WordBank from '@/Components/tutor-grade-essay/WordBank'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Head, useForm } from '@inertiajs/react'
@@ -13,8 +11,6 @@ export default function TutorEssayPage({ essay, words }) {
     essay_id: essay.id,
     feedback: '',
   })
-
-  console.log('the words', words)
 
   function handleSubmit(e) {
     e.preventDefault()

@@ -125,7 +125,7 @@ class EssayService
     private function shouldUpdateGrade(?string $previousGrade, ?string $newGrade): bool
     {
         return (
-            in_array($previousGrade, ['used_in_essay', 'correct', 'incorrect', 'partially_correct']) &&
+            in_array($previousGrade, ['used_in_essay', 'correct', 'incorrect', 'partially_correct', 'not_attempted']) &&
             !in_array($newGrade, ['used_in_essay', 'attempted_but_not_used'])
         );
     }

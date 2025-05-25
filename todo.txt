@@ -17,3 +17,7 @@
 // it will be easier to think about how I can manage
 // or implement the ability to be given feedback 
 // on a single essay from multiple people.
+
+// TODO - Create robust system of grading
+// this whole thing of just checking string and arrays declared
+// in random places is going to bite me in the ass one day
