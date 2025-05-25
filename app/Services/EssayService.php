@@ -22,52 +22,25 @@ class EssayService
             'status' => 'submitted',
         ]);
 
-        foreach ($validated['words'] as $word) {
-            $this->attachWordToEssay($essay, $word);
-        }
-
+        $this->attachWordToEssay($essay->id, $validated['words']);
         $essay->tutor?->notify(new EssayAssignedToTutor($essay));
 
         return $essay;
     }
 
-    public function attachWordToEssay(Essay $essay, array $word)
+    public function attachWordToEssay(int $essay_id, array $words): void
     {
-        $essayWordJoin = EssayWordJoin::firstOrNew([
-            'essay_id' => $essay->id,
-            'word_id' => $word['id'],
-        ]);
 
-        $bucketWordJoinWord = BucketWordJoin::where('bucket_id', $essay->bucket_id)
-            ->where('word_id', $word['id'])
-            ->first();
+        foreach ($words as $word) {
 
-            dd($essayWordJoin);
-
-        if ($this->shouldUpdateGradeDuringWriteEssay($essayWordJoin->grade)) {
-            $essayWordJoin->grade = $bucketWordJoinWord->grade ?? ($word['used'] ? 'used_in_essay' : 'attempted_but_not_used');
+            if (!$word['used']) return;
+    
+            EssayWordJoin::updateOrCreate(
+                ['essay_id' => $essay_id, 'word_id' => $word['id']],
+                ['used_in_essay' => true]
+            );
         }
 
-        if ($essayWordJoin->isDirty('grade')) {
-            $essayWordJoin->save();
-        }
-
-        $bucketWordJoin = BucketWordJoin::firstOrCreate([
-            'word_id' => $word['id'],
-            'bucket_id' => $essay->bucket_id,
-        ]);
-
-        dd($essayWordJoin);
-
-        if ($this->shouldUpdateGradeDuringWriteEssay($bucketWordJoin->grade)) {
-            $bucketWordJoin->grade = $word['used'] ? 'used_in_essay' : 'attempted_but_not_used';
-        }
-
-        if ($bucketWordJoin->isDirty('grade')) {
-            $bucketWordJoin->increment('times_used_in_essay');
-            $bucketWordJoin->increment('times_in_word_bank');
-            $bucketWordJoin->save();
-        }
     }
 
     public function update_essay(Essay $essay, array $words, string $feedback)
@@ -77,56 +50,43 @@ class EssayService
             'status' => 'graded',
         ]);
 
+        $this->updateWordGrades($essay, $words);
+    }
+
+    private function updateWordGrades(Essay $essay, array $words)
+    {
+
         foreach ($words as $word) {
-            $this->updateWordGrades($essay, $word);
-        }
-    }
-
-    private function updateWordGrades(Essay $essay, array $word)
-    {
-        
-        $bucketWordJoin = BucketWordJoin::where('bucket_id', $essay->bucket_id)
+            
+            $essay_word_join = EssayWordJoin::where('essay_id', $essay->id)
             ->where('word_id', $word['id'])
             ->first();
+            
+            $bucket_word_join = BucketWordJoin::where('bucket_id', $essay->bucket_id)
+                ->where('word_id', $word['id'])
+                ->first();
 
-        if ($this->shouldUpdateGrade($bucketWordJoin->grade, $word['pivot']['grade'])) {
-            $bucketWordJoin->grade = $word['pivot']['grade'];
+            $new_grade = $word['pivot']['grade'];
+            $previous_grade = $essay_word_join->grade;
+            
+            
+            if ($new_grade !== $previous_grade) {
+                $essay_word_join->grade = $word['pivot']['grade'];
+                $bucket_word_join->grade = $word['pivot']['grade'];
+            }
+
+            if ($word['pivot']['comment']) {
+                $essay_word_join->comment = $word['pivot']['comment'];
+            }
+
+            if ($essay_word_join->isDirty('grade') || $essay_word_join->isDirty('comment')) {
+                $essay_word_join->save();
+            }
+
+            if ($bucket_word_join->isDirty('grade')) {
+                $bucket_word_join->save();
+            }
         }
+    }   
 
-        if ($word['pivot']['comment']) {
-            $bucketWordJoin->comment = $word['pivot']['comment'];
-        }
-
-        if ($bucketWordJoin->isDirty('grade') || $bucketWordJoin->isDirty('comment')) {
-            $bucketWordJoin->save();
-        }
-
-        $essayWordJoin = EssayWordJoin::where('essay_id', $essay->id)
-            ->where('word_id', $word['id'])
-            ->first();
-
-        if ($this->shouldUpdateGrade($essayWordJoin->grade, $word['pivot']['grade'])) {
-            $essayWordJoin->grade = $word['pivot']['grade'];
-        }
-
-        if ($word['pivot']['comment']) {
-            $essayWordJoin->comment = $word['pivot']['comment'];
-        }
-
-        if ($essayWordJoin->isDirty('grade') || $essayWordJoin->isDirty('comment')) {
-            $essayWordJoin->save();
-        }
-    }
-    private function shouldUpdateGradeDuringWriteEssay($previousGrade): bool
-        {
-            return !in_array($previousGrade, ['correct', 'partially_correct', 'incorrect', 'used_in_essay']);
-        }
-
-    private function shouldUpdateGrade(?string $previousGrade, ?string $newGrade): bool
-    {
-        return (
-            in_array($previousGrade, ['used_in_essay', 'correct', 'incorrect', 'partially_correct', 'not_attempted']) &&
-            !in_array($newGrade, ['used_in_essay', 'attempted_but_not_used'])
-        );
-    }
 }

@@ -3,10 +3,10 @@ import { gradeConfig } from '@/Utilities/tutor_utils/grades'
 export default function GradeProgressBar({ words }) {
   if (!words || words.length === 0) return null
 
-  const gradeOrder = ['correct', 'partially_correct', 'incorrect', 'used_in_essay', 'not_attempted']
+  const gradeOrder = ['correct', 'partially_correct', 'incorrect', 'used_in_essay', 'not_graded']
 
   const gradeCounts = words.reduce((acc, word) => {
-    const grade = word.pivot?.grade || 'not_attempted'
+    const grade = word.pivot?.grade || 'not_graded'
     acc[grade] = (acc[grade] || 0) + 1
     return acc
   }, {})

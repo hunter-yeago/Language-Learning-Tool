@@ -15,10 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('bucket_id')->constrained()->cascadeOnDelete();
             $table->foreignId('word_id')->constrained()->cascadeOnDelete();
-            $table->integer('times_used_in_essay')->default(0);
-            $table->integer('times_in_word_bank')->default(0);
-            $table->string('grade')->default('not_attempted');
-            $table->string('comment')->default('');
+            $table->string('grade')->nullable();
             $table->timestamps();
         });
     }

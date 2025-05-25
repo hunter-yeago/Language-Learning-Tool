@@ -107,10 +107,6 @@ class SubmittedEssaysSeeder extends Seeder
                 DB::table('bucket_word_join')->insert([
                     'bucket_id' => $bucket->id,
                     'word_id' => $words[$wordText]->id,
-                    'times_used_in_essay' => 0,
-                    'times_in_word_bank' => 0,
-                    'grade' => 'not_attempted',
-                    'comment' => '',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -132,8 +128,8 @@ class SubmittedEssaysSeeder extends Seeder
                     DB::table('essay_word_join')->insert([
                         'essay_id' => $essay->id,
                         'word_id' => $words[$wordText]->id,
-                        'grade' => 'not_attempted',
-                        'comment' => '',
+                        'grade' => null,
+                        'comment' => null,
                         'created_at' => now(),
                         'updated_at' => now(),
                     ]);

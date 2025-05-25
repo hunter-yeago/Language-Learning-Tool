@@ -50,30 +50,18 @@ export default function AddWordsPage({ bucket, words }) {
   }
 
   return (
-    <AuthenticatedLayout
-      header={
-        <h2 className="text-2xl font-semibold text-gray-800">Write an Essay</h2>
-      }
-    >
+    <AuthenticatedLayout header={<h2 className="text-2xl font-semibold text-gray-800">Write an Essay</h2>}>
       {/* Container - Word Bank Preview, Word Adding Form */}
       <div className="flex flex-col px-20 mx-auto gap-3 mt-20 max-w-[800px]">
         {/* Word Bank Preview */}
         <div className=" max-h-80 overflow-y-auto border border-gray-300 rounded-md p-4">
-          <h3 className="text-lg font-medium text-gray-800 mb-2">
-            Word Bank Preview:
-          </h3>
+          <h3 className="text-lg font-medium text-gray-800 mb-2">Word Bank Preview:</h3>
           {wordList.length > 0 ? (
             <ul className="space-y-1">
               {wordList.map((word, index) => (
-                <li
-                  key={index}
-                  className="flex justify-between items-center text-gray-900 bg-gray-100 px-2 py-1 rounded"
-                >
+                <li key={index} className="flex justify-between items-center text-gray-900 bg-gray-100 px-2 py-1 rounded">
                   {word}
-                  <button
-                    onClick={() => removeWord(word)}
-                    className="text-red-500 hover:text-red-700"
-                  >
+                  <button onClick={() => removeWord(word)} className="text-red-500 hover:text-red-700">
                     x
                   </button>
                 </li>
@@ -88,10 +76,7 @@ export default function AddWordsPage({ bucket, words }) {
         <div className="flex-1">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label
-                htmlFor="wordInput"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="wordInput" className="block text-sm font-medium text-gray-700">
                 Add a Word
               </label>
               <div className="flex">
@@ -103,17 +88,11 @@ export default function AddWordsPage({ bucket, words }) {
                   onKeyDown={handleKeyDown}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
-                <button
-                  type="button"
-                  onClick={addWord}
-                  className="mt-1 ml-2 px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                >
+                <button type="button" onClick={addWord} className="mt-1 ml-2 px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
                   Add
                 </button>
               </div>
-              {errors.words && (
-                <div className="text-red-500 text-sm">{errors.words}</div>
-              )}
+              {errors.words && <div className="text-red-500 text-sm">{errors.words}</div>}
             </div>
 
             <div className="mt-4">

@@ -152,7 +152,7 @@ export default function Dashboard({ essays, buckets, bucketID }) {
                     <option value="partially_correct">Partially Correct</option>
                     <option value="incorrect">Incorrect</option>
                     <option value="used_in_essay">Waiting for Grade</option>
-                    <option value="not_attempted">Unused</option>
+                    <option value="not_graded">Unused</option>
                   </select>
 
                   <select className="border px-3 py-1 rounded w-full max-w-sm" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
@@ -173,7 +173,7 @@ export default function Dashboard({ essays, buckets, bucketID }) {
                       {sortedWords.slice(0, visibleCount).map((word) => (
                         <li
                           key={word.id}
-                          className={`border rounded px-3 py-2 text-center ${word.pivot.grade}
+                          className={`border rounded px-3 py-2 text-center
                               ${getGradeBackgroundColor(word.pivot.grade)}`}
                         >
                           {word.word}

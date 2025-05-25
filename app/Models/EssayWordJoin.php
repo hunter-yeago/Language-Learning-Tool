@@ -8,7 +8,7 @@ class EssayWordJoin extends Model
 
 {
     protected $table = 'essay_word_join';
-    protected $fillable = [ 'essay_id', 'word_id', 'grade', 'comment'];
+    protected $fillable = [ 'essay_id', 'word_id', 'grade', 'comment', 'used_in_essay'];
 
     public function essay()
     {

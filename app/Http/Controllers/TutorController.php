@@ -33,7 +33,6 @@ class TutorController extends Controller
     {
 
         $validated = $request->validated();
-        // dd($validated);
 
         $this->essayService->update_essay(
             Essay::findOrFail($validated['essay_id']),

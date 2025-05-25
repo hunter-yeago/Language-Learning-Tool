@@ -31,7 +31,7 @@ export default function AuthenticatedLayout({ header, children }) {
         <NavLink key={href} href={href} active={route().current(href)}>
           {label}
         </NavLink>
-      )
+      ),
     )
 
   const renderDropdown = () => (

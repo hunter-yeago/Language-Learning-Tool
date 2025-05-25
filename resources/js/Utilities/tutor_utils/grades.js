@@ -21,33 +21,16 @@ export const gradeConfig = {
     text: 'text-red-800',
     gradeable: true,
   },
-  used_in_essay: {
-    label: 'Ungraded',
-    background: 'bg-blue-200',
-    text: 'text-blue-800',
-    gradeable: false,
-  },
-  attempted_but_not_used: {
-    label: 'Unused',
-    background: 'bg-gray-200',
-    text: 'text-gray-800',
-    gradeable: false,
-  },
-  not_attempted: {
-    label: 'Unused',
-    background: 'bg-gray-200',
-    text: 'text-gray-800',
-    gradeable: false,
-  },
 }
 
 export function getGradeColor(grade) {
   const g = gradeConfig[grade]
-  return g ? `${g.background} ${g.text}` : ''
+  return g ? `${g.background} ${g.text}` : 'text-gray-800'
 }
 
+// update to handle waiting / not waitinf for grade
 export function getGradeBackgroundColor(grade) {
-  return gradeConfig[grade]?.background || ''
+  return gradeConfig[grade]?.background || 'bg-gray-200'
 }
 
 export function getGradeLabel(grade) {

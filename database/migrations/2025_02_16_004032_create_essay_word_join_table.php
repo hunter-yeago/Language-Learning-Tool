@@ -15,8 +15,9 @@ return new class extends Migration
         $table->id();
         $table->foreignId('essay_id')->constrained();
         $table->foreignId('word_id')->constrained();
-        $table->string('grade')->default('not_attempted');
-        $table->string('comment')->default('');
+        $table->boolean('used_in_essay')->default(false);
+        $table->string('grade')->nullable();
+        $table->string('comment')->nullable();
         $table->timestamps();
     });
 }
