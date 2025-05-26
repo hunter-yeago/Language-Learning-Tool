@@ -29,6 +29,26 @@ TODO bucket dashboard
 // in that essay
 // bucket dashboard - style up the essays a bit with some more data
 
+// TODO
+// do not allow duplicate words in bucket
+// so right now the same word will be put in the db over and over again with different users and such
+// should create a single table for words -- and then if a user adds the word to their bucket it just pulls from there
+// and works with their pivot.
+// so that there will only ever be a single "analyze" for example entry in the dbf
+
+//TODO
+// add ability for tutors and users to add each other
+
+// write essay page - why not have a little space for a note to the tutor to go with the essay
+
+// tutors - page of previously graded essays?
+
+// privatize code?
+// instead of open repo I can make a really nice and long page talking about it
+
+
+// design / ux
+
 ////////////
 // Not MVP//
 ////////////
