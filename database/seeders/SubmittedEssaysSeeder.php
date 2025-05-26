@@ -17,24 +17,15 @@ class SubmittedEssaysSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create Users
-        $student = User::factory()->create([
-            'name' => 'test',
-            'email' => 'test@test.com',
-            'password' => Hash::make('testing123'),
-        ]);
 
-        $tutor = User::factory()->create([
-            'name' => 'tutor',
-            'email' => 'tutor@tutor.com',
-            'role' => 'tutor',
-            'password' => Hash::make('tutor123'),
-        ]);
+        // check if theres a student and tutor, and if not then use them for this
+        $student = \App\Models\User::where('email', 'test@test.com')->first();
+        $tutor = \App\Models\User::where('email', 'tutor@tutor.com')->first();
 
-        DB::table('student_tutor')->insert([
-            'student_id' => $student->id,
-            'tutor_id' => $tutor->id,
-        ]);
+        if (!$student || !$tutor) {
+            $this->command->error("Student or tutor user not found. Please run UserSeeder first.");
+            return;
+        }
 
         // Central config: buckets, words, and essays
         $bucketConfig = [
