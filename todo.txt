@@ -1,6 +1,26 @@
 
-// TODO bucket dashboard 
 
+TODO - Create robust system of grading
+// this whole thing of just checking string and arrays declared
+// in random places is going to bite me in the ass one day
+
+TODO
+// add dictionary to add words page
+// and clean up the styling a bit
+
+TODO
+// tutors -
+// "student page" where they can see student 
+// - ability to make a change to an essay after grading
+
+TODO
+// bucket dashboard - remove unused / fix filters (unused / waiting for grade)
+
+TODO
+// students - when receive marked essay, you have an "essay page"
+// can be expanded to make public
+
+TODO bucket dashboard 
 // - clicking on a word shows you more information
 // dictionary data
 // essays its been used in
@@ -9,7 +29,19 @@
 // in that essay
 // bucket dashboard - style up the essays a bit with some more data
 
-// TODO create system for an essay -
+////////////
+// Not MVP//
+////////////
+
+TODO
+// essays / reviews join table
+// the same essay could be reviewed by multiple people?
+// reddit / tutor / AI?
+
+TODO
+// add chapters / articles / whatever content that the words are from as you are adding them
+
+TODO create system for an essay -
 // essay - (send to nobody)
 // essay - send to tutor immediately
 // essay - share it online
@@ -18,7 +50,9 @@
 // or implement the ability to be given feedback 
 // on a single essay from multiple people.
 
-// TODO - Create robust system of grading
-// this whole thing of just checking string and arrays declared
-// in random places is going to bite me in the ass one day
+TODO
+// grading essay - way to grade parts of the essay that are not the words from the word bank
 
+// ai reviewer?
+// dictionary - conjugation tables (ai)
+// dictionary - ai generated example sentences?
