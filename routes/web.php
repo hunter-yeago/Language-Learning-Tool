@@ -21,12 +21,24 @@ Route::get('login-redirect', function() {
 });
 
 // Home
-Route::get('/', [HomeController::class, 'index'])->name('home');
+// All Users
+Route::middleware(['auth', 'verified'])->group(function () {
+    
+    Route::get('/', [HomeController::class, 'index'])->name('/');
+    
+    // Dictionary
+    Route::get('/dictionary', fn() => Inertia::render('DictionaryPage'))->name('dictionary');
+    Route::get('/lookup-word/{word}', [DictionaryController::class, 'lookup']);
+    
+    // Profile
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
 // Tutor
 Route::middleware(['auth', 'verified', 'role:tutor'])->name('tutor.')->group(function () {
 
-    Route::get('/', [TutorController::class, 'index'])->name('tutor-dashboard');
     Route::get('/grade-essay', [TutorController::class, 'grade_essay'])->name('grade-essay');
     Route::post('/update-essay', [TutorController::class, 'update_essay'])->name('update-essay');
 });
@@ -34,9 +46,6 @@ Route::middleware(['auth', 'verified', 'role:tutor'])->name('tutor.')->group(fun
 // Student
 Route::middleware(['auth', 'verified', 'role:student'])->name('student.')->group(function () {
     
-    // Dashboard
-    Route::get('/dashboard', [StudentController::class, 'index'])->name('student-dashboard');
-
     // Add Words
     Route::post('/add-words-page', [StudentController::class, 'addWordsPage'])->name('add-words-page');
     Route::get('/add-words-page', fn() => redirect()->route('student.dashboard'));
@@ -56,19 +65,6 @@ Route::middleware(['auth', 'verified', 'role:student'])->name('student.')->group
         Route::get('/essays', 'index')->name('essays.index');
         Route::post('/essays/write-essay', 'store')->name('store-essay');
     });
-});
-
-// All Users
-Route::middleware(['auth', 'verified'])->group(function () {
-    
-    // Dictionary
-    Route::get('/dictionary', fn() => Inertia::render('DictionaryPage'))->name('dictionary');
-    Route::get('/lookup-word/{word}', [DictionaryController::class, 'lookup']);
-    
-    // Profile
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 require __DIR__.'/auth.php';
