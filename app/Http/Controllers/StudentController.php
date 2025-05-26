@@ -11,16 +11,17 @@ use Inertia\Inertia;
 class StudentController extends Controller
 {
 
-    public function index(Request $request)
+    // temporarily taking out request
+    public function index()
     {
         $essays = Essay::where('user_id', Auth::id())->with('words')->get();
         $buckets = Bucket::where('user_id', Auth::id())->with('words')->get();
-        $bucketID = $request->query('bucketID');
+        // $bucketID = $request->query('bucketID');
 
         return Inertia::render('Dashboard', [
             'essays' => $essays,
             'buckets' => $buckets,
-            'bucketID' => $bucketID,
+            // 'bucketID' => $bucketID,
         ]);
     }
 

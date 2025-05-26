@@ -72,10 +72,3 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 require __DIR__.'/auth.php';
-
-
-// notes
-// tutor dashboard
-// Dashboard - note, having the same route name /dashbaord for both tutors and students
-// even though they require different roles during auth
-// was causing big problems - tutor.dashboard was resolving to student for some reason

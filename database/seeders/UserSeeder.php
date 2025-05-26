@@ -3,8 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Container\Attributes\DB;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -22,12 +21,16 @@ class UserSeeder extends Seeder
             'password' => Hash::make('testing123'),
         ]);
 
+        $student->assignRole('student');
+
         $tutor = User::factory()->create([
             'name' => 'tutor',
             'email' => 'tutor@tutor.com',
             'role' => 'tutor',
             'password' => Hash::make('tutor123'),
         ]);
+
+        $tutor->assignRole('tutor');
 
         DB::table('student_tutor')->insert([
             'student_id' => $student->id,

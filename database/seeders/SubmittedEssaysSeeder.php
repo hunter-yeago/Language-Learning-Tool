@@ -22,6 +22,7 @@ class SubmittedEssaysSeeder extends Seeder
         $student = \App\Models\User::where('email', 'test@test.com')->first();
         $tutor = \App\Models\User::where('email', 'tutor@tutor.com')->first();
 
+
         if (!$student || !$tutor) {
             $this->command->error("Student or tutor user not found. Please run UserSeeder first.");
             return;

@@ -6,11 +6,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -66,9 +67,14 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'student_tutor', 'tutor_id', 'student_id');
     }
 
-    public function hasRole($role): bool
+    public function isStudent(): bool
     {
-        return $this->role === $role;
+        return $this->hasRole('student');
+    }
+
+    public function isTutor(): bool
+    {
+        return $this->hasRole('tutor');
     }
 
 }
