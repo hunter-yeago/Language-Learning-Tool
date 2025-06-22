@@ -16,6 +16,11 @@ TODO
 TODO
 // bucket dashboard - remove unused / fix filters (unused / waiting for grade)
 
+TODO 
+// dictionary - users can add their custom Comments
+// tutors - can be seen by their students?
+// students dictionary
+
 TODO
 // students - when receive marked essay, you have an "essay page"
 // can be expanded to make public
