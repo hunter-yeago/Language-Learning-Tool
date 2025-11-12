@@ -3,7 +3,7 @@ import { useState } from 'react'
 export default function CreateBucketForm({ bucketData, setData, post, data, onCancel, processing }) {
   function handleCreateNewBucket(e) {
     e.preventDefault()
-    post(route('store-bucket'), {
+    post(route('student.store-bucket'), {
       title: data.bucket.title,
       description: data.bucket.description,
     })

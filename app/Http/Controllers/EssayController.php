@@ -26,7 +26,7 @@ class EssayController extends Controller
 
         $this->essayService->storeEssay($validated, Auth::user());
 
-        return redirect()->route('student.dashboard', ['bucketID' => $validated['bucket_id']])
+        return redirect()->route('/', ['bucketID' => $validated['bucket_id']])
             ->with('success', 'Essay saved and sent to tutor.');
     }
 

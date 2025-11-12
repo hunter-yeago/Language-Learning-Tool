@@ -40,7 +40,7 @@ class TutorController extends Controller
             $validated['feedback']
         );
 
-        return redirect()->route('tutor.tutor-dashboard')->with('success', 'Essay graded!');
+        return redirect()->route('/')->with('success', 'Essay graded!');
     }
 
     public function grade_essay(Request $request)
@@ -48,13 +48,13 @@ class TutorController extends Controller
         $essay_id = $request->input('essay_id');
 
         if (!$essay_id || !isset($essay_id)) {
-            return redirect()->route('tutor.tutor-dashboard');
+            return redirect()->route('/');
         }
 
         $essay = Essay::with('words')->find($essay_id);
 
         if (!$essay) {
-            return redirect()->route('tutor.tutor-dashboard')->with('error', 'Essay not found');
+            return redirect()->route('/')->with('error', 'Essay not found');
         }
 
         return Inertia::render('TutorEssayPage', [
