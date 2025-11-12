@@ -104,11 +104,11 @@ export default function Dashboard({ essays, buckets, bucketID }) {
   }
 
   return (
-    <AuthenticatedLayout header={<h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>}>
+    <AuthenticatedLayout header={<h1 className="text-3xl font-semibold text-neutral-900">Student Dashboard</h1>}>
       <Head title="Dashboard" />
 
-      <section className="flex flex-col gap-3">
-        <article className="border p-6 min-h-full bg-white shadow-md rounded-lg flex flex-col gap-10">
+      <section className="flex flex-col gap-6">
+        <article className="border border-neutral-200 p-8 bg-white shadow-sm rounded-lg flex flex-col gap-10">
           <ExistingWordBuckets
             buckets={buckets}
             currentBucketId={currentBucket?.id}
@@ -120,11 +120,11 @@ export default function Dashboard({ essays, buckets, bucketID }) {
           />
         </article>
 
-        <article className="border p-6 min-h-full bg-white shadow-md rounded-lg flex flex-col gap-6">
+        <article className="border border-neutral-200 p-8 bg-white shadow-sm rounded-lg flex flex-col gap-6">
           {currentBucket ? (
             <>
               <div className="flex items-center justify-between gap-4">
-                <h2 className="w-fit text-xl font-bold text-gray-800">Bucket: {currentBucket.title}</h2>
+                <h2 className="w-fit text-2xl font-semibold text-neutral-900">{currentBucket.title}</h2>
                 <GradeProgressBar words={currentBucket.words} />
 
                 <div className="flex gap-2">
@@ -134,20 +134,20 @@ export default function Dashboard({ essays, buckets, bucketID }) {
               </div>
 
               {/* Word Filters */}
-              <section className="space-y-2">
-                <h3 className="font-semibold text-gray-700">Words in this Bucket</h3>
+              <section className="space-y-4">
+                <h3 className="text-lg font-semibold text-neutral-900">Vocabulary Words</h3>
                 <Instructions />
                 <div className="flex items-center gap-4">
                   {/* Text Word Filter */}
                   <input
                     type="text"
                     placeholder="Search words..."
-                    className="border px-3 py-1 rounded w-full max-w-sm"
+                    className="border border-neutral-300 px-4 py-2.5 rounded-md w-full max-w-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                   />
-                  <select className="border px-3 py-1 rounded w-full max-w-sm" name="grades" id="grades" onChange={(e) => setGradeFilter(e.target.value)}>
-                    <option value="">All</option>
+                  <select className="border border-neutral-300 px-4 py-2.5 rounded-md w-full max-w-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition" name="grades" id="grades" onChange={(e) => setGradeFilter(e.target.value)}>
+                    <option value="">All Grades</option>
                     <option value="correct">Correct</option>
                     <option value="partially_correct">Partially Correct</option>
                     <option value="incorrect">Incorrect</option>
@@ -155,7 +155,7 @@ export default function Dashboard({ essays, buckets, bucketID }) {
                     <option value="not_graded">Unused</option>
                   </select>
 
-                  <select className="border px-3 py-1 rounded w-full max-w-sm" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+                  <select className="border border-neutral-300 px-4 py-2.5 rounded-md w-full max-w-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
                     <option value="created-newest">Newest</option>
                     <option value="created-oldest">Oldest</option>
                     {gradeFilter === '' && (
@@ -169,11 +169,11 @@ export default function Dashboard({ essays, buckets, bucketID }) {
 
                 {sortedWords.length ? (
                   <>
-                    <ul className="border p-2 grid grid-cols-2 md:grid-cols-4 gap-3 text-gray-800 mt-4">
+                    <ul className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
                       {sortedWords.slice(0, visibleCount).map((word) => (
                         <li
                           key={word.id}
-                          className={`border rounded px-3 py-2 text-center
+                          className={`border border-neutral-200 rounded-md px-4 py-3 text-center font-medium transition hover:shadow-sm
                               ${getGradeBackgroundColor(word.pivot.grade)}`}
                         >
                           {word.word}
@@ -182,30 +182,30 @@ export default function Dashboard({ essays, buckets, bucketID }) {
                     </ul>
 
                     {sortedWords.length > visibleCount && (
-                      <button onClick={() => setVisibleCount(visibleCount + 30)} className="mt-4 px-4 py-2 text-sm bg-blue-100 rounded hover:bg-blue-200">
-                        Load More
+                      <button onClick={() => setVisibleCount(visibleCount + 30)} className="mt-4 px-5 py-2.5 text-sm bg-primary-50 text-primary-700 rounded-md hover:bg-primary-100 border border-primary-200 transition font-medium">
+                        Load More Words
                       </button>
                     )}
                   </>
                 ) : (
-                  <p className="text-sm text-gray-500 italic">No matching words found.</p>
+                  <p className="text-sm text-neutral-500 italic">No matching words found.</p>
                 )}
               </section>
 
               {/* Essay List */}
-              <section className="">
-                <h3 className="font-semibold text-gray-700 mb-2">Essays</h3>
+              <section className="pt-6 border-t border-neutral-200">
+                <h3 className="text-lg font-semibold text-neutral-900 mb-4">Essays</h3>
                 {filteredEssays.length ? (
-                  <ul className="grid grid-cols-2 gap-3">
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {filteredEssays.map((essay) => (
-                      <li key={essay.id} className="border p-3 rounded bg-gray-50">
-                        <div className="font-medium">{essay.title}</div>
-                        <p className="text-sm text-gray-600 line-clamp-2">{essay.content}</p>
+                      <li key={essay.id} className="border border-neutral-200 p-4 rounded-md bg-neutral-50 hover:shadow-sm transition">
+                        <div className="font-semibold text-neutral-900 mb-1">{essay.title}</div>
+                        <p className="text-sm text-neutral-600 line-clamp-2">{essay.content}</p>
                       </li>
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-sm text-gray-500 italic">No essays yet.</p>
+                  <p className="text-sm text-neutral-500 italic">No essays yet.</p>
                 )}
               </section>
             </>
