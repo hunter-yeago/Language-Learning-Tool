@@ -35,7 +35,7 @@ export default function AuthenticatedLayout({ header, children }) {
     <Dropdown>
       <Dropdown.Trigger>
         <span className="inline-flex rounded-md">
-          <button type="button" className="inline-flex items-center rounded-md border bg-white px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">
+          <button type="button" className="inline-flex items-center rounded-md border border-neutral-300 bg-white px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition">
             {user.name}
             <svg className="ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
               <path
@@ -57,13 +57,13 @@ export default function AuthenticatedLayout({ header, children }) {
   )
 
   return (
-    <div className="min-h-screen bg-gray-100 pb-8">
-      <nav className="border-b border-gray-100 bg-white">
+    <div className="min-h-screen bg-neutral-50 pb-8">
+      <nav className="bg-white border-b border-neutral-200 shadow-sm">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 justify-between">
+          <div className="flex h-20 justify-between">
             <div className="flex items-center">
-              <ApplicationLogo className="block h-9 w-auto text-gray-800" />
-              <div className="hidden sm:flex space-x-8 ml-10">{renderNavLinks(false)}</div>
+              <ApplicationLogo className="block h-10 w-auto text-primary-700" />
+              <div className="hidden sm:flex space-x-1 ml-12">{renderNavLinks(false)}</div>
             </div>
             <div className="hidden sm:flex sm:items-center">
               <div className="relative ml-3">{renderDropdown()}</div>
@@ -71,7 +71,7 @@ export default function AuthenticatedLayout({ header, children }) {
             <div className="-mr-2 flex items-center sm:hidden">
               <button
                 onClick={toggleNavigation}
-                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 focus:outline-none"
+                className="inline-flex items-center justify-center rounded-md p-2 text-neutral-500 hover:bg-neutral-100 focus:outline-none"
               >
                 <svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                   <path
@@ -94,18 +94,18 @@ export default function AuthenticatedLayout({ header, children }) {
           </div>
         </div>
         {showingNavigationDropdown && (
-          <div className="sm:hidden">
+          <div className="sm:hidden border-t border-neutral-200">
             <div className="space-y-1 pt-2 pb-3">{renderNavLinks(true)}</div>
           </div>
         )}
       </nav>
 
       {header && (
-        <header className="bg-white shadow mb-12">
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{header}</div>
+        <header className="bg-white border-b border-neutral-200">
+          <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">{header}</div>
         </header>
       )}
-      <main className="max-w-[min(90%,1000px)] mx-auto">{children}</main>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</main>
     </div>
   )
 }
