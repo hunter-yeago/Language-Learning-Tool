@@ -1,13 +1,7 @@
 import ActionButton from '@/Components/dashboard/ActionButton'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Head, router } from '@inertiajs/react'
-
-interface Essay {
-  id: number
-  title: string
-  content: string
-  created_at: string
-}
+import { Essay } from '@/types/essay'
 
 interface Props {
   essays: Essay[]

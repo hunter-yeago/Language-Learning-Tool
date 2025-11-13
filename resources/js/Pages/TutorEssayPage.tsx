@@ -5,15 +5,8 @@ import Comments from '@/Components/tutor-grade-essay/Comments'
 import StudentEssay from '@/Components/tutor-grade-essay/StudentEssay'
 import GeneralFeedback from '@/Components/tutor-grade-essay/GeneralFeedback'
 import { TutorWord } from '@/types/tutor'
+import { Essay } from '@/types/essay'
 import { FormEventHandler } from 'react'
-
-interface Essay {
-  id: number
-  title: string
-  content: string
-  bucket_id: number
-  created_at: string
-}
 
 interface Props {
   essay: Essay

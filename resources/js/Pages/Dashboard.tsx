@@ -10,14 +10,7 @@ import GradeProgressBar from './GradeProgressBar'
 import { Bucket, BucketData } from '@/types/bucket'
 import { TutorWord } from '@/types/tutor'
 import { Word } from '@/types/word'
-
-interface Essay {
-  id: number
-  title: string
-  content: string
-  bucket_id: number
-  created_at: string
-}
+import { Essay } from '@/types/essay'
 
 // Extend Bucket type to include TutorWord compatibility
 interface BucketWithTutorWords extends Omit<Bucket, 'words'> {
