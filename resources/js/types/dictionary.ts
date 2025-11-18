@@ -10,6 +10,6 @@ export interface Lexeme {
 
 export interface DictionaryEntry {
   id: string;
-  headword: string;
+  entry: string;
   lexemes: Lexeme[];
 }

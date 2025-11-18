@@ -17,8 +17,8 @@ export default function DictionaryPage() {
       <DictionarySearchForm setWords={setWords} />
 
       {words.length > 0 && (
-        <section className="max-w-2xl mx-auto mt-6 p-6 bg-white shadow-md rounded-md" aria-label={`dictionary results for ${words[0].headword}`}>
-          <h2 className="text-xl mb-4 font-bold">{capitalizeFirstLetter(words[0].headword)}</h2>
+        <section className="max-w-2xl mx-auto mt-6 p-6 bg-white shadow-md rounded-md" aria-label={`dictionary results for ${words[0].entry}`}>
+          <h2 className="text-xl mb-4 font-bold">{capitalizeFirstLetter(words[0].entry)}</h2>
           <div className="flex flex-col gap-4">
             {words.map((entry) =>
               entry.lexemes.map((lexeme, index) => <LexemeCard key={index} lexeme={lexeme} pluralForm={findPluralForm(words[0].lexemes) ?? ''} />),
