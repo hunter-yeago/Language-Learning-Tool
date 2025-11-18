@@ -2,19 +2,19 @@ import { getGradeColor } from '@/Utilities/tutor_utils/grades'
 import { TutorWord } from '@/types/tutor'
 
 interface CommentEditorProps {
+  words: TutorWord[];
+  setData: (key: string, value: TutorWord[]) => void;
   currentComment: number | null;
   setCurrentComment: (wordId: number | null) => void;
   tempData: string;
   setTempData: (comment: string) => void;
-  data: TutorWord[];
-  setData: (key: string, value: TutorWord[]) => void;
 }
 
-export default function CommentEditor({ currentComment, setCurrentComment, tempData, setTempData, data, setData }: CommentEditorProps) {
+export default function CommentEditor({ currentComment, setCurrentComment, tempData, setTempData, words, setData }: CommentEditorProps) {
   function saveComment() {
     if (currentComment != null) {
       // Find the current word in data array
-      const updatedWords = data.map((word) => {
+      const updatedWords = words.map((word: TutorWord) => {
         if (word.id === currentComment) {
           return {
             ...word,
@@ -43,7 +43,7 @@ export default function CommentEditor({ currentComment, setCurrentComment, tempD
   if (!currentComment) return null
 
   // Find the word object from the data
-  const wordObj = data.find((w) => w.id === currentComment)
+  const wordObj = words.find((word) => word.id === currentComment)
 
   if (!wordObj) return null
 

@@ -1,11 +1,8 @@
-import { Essay } from '@/types/essay';
 import { TutorWord } from '@/types/tutor'
 
 interface CommentWordsProps {
-  essay: Essay;
-  data: TutorWord[];
-  setCurrentComment: (wordId: number | null) => void;
   words: TutorWord[];
+  setCurrentComment: (wordId: number | null) => void;
 }
 
 export default function CommentWords({ setCurrentComment, words }: CommentWordsProps) {

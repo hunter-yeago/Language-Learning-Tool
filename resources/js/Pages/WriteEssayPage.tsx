@@ -33,55 +33,90 @@ export default function WriteEssayPage({ bucket, words }: Props) {
     tutor_id: 2,
   })
 
+  /**
+   * Handles changes to the essay title input.
+   * Updates both form data and local state.
+   */
   function handleTitleChange(e: ChangeEvent<HTMLInputElement>) {
+    // Update form data for submission
     setData('title', e.target.value)
+
+    // Update local state for UI display
     setTitle(e.target.value)
   }
 
+  /**
+   * Handles changes to the essay content textarea.
+   * Finds which vocabulary words are used in the text and updates word usage status.
+   */
   function handleTextChange(e: ChangeEvent<HTMLTextAreaElement>) {
+    // Find which vocabulary words appear in the essay text
     const usedWords = findUsedWords(e.target.value)
+
+    // Update displayed word buttons in the word bank
     setWordButtons(usedWords)
 
+    // Update form data with essay content and word usage
     setData((prevData) => {
       return {
         ...prevData,
         content: e.target.value,
-        words: getUpdatedWords(usedWords),
+        words: getUpdatedWords(usedWords), // Mark which words are used/unused
       }
     })
   }
 
-  // some voodoo magic about having an issue with a smiley likek thi :) in the word bank
+  /**
+   * Escapes special regex characters in a string to prevent regex errors.
+   * Necessary to handle words that might contain regex special chars like :) or (test)
+   */
   function escapeRegex(string: string): string {
+    // Replace all regex special characters with escaped versions
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   }
 
+  /**
+   * Creates an updated words array with usage status for each word.
+   * Marks which words from the bucket are actually used in the essay.
+   */
   function getUpdatedWords(usedWords: Word[]): WordWithUsed[] {
-    // Create a Set of used word IDs for faster lookup
+    // Create a Set of used word IDs for O(1) lookup performance
     const usedWordIds = new Set(usedWords.map((word) => word.id))
 
-    // Mark all words with used: true/false
+    // Map through all bucket words and mark each as used or unused
     return words.map((word) => ({
       ...word,
-      used: usedWordIds.has(word.id),
+      used: usedWordIds.has(word.id), // True if word appears in essay, false otherwise
     }))
   }
 
-  // 'i' — case-insensitive match
-  // \\b — word boundary (ensures "benevolent" matches only as a full word, not inside "benevolently")
+  /**
+   * Finds which vocabulary words from the bucket appear in the essay text.
+   * Uses case-insensitive regex matching with word boundaries to match whole words only.
+   *
+   * 'i' flag = case-insensitive match
+   * \\b = word boundary (ensures "benevolent" matches only as full word, not inside "benevolently")
+   */
   function findUsedWords(userEssay: string): Word[] {
-    // start filter
+    // Filter the bucket words to only those that appear in the essay
     return words.filter((word) => {
-      // use regex to search for word
+      // Create regex with escaped word text, word boundaries, and case-insensitive flag
       const wordRegex = new RegExp(`\\b${escapeRegex(word.word)}\\b`, 'i')
 
-      // callback - add the word to the new array if it matches
+      // Test if this word appears anywhere in the essay text
       return wordRegex.test(userEssay)
     })
   }
 
+  /**
+   * Handles essay submission form.
+   * Sends essay data to the backend for storage and tutor assignment.
+   */
   const handleSubmit: FormEventHandler = (e) => {
+    // Prevent default form submission
     e.preventDefault()
+
+    // Post essay data to server
     post(route('student.store-essay'))
   }
 

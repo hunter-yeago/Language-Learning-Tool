@@ -17,42 +17,80 @@ export default function AddWordsPage({ bucket }: Props) {
   const [currentWord, setCurrentWord] = useState('')
   const [wordList, setWordList] = useState<string[]>([])
 
+  /**
+   * Handles Enter key press in the word input field.
+   * Adds the word without submitting the form.
+   */
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault()
+      // Add the word to the list
       addWord()
     }
   }
 
+  /**
+   * Adds a word to the word list if it's valid and not a duplicate.
+   * Validates the word by trimming whitespace and checking for empty strings.
+   */
   const addWord = () => {
+    // Remove leading/trailing whitespace
     const trimmedWord = currentWord.trim()
+
+    // Only proceed if the word is not empty
     if (trimmedWord !== '') {
-      // Prevent duplicate words
+      // Prevent duplicate words from being added
       if (!wordList.includes(trimmedWord)) {
+        // Create new array with the added word
         const updatedWordList = [...wordList, trimmedWord]
+
+        // Update local state for UI display
         setWordList(updatedWordList)
+
+        // Update form data for submission
         setData('words', updatedWordList)
+
+        // Clear the input field
         setCurrentWord('')
       }
     }
   }
 
+  /**
+   * Handles form submission to save all words to the bucket.
+   * Sends the word list to the backend and clears the form on success.
+   */
   const handleSubmit: FormEventHandler = (e) => {
+    // Prevent default form submission behavior
     e.preventDefault()
 
+    // Send POST request to add words to the bucket
     post(`/buckets/${bucket.id}/add-new-words`, {
       data: { words: wordList },
+
+      // On successful save, clear the word list and form data
       onSuccess: () => {
         setWordList([])
         setData('words', [])
       },
+
+      // Log any errors that occur during submission
       onError: (error) => console.error('Error adding words:', error),
     })
   }
 
+  /**
+   * Removes a word from the word list.
+   * Updates both local state and form data.
+   */
   const removeWord = (wordToRemove: string) => {
+    // Filter out the word to remove
     const updatedWordList = wordList.filter((word) => word !== wordToRemove)
+
+    // Update local state for UI display
     setWordList(updatedWordList)
+
+    // Update form data for submission
     setData('words', updatedWordList)
   }
 

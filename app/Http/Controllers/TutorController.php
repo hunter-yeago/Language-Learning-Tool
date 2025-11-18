@@ -31,8 +31,15 @@ class TutorController extends Controller
 
     public function update_essay(GradeEssayRequest $request)
     {
-
         $validated = $request->validated();
+
+        // Debug: Log all incoming data
+        \Log::info('=== Update Essay Debug ===');
+        \Log::info('Essay ID: ' . $validated['essay_id']);
+        \Log::info('Feedback: ' . $validated['feedback']);
+        \Log::info('Words count: ' . count($validated['words']));
+        \Log::info('Words data: ', $validated['words']);
+        \Log::info('Raw request data: ', $request->all());
 
         $this->essayService->update_essay(
             Essay::findOrFail($validated['essay_id']),
@@ -59,7 +66,6 @@ class TutorController extends Controller
 
         return Inertia::render('TutorEssayPage', [
             'essay' => $essay,
-            'words' => $essay->words,
         ]);
     }
 

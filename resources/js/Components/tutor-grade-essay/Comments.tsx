@@ -7,12 +7,11 @@ import { Essay } from '@/types/essay'
 
 interface CommentsProps {
   essay: Essay;
-  data: TutorWord[];
   setData: (key: string, value: TutorWord[]) => void;
-  words: TutorWord[];
 }
 
-export default function Comments({ essay, data, setData, words }: CommentsProps) {
+export default function Comments({ essay, setData }: CommentsProps) {
+  const words = essay.words;
   const [tempData, setTempData] = useState('')
   const [currentComment, setCurrentComment] = useState<number | null>(null)
 
@@ -23,18 +22,18 @@ export default function Comments({ essay, data, setData, words }: CommentsProps)
         <p className="text-sm text-gray-600">- Click on a word to leave a comment</p>
       </div>
 
-      <CommentWords words={words} essay={essay} data={data} setCurrentComment={setCurrentComment} />
+      <CommentWords words={words} setCurrentComment={setCurrentComment} />
 
       <CommentEditor
         currentComment={currentComment}
         setCurrentComment={setCurrentComment}
         tempData={tempData}
         setTempData={setTempData}
-        data={data}
+        words={words}
         setData={setData}
       />
 
-      <CommentList essay={essay} data={data} currentComment={currentComment} setCurrentComment={setCurrentComment} setData={setData} setTempData={setTempData} />
+      <CommentList words={words} currentComment={currentComment} setCurrentComment={setCurrentComment} setData={setData} setTempData={setTempData} />
     </section>
   )
 }

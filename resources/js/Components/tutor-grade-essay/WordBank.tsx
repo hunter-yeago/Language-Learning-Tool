@@ -7,13 +7,12 @@ import { Essay } from '@/types/essay';
 interface WordBankProps {
   essay: Essay;
   setData: (key: string, value: TutorWord[]) => void;
-  words: TutorWord[];
 }
 
-export default function WordBank({ essay, setData, words }: WordBankProps) {
-  const hasWords = Array.isArray(words) && words.length > 0
+export default function WordBank({ essay, setData }: WordBankProps) {
+  const words = essay.words;
 
-  // console.log('words in wordbank', words)
+  const hasWords = Array.isArray(words) && words.length > 0
 
   if (!hasWords) {
     return (

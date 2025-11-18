@@ -1,11 +1,11 @@
-import { TutorFormData } from '@/types/tutor'
+
 
 interface GeneralFeedbackProps {
   setData: (key: string, value: string) => void;
-  data: TutorFormData;
+  feedback: string;
 }
 
-export default function GeneralFeedback({ setData, data }: GeneralFeedbackProps) {
+export default function GeneralFeedback({ setData, feedback }: GeneralFeedbackProps) {
   return (
     <div className="w-full mt-4">
       {/* Title */}
@@ -17,7 +17,7 @@ export default function GeneralFeedback({ setData, data }: GeneralFeedbackProps)
           rows={4}
           placeholder="Enter general feedback for the student..."
           className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-          value={data.feedback}
+          value={feedback}
           onChange={(e) => setData('feedback', e.target.value)}
         ></textarea>
       </div>

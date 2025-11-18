@@ -1,20 +1,12 @@
 import { getGradeColor } from '@/Utilities/tutor_utils/grades'
 import { buildHighlightedSegments, filterOverlappingMatches, getMatchingWordPositions } from '@/Utilities/tutor_utils/tutor'
 import { Essay } from '@/types/essay';
-import { TutorWord } from '@/types/tutor'
 
-interface StudentEssayProps {
-  essay: Essay;
-  data: TutorWord[];
-  words: TutorWord[];
-}
 
-export default function StudentEssay({ essay, data, words }: StudentEssayProps) {
-  console.log('essay', essay)
-  console.log('words', words)
 
-  // const words = essay
-  
+export default function StudentEssay({ essay }: {essay: Essay}) {
+  const words = essay.words;
+
   function highlightWordButtons(text: string) {
     if (!text || !words?.length) return <p>{text}</p>
 
@@ -30,7 +22,7 @@ export default function StudentEssay({ essay, data, words }: StudentEssayProps) 
           if (segment.type === 'text') return <span key={index}>{segment.content}</span>
 
           // connect data word with segment word via id
-          const word = data.find((word) => word.id === segment.wordId)
+          const word = words.find((word) => word.id === segment.wordId)
 
           // early return
           if (!word) return <></>
