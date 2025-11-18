@@ -1,7 +1,8 @@
-import { TutorEssay, TutorWord } from '@/types/tutor'
+import { Essay } from '@/types/essay';
+import { TutorWord } from '@/types/tutor'
 
 interface CommentWordsProps {
-  essay: TutorEssay;
+  essay: Essay;
   data: TutorWord[];
   setCurrentComment: (wordId: number | null) => void;
   words: TutorWord[];

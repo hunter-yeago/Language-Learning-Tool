@@ -14,6 +14,9 @@ interface Props {
 }
 
 export default function TutorEssayPage({ essay, words }: Props) {
+  // console.log('essay', essay)
+  // console.log('words', words)
+
   const { data, setData, post } = useForm({
     words: words,
     essay_id: essay.id,
@@ -25,6 +28,8 @@ export default function TutorEssayPage({ essay, words }: Props) {
 
     post(route('tutor.update-essay'))
   } 
+
+  // console.log('firing')
 
   return (
     <AuthenticatedLayout header={<h1 className="text-2xl font-semibold text-gray-800">Student Essay Review</h1>}>

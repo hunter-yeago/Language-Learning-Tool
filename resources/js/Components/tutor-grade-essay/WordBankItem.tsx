@@ -8,6 +8,7 @@ interface WordBankItemProps {
 }
 
 export default function WordBankItem({ word, handleWordClick }: WordBankItemProps) {
+  // console.log('word in word bank item', word)
   return (
     <li key={word.id}>
       <WordButton color={getGradeColor(word.pivot.grade)} clickHandler={() => handleWordClick(word.id)} word={word.word} />

@@ -1,14 +1,20 @@
 import { getGradeColor } from '@/Utilities/tutor_utils/grades'
 import { buildHighlightedSegments, filterOverlappingMatches, getMatchingWordPositions } from '@/Utilities/tutor_utils/tutor'
-import { TutorEssay, TutorWord } from '@/types/tutor'
+import { Essay } from '@/types/essay';
+import { TutorWord } from '@/types/tutor'
 
 interface StudentEssayProps {
-  essay: TutorEssay;
+  essay: Essay;
   data: TutorWord[];
   words: TutorWord[];
 }
 
 export default function StudentEssay({ essay, data, words }: StudentEssayProps) {
+  console.log('essay', essay)
+  console.log('words', words)
+
+  // const words = essay
+  
   function highlightWordButtons(text: string) {
     if (!text || !words?.length) return <p>{text}</p>
 
@@ -18,14 +24,19 @@ export default function StudentEssay({ essay, data, words }: StudentEssayProps) 
 
     return (
       <div className="whitespace-pre-wrap text-gray-700">
-        {segments.map((segment, idx) => {
-          if (segment.type === 'text') {
-            return <span key={idx}>{segment.content}</span>
-          }
+        {segments.map((segment, index) => {
+          
+          // return regular essay text 
+          if (segment.type === 'text') return <span key={index}>{segment.content}</span>
 
-          const word = data[segment.wordId!] || {}
+          // connect data word with segment word via id
+          const word = data.find((word) => word.id === segment.wordId)
+
+          // early return
+          if (!word) return <></>
+
           return (
-            <button key={`${segment.wordId}-${idx}`} className={`px-2 py-1 rounded-full border ${word.pivot?.grade ? getGradeColor(word.pivot.grade) : 'border-gray-300'}`}>
+            <button key={`${segment.wordId}-${index}`} className={`px-2 py-1 rounded-full border ${word.pivot.grade ? getGradeColor(word.pivot.grade) : 'border-gray-300'}`}>
               {segment.content}
             </button>
           )

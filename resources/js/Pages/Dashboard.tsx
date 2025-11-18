@@ -1,4 +1,4 @@
-import { useEffect, useState, FormEventHandler } from 'react'
+import { useEffect, useState } from 'react'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import ExistingWordBuckets from '@/Components/dashboard/ExistingWordBuckets'
 import { Head, useForm, router } from '@inertiajs/react'
@@ -11,6 +11,7 @@ import { Bucket, BucketData } from '@/types/bucket'
 import { TutorWord } from '@/types/tutor'
 import { Word } from '@/types/word'
 import { Essay } from '@/types/essay'
+import { voidFunction } from '@/types/types'
 
 // Extend Bucket type to include TutorWord compatibility
 interface BucketWithTutorWords extends Omit<Bucket, 'words'> {
@@ -118,8 +119,7 @@ export default function Dashboard({ essays, buckets, bucketID }: Props) {
   // Filter essays to only show those associated with the current bucket
   const filteredEssays = essays.filter((essay) => essay.bucket_id === currentBucket?.id)
 
-  const handleWriteEssayPage: FormEventHandler = (e) => {
-    e.preventDefault()
+  const handleWriteEssayPage: voidFunction = () => {
     if (data.bucket.id) {
       router.visit(route('student.write-essay'), {
         method: 'post',
@@ -131,8 +131,9 @@ export default function Dashboard({ essays, buckets, bucketID }: Props) {
     }
   }
 
-  const handleAddWords: FormEventHandler = (e) => {
-    e.preventDefault()
+  
+
+  const handleAddWords: voidFunction = () => {
     if (data.bucket.id) {
       router.visit(route('student.add-words-page'), {
         method: 'post',
@@ -143,6 +144,7 @@ export default function Dashboard({ essays, buckets, bucketID }: Props) {
       })
     }
   }
+
 
   return (
     <AuthenticatedLayout header={<h1 className="text-3xl font-semibold text-neutral-900">Student Dashboard</h1>}>
@@ -169,8 +171,8 @@ export default function Dashboard({ essays, buckets, bucketID }: Props) {
                 <GradeProgressBar words={currentBucket.words} />
 
                 <div className="flex gap-2">
-                  <ActionButton onClick={() => handleAddWords({} as any)} processing={processing} color="green" text="Add Words" />
-                  <ActionButton onClick={() => handleWriteEssayPage({} as any)} processing={processing} color="blue" text="Write Essay" />
+                  <ActionButton onClick={handleAddWords} processing={processing} color="green" text="Add Words" />
+                  <ActionButton onClick={handleWriteEssayPage} processing={processing} color="blue" text="Write Essay" />
                 </div>
               </div>
 

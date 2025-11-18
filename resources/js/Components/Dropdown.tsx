@@ -1,3 +1,4 @@
+import { voidFunction } from '@/types/types';
 import { Transition } from '@headlessui/react';
 import { Link, InertiaLinkProps } from '@inertiajs/react';
 import { createContext, useContext, useState, PropsWithChildren, Dispatch, SetStateAction } from 'react';
@@ -5,7 +6,7 @@ import { createContext, useContext, useState, PropsWithChildren, Dispatch, SetSt
 interface DropDownContextType {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  toggleOpen: () => void;
+  toggleOpen: voidFunction;
 }
 
 const DropDownContext = createContext<DropDownContextType | undefined>(undefined);

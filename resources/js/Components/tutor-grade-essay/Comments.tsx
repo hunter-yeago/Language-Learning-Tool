@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { TutorEssay, TutorWord } from '@/types/tutor'
+import { TutorWord } from '@/types/tutor'
 import CommentEditor from './CommentEditor'
 import CommentList from './CommentList'
 import CommentWords from './CommentWords'
+import { Essay } from '@/types/essay'
 
 interface CommentsProps {
-  essay: TutorEssay;
+  essay: Essay;
   data: TutorWord[];
   setData: (key: string, value: TutorWord[]) => void;
   words: TutorWord[];

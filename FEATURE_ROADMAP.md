@@ -239,3 +239,17 @@ When implementing any feature from this roadmap:
 3. Ensure consistency with current architecture
 4. Consider impact on related features
 5. Update this document when features are completed or requirements change
+
+### 19. Word History
+**Status:** Future
+**Priority:** Medium
+
+**Requirements:**
+- Can see the history of how the word was used.
+- First it was unused.
+- Then it was wrong.
+- Then it was right.
+- Then it was partially correct?
+- have access to the essay / tutor / whatever in the history
+
+---

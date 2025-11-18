@@ -16,6 +16,8 @@ export function getMatchingWordPositions(text: string, words: Word[]): WordMatch
   const sortedWords = [...words].sort((a, b) => b.word.length - a.word.length)
   const matches: WordMatch[] = []
 
+  // console.log('sort words', sortedWords)
+
   sortedWords.forEach((wordObj) => {
     const word = wordObj.word.toLowerCase()
     const wordRegex = new RegExp(`\\b${word}\\b`, 'gi')
@@ -29,6 +31,8 @@ export function getMatchingWordPositions(text: string, words: Word[]): WordMatch
       })
     }
   })
+
+  // console.log('matches', matches)
 
   return matches
 }

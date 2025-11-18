@@ -12,11 +12,6 @@ export interface TutorWord {
   created_at?: string;
 }
 
-export interface TutorEssay {
-  title: string;
-  content: string;
-}
-
 export interface TutorFormData {
   words: TutorWord[];
   feedback: string;
@@ -32,5 +27,5 @@ export interface WordMatch {
 export interface TextSegment {
   type: 'text' | 'word';
   content: string;
-  wordId?: number;
+  wordId: number;
 }

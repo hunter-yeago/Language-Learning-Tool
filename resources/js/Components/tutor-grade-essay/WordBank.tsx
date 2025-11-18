@@ -1,16 +1,19 @@
 import { cycleGrade } from '@/Utilities/tutor_utils/grades'
-import { TutorEssay, TutorWord } from '@/types/tutor'
+import { TutorWord } from '@/types/tutor'
 import Instructions from './Instructions'
 import WordBankItem from './WordBankItem'
+import { Essay } from '@/types/essay';
 
 interface WordBankProps {
-  essay: TutorEssay;
+  essay: Essay;
   setData: (key: string, value: TutorWord[]) => void;
   words: TutorWord[];
 }
 
 export default function WordBank({ essay, setData, words }: WordBankProps) {
   const hasWords = Array.isArray(words) && words.length > 0
+
+  // console.log('words in wordbank', words)
 
   if (!hasWords) {
     return (

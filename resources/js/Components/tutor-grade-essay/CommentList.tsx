@@ -1,8 +1,9 @@
 import { getGradeColor } from '@/Utilities/tutor_utils/grades'
-import { TutorEssay, TutorWord } from '@/types/tutor'
+import { Essay } from '@/types/essay';
+import { TutorWord } from '@/types/tutor'
 
 interface CommentListProps {
-  essay: TutorEssay;
+  essay: Essay;
   data: TutorWord[];
   currentComment: number | null;
   setCurrentComment: (wordId: number | null) => void;
