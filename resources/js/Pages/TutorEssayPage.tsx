@@ -28,7 +28,7 @@ export default function TutorEssayPage({ essay }: {essay: Essay}) {
         <WordBank essay={essay} setData={setData} />
         <StudentEssay essay={essay}/>
         <Comments essay={essay} setData={setData} />
-        <GeneralFeedback data={data} setData={setData} />
+        <GeneralFeedback feedback={data.feedback} setData={setData} />
 
         <div className="flex justify-end mt-2">
           <button onClick={handleSubmit} className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
