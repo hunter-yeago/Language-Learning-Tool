@@ -58,6 +58,7 @@ Route::middleware(['auth', 'verified', 'role:student'])->name('student.')->group
     Route::controller(BucketController::class)->group(function () {
         Route::post('/buckets', 'store')->name('store-bucket');
         Route::post('/buckets/{bucketID}/add-new-words', 'addWords')->name('add-new-words');
+        Route::delete('/buckets/{bucket_id}', 'destroy')->name('delete-bucket');
     });
 
     // Update Essay

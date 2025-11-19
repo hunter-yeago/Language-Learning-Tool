@@ -58,4 +58,29 @@ class BucketController extends Controller
         return redirect()->route('/', ['bucketID' => $bucketID])
             ->with('success', 'Words added successfully!');
     }
+
+    /**
+     * Delete a bucket and all associated data.
+     *
+     * @param int $bucket_id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(int $bucket_id): \Illuminate\Http\RedirectResponse
+    {
+        $bucket = Bucket::findOrFail($bucket_id);
+
+        // Ensure the user owns this bucket
+        if ($bucket->user_id !== Auth::id()) {
+            return redirect()->route('/')
+                ->with('error', 'You do not have permission to delete this bucket.');
+        }
+
+        $bucketTitle = $bucket->title;
+
+        // Delete the bucket (cascade will handle related records)
+        $bucket->delete();
+
+        return redirect()->route('/')
+            ->with('success', "Bucket '{$bucketTitle}' has been deleted successfully.");
+    }
 }

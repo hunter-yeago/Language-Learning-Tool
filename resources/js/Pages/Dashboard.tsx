@@ -8,6 +8,7 @@ import { getGradeBackgroundColor, gradeConfig } from '@/Utilities/tutor_utils/gr
 import Instructions from '@/Components/dashboard/Instructions'
 import GradeProgressBar from './GradeProgressBar'
 import GradedEssayUpdates from '@/Components/dashboard/GradedEssayUpdates'
+import BucketSettings from '@/Components/dashboard/BucketSettings'
 import { Bucket, BucketData } from '@/types/bucket'
 import { TutorWord } from '@/types/tutor'
 import { Word } from '@/types/word'
@@ -270,6 +271,9 @@ export default function Dashboard({ essays, buckets, bucketID }: Props) {
                   <p className="text-sm text-neutral-500 italic">No essays yet.</p>
                 )}
               </section>
+
+              {/* Bucket Settings */}
+              <BucketSettings bucket={currentBucket} />
             </>
           ) : (
             <CreateBucketForm
