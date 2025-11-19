@@ -17,12 +17,14 @@ export default function Comments({ essay, setData }: CommentsProps) {
 
   return (
     <section className="w-full flex flex-col gap-3" aria-label={`comments for the ${essay.title} essay`}>
-      <div className="flex items-center gap-2">
-        <h3 className="text-lg font-semibold">Comments</h3>
-        <p className="text-sm text-gray-600">- Click on a word to leave a comment</p>
-      </div>
 
-      <CommentWords words={words} setCurrentComment={setCurrentComment} />
+      <div className='flex flex-col gap-2 border rounded-lg p-4'>
+        <div className="flex items-center gap-2">
+          <h3 className="text-lg font-semibold">Comments</h3>
+          <p className="text-sm text-gray-600">- Click on a word to leave a comment</p>
+        </div>
+        <CommentWords words={words} setCurrentComment={setCurrentComment} />
+      </div>
 
       <CommentEditor
         currentComment={currentComment}

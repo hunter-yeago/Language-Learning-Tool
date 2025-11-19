@@ -45,9 +45,9 @@ export default function WordBank({ essay, setData }: WordBankProps) {
     <section className="w-full" aria-label={`word bank for the ${essay.title} essay`}>
       <Instructions />
       
-      <div>
-        <h2 className="text-lg font-semibold">Word Bank</h2>
-        <ul className="border items-center rounded-lg p-4 flex flex-wrap gap-2">
+      <div className='border rounded-lg p-4 flex flex-col gap-2'>
+        <h2 className="text-lg">Word Bank</h2>
+        <ul className="flex flex-wrap gap-4">
           {words.map((word) => (
             <WordBankItem key={word.id} word={word} handleWordClick={handleWordClick} />
           ))}

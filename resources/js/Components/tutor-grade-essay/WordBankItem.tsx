@@ -12,7 +12,7 @@ export default function WordBankItem({ word, handleWordClick }: WordBankItemProp
 
   // Get border and text color for previous grade indicator
   const getPreviousGradeStyles = () => {
-    if (!word.previous_grade) return { borderColor: '', textColor: '' }
+    if (!word.previous_grade) return { borderColor: 'border-gray-400', textColor: 'text-gray-500' }
 
     const styleMap: Record<string, { borderColor: string; textColor: string }> = {
       'correct': { borderColor: 'border-green-500', textColor: 'text-green-700' },
@@ -21,7 +21,7 @@ export default function WordBankItem({ word, handleWordClick }: WordBankItemProp
       'not_used': { borderColor: 'border-gray-500', textColor: 'text-gray-700' },
     }
 
-    return styleMap[word.previous_grade] || { borderColor: '', textColor: '' }
+    return styleMap[word.previous_grade] || { borderColor: 'border-gray-400', textColor: 'text-gray-500' }
   }
 
   const styles = getPreviousGradeStyles()
@@ -29,11 +29,9 @@ export default function WordBankItem({ word, handleWordClick }: WordBankItemProp
   return (
     <li key={word.id} className="flex flex-col items-center gap-1">
       <WordButton color={getGradeColor(word.pivot.grade)} clickHandler={() => handleWordClick(word.id)} word={word.word} />
-      {hasPreviousGrade && (
-        <div className={`text-xs ${styles.textColor} border-t-2 ${styles.borderColor} pt-0.5 px-1`}>
-          {getGradeLabel(word.previous_grade)}
-        </div>
-      )}
+      <div className={`text-xs ${styles.textColor} border-t-2 ${styles.borderColor} pt-0.5 px-1`}>
+        {hasPreviousGrade && word.previous_grade ? getGradeLabel(word.previous_grade) : 'First Use'}
+      </div>
     </li>
   )
 }

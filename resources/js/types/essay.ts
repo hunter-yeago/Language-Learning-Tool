@@ -9,6 +9,7 @@ export interface Essay {
   words: TutorWord[];
   feedback?: string;
   tutor_id?: number;
+  viewed?: boolean;
 }
 
 export interface EssayData {

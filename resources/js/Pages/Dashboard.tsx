@@ -7,6 +7,7 @@ import ActionButton from '@/Components/dashboard/ActionButton'
 import { getGradeBackgroundColor, gradeConfig } from '@/Utilities/tutor_utils/grades'
 import Instructions from '@/Components/dashboard/Instructions'
 import GradeProgressBar from './GradeProgressBar'
+import GradedEssayUpdates from '@/Components/dashboard/GradedEssayUpdates'
 import { Bucket, BucketData } from '@/types/bucket'
 import { TutorWord } from '@/types/tutor'
 import { Word } from '@/types/word'
@@ -146,6 +147,8 @@ export default function Dashboard({ essays, buckets, bucketID }: Props) {
       <Head title="Dashboard" />
 
       <section className="flex flex-col gap-6">
+        <GradedEssayUpdates essays={essays} currentBucketId={currentBucket?.id} />
+
         <article className="border border-neutral-200 p-8 bg-white shadow-sm rounded-lg flex flex-col gap-10">
           <ExistingWordBuckets
             buckets={buckets}
@@ -240,7 +243,7 @@ export default function Dashboard({ essays, buckets, bucketID }: Props) {
                       return (
                         <li
                           key={essay.id}
-                          onClick={() => isGraded && router.get(route('student.view-essay', { essay_id: essay.id }))}
+                          onClick={() => isGraded && router.get(route('student.view-essay', { essay_id: essay.id, bucket_id: currentBucket?.id }))}
                           className={`border border-neutral-200 p-4 rounded-md bg-neutral-50 transition ${
                             isGraded ? 'cursor-pointer hover:shadow-md hover:border-primary-300' : 'opacity-75'
                           }`}

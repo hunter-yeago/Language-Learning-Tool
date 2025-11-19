@@ -113,27 +113,27 @@ export function getGradeLabel(grade: GradeType): string {
 /**
  * Cycles to the next grade in the grading sequence.
  * Used when tutors click on word buttons to change grades.
- * The cycle goes: correct → partially_correct → incorrect → not_used → correct (loops)
- *
- * Only cycles through grades marked as "gradeable" in the config.
+ * For words used in essays: correct → partially_correct → incorrect → correct (loops)
+ * Excludes 'not_used' since words in the essay must be graded.
  *
  * @param grade - The current grade type
  * @returns The next grade type in the cycle
  *
  * @example
  * cycleGrade('correct') // Returns: "partially_correct"
- * cycleGrade('not_used') // Returns: "correct" (loops back to start)
+ * cycleGrade('incorrect') // Returns: "correct" (loops back to start)
  */
 export function cycleGrade(grade: GradeType): GradeType {
-  // Build an array of all gradeable grade types from the config
-  const gradeCycle = Object.entries(gradeConfig)
-    // Filter to only include grades that are defined and marked as gradeable
-    .filter(([_, config]) => config !== undefined && config.gradeable)
-    // Extract just the grade keys (e.g., 'correct', 'partially_correct')
-    .map(([key]) => key) as GradeableType[];
+  // Only cycle through actual grades (exclude 'not_used' for words that are used in essays)
+  const gradeCycle: GradeableType[] = ['correct', 'partially_correct', 'incorrect'];
 
   // Find the current grade's position in the cycle array
   const currentIndex = gradeCycle.indexOf(grade as GradeableType);
+
+  // If not found (null or not_used), start with 'correct'
+  if (currentIndex === -1) {
+    return 'correct';
+  }
 
   // Return the next grade, using modulo to wrap around to the beginning
   return gradeCycle[(currentIndex + 1) % gradeCycle.length];

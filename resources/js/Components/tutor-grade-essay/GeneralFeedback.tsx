@@ -7,18 +7,21 @@ interface GeneralFeedbackProps {
 
 export default function GeneralFeedback({ setData, feedback }: GeneralFeedbackProps) {
   return (
-    <div className="w-full mt-4">
-      <h3 className="text-lg font-semibold mb-2">General Feedback</h3>
+      <section className="border rounded-lg p-4 bg-gray-50">
+        
+        <h3 className="text-lg font-semibold mb-4">
+          General Feedback <span className="text-red-600">*</span>
+        </h3>
 
-      <div className="border rounded-lg p-4 bg-gray-50">
         <textarea
           rows={4}
-          placeholder="Enter general feedback for the student..."
+          placeholder="Enter general feedback for the student... (required)"
           className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
           value={feedback}
           onChange={(e) => setData('feedback', e.target.value)}
+          required
         ></textarea>
-      </div>
-    </div>
+        
+      </section>
   )
 }

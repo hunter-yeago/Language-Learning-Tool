@@ -4,7 +4,7 @@ import { Essay } from '@/types/essay'
 import { getGradeColor } from '@/Utilities/tutor_utils/grades'
 import { buildHighlightedSegments, filterOverlappingMatches, getMatchingWordPositions } from '@/Utilities/tutor_utils/tutor'
 
-export default function StudentEssayReviewPage({ essay }: { essay: Essay }) {
+export default function StudentEssayReviewPage({ essay, bucket_id }: { essay: Essay; bucket_id?: number }) {
   const words = essay.words
 
   function highlightWordButtons(text: string) {
@@ -41,7 +41,7 @@ export default function StudentEssayReviewPage({ essay }: { essay: Essay }) {
       <div className="flex flex-col gap-6 p-6 bg-white shadow-md rounded-lg max-w-4xl mx-auto">
         {/* Back Button */}
         <button
-          onClick={() => router.get(route('/'))}
+          onClick={() => router.get(route('/'), { bucketID: bucket_id })}
           className="self-start px-4 py-2 text-sm text-primary-700 hover:text-primary-900 transition"
         >
           ← Back to Dashboard

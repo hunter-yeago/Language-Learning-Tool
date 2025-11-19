@@ -8,7 +8,7 @@ interface CommentWordsProps {
 
 export default function CommentWords({ setCurrentComment, words }: CommentWordsProps) {
   return (
-    <ul className="flex flex-wrap gap-2 border items-center rounded-lg p-4">
+    <ul className="flex flex-wrap gap-4">
       {words.map((word) => {
         return (
           <li key={word.id}>

@@ -11,17 +11,16 @@ use Inertia\Inertia;
 class StudentController extends Controller
 {
 
-    // temporarily taking out request
-    public function index()
+    public function index(Request $request)
     {
         $essays = Essay::where('user_id', Auth::id())->with('words')->get();
         $buckets = Bucket::where('user_id', Auth::id())->with('words')->get();
-        // $bucketID = $request->query('bucketID');
+        $bucketID = $request->query('bucketID');
 
         return Inertia::render('Dashboard', [
             'essays' => $essays,
             'buckets' => $buckets,
-            // 'bucketID' => $bucketID,
+            'bucketID' => $bucketID,
         ]);
     }
 
@@ -51,6 +50,7 @@ class StudentController extends Controller
     public function viewEssay(Request $request)
     {
         $essay_id = $request->input('essay_id');
+        $bucket_id = $request->input('bucket_id');
 
         if (!$essay_id) {
             return redirect()->route('/');
@@ -62,8 +62,14 @@ class StudentController extends Controller
             return redirect()->route('/')->with('error', 'Essay not found');
         }
 
+        // Mark essay as viewed when student opens it
+        if (!$essay->viewed) {
+            $essay->update(['viewed' => true]);
+        }
+
         return Inertia::render('StudentEssayReviewPage', [
             'essay' => $essay,
+            'bucket_id' => $bucket_id,
         ]);
     }
 }

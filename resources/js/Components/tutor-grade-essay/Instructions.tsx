@@ -10,7 +10,7 @@ export default function Instructions() {
   }
 
   return (
-    <div className="flex gap-10 text-sm text-gray-600">
+    <div className="flex gap-10 text-sm text-gray-600 py-4">
       <p className="flex flex-col gap-1">
         Click on highlighted words to grade them:
         <div className="flex items-center gap-2">
@@ -20,8 +20,7 @@ export default function Instructions() {
         </div>
       </p>
 
-      <p className="flex flex-col gap-1">
-        <div>Example Word:</div>
+      <p className="flex flex-col gap-1 pt-1">
 
         <div className="flex items-center gap-2">
           <div className="flex flex-col items-center gap-1">
@@ -29,7 +28,7 @@ export default function Instructions() {
               onClick={handleExampleClick}
               className={`list-none border px-2 py-1 rounded-full ${getGradeColor(exampleGrade)}`}
             >
-              Used Word
+              Example
             </button>
             <div className="text-xs text-blue-700 border-t-2 border-blue-500 pt-0.5 px-1">
               Previous Grade
