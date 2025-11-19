@@ -1,4 +1,5 @@
 import { TutorWord } from '@/types/tutor'
+import { getGradeColor } from '@/Utilities/tutor_utils/grades'
 
 interface CommentWordsProps {
   words: TutorWord[];
@@ -11,7 +12,10 @@ export default function CommentWords({ setCurrentComment, words }: CommentWordsP
       {words.map((word) => {
         return (
           <li key={word.id}>
-            <button onClick={() => setCurrentComment(word.id)} className={`px-2 py-1 rounded-full border hover:bg-gray-100`}>
+            <button
+              onClick={() => setCurrentComment(word.id)}
+              className={`px-2 py-1 rounded-full border hover:opacity-80 ${getGradeColor(word.pivot.grade)}`}
+            >
               {word.word}
             </button>
           </li>

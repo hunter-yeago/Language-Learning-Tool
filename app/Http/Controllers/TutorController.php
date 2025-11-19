@@ -58,10 +58,19 @@ class TutorController extends Controller
             return redirect()->route('/');
         }
 
-        $essay = Essay::with('words')->find($essay_id);
+        $essay = Essay::with(['words', 'bucket.words'])->find($essay_id);
 
         if (!$essay) {
             return redirect()->route('/')->with('error', 'Essay not found');
+        }
+
+        // Add previous grades from bucket to essay words
+        if ($essay->bucket) {
+            $bucketWordGrades = $essay->bucket->words->pluck('pivot.grade', 'id');
+
+            $essay->words->each(function ($word) use ($bucketWordGrades) {
+                $word->previous_grade = $bucketWordGrades->get($word->id);
+            });
         }
 
         return Inertia::render('TutorEssayPage', [

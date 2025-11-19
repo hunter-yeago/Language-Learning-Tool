@@ -10,6 +10,7 @@ export interface TutorWord {
   word: string;
   pivot: WordPivot;
   created_at?: string;
+  previous_grade?: GradeType;
 }
 
 export interface TutorFormData {

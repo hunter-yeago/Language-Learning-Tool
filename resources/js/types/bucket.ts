@@ -1,15 +1,15 @@
 import { Word } from './word';
 
-export interface Bucket {
+export interface Bucket<T = Word> {
   id: number;
   title: string;
   description: string;
-  words: Word[];
+  words: T[];
 }
 
-export interface BucketData {
+export interface BucketData<T = Word> {
   id?: number;
   title: string;
   description: string;
-  words?: Word[];
+  words?: T[];
 }

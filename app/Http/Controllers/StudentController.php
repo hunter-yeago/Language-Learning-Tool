@@ -47,4 +47,23 @@ class StudentController extends Controller
             'bucketID' => $bucketID
         ]);
     }
+
+    public function viewEssay(Request $request)
+    {
+        $essay_id = $request->input('essay_id');
+
+        if (!$essay_id) {
+            return redirect()->route('/');
+        }
+
+        $essay = Essay::with('words')->find($essay_id);
+
+        if (!$essay || $essay->user_id !== Auth::id()) {
+            return redirect()->route('/')->with('error', 'Essay not found');
+        }
+
+        return Inertia::render('StudentEssayReviewPage', [
+            'essay' => $essay,
+        ]);
+    }
 }

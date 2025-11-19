@@ -43,15 +43,16 @@ export default function WordBank({ essay, setData }: WordBankProps) {
 
   return (
     <section className="w-full" aria-label={`word bank for the ${essay.title} essay`}>
-      <div className="flex gap-3 items-center mb-2">
+      <Instructions />
+      
+      <div>
         <h2 className="text-lg font-semibold">Word Bank</h2>
-        <Instructions />
+        <ul className="border items-center rounded-lg p-4 flex flex-wrap gap-2">
+          {words.map((word) => (
+            <WordBankItem key={word.id} word={word} handleWordClick={handleWordClick} />
+          ))}
+        </ul>
       </div>
-      <ul className="border items-center rounded-lg p-4 flex flex-wrap gap-2">
-        {words.map((word) => (
-          <WordBankItem key={word.id} word={word} handleWordClick={handleWordClick} />
-        ))}
-      </ul>
     </section>
   )
 }

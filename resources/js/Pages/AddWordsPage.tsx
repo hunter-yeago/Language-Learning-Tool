@@ -64,6 +64,11 @@ export default function AddWordsPage({ bucket }: Props) {
     // Prevent default form submission behavior
     e.preventDefault()
 
+    if (!bucket?.id) {
+      console.error('No bucket selected')
+      return
+    }
+
     // Send POST request to add words to the bucket
     post(`/buckets/${bucket.id}/add-new-words`, {
       data: { words: wordList },

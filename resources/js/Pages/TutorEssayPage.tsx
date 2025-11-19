@@ -19,15 +19,21 @@ export default function TutorEssayPage({ essay }: {essay: Essay}) {
     e.preventDefault()
 
     post(route('tutor.update-essay'))
-  } 
+  }
+
+  // Create a working essay object that uses the form data
+  const workingEssay = {
+    ...essay,
+    words: data.words
+  }
 
   return (
     <AuthenticatedLayout header={<h1 className="text-2xl font-semibold text-gray-800">Student Essay Review</h1>}>
       <Head title="Student Essay Review" />
       <div className="flex flex-col gap-6 p-6 bg-white shadow-md rounded-lg">
-        <WordBank essay={essay} setData={setData} />
-        <StudentEssay essay={essay}/>
-        <Comments essay={essay} setData={setData} />
+        <WordBank essay={workingEssay} setData={setData} />
+        <StudentEssay essay={workingEssay}/>
+        <Comments essay={workingEssay} setData={setData} />
         <GeneralFeedback feedback={data.feedback} setData={setData} />
 
         <div className="flex justify-end mt-2">

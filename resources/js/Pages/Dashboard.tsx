@@ -13,14 +13,9 @@ import { Word } from '@/types/word'
 import { Essay } from '@/types/essay'
 import { voidFunction } from '@/types/types'
 
-// Extend Bucket type to include TutorWord compatibility
-interface BucketWithTutorWords extends Omit<Bucket, 'words'> {
-  words: TutorWord[]
-}
-
 interface Props {
   essays: Essay[]
-  buckets: BucketWithTutorWords[]
+  buckets: Bucket<TutorWord>[]
   bucketID?: string | number
 }
 
@@ -48,7 +43,7 @@ export default function Dashboard({ essays, buckets, bucketID }: Props) {
     },
   })
 
-  const [currentBucket, setCurrentBucket] = useState<BucketWithTutorWords | null>(null)
+  const [currentBucket, setCurrentBucket] = useState<Bucket<TutorWord> | null>(null)
   const [visibleCount, setVisibleCount] = useState(30)
   const [search, setSearch] = useState('')
   const [gradeFilter, setGradeFilter] = useState('')
@@ -138,7 +133,7 @@ export default function Dashboard({ essays, buckets, bucketID }: Props) {
       router.visit(route('student.add-words-page'), {
         method: 'post',
         data: {
-          bucket_id: data.bucket.id,
+          bucket: data.bucket as any,
           words: data.bucket.words as any,
         }
       })
@@ -153,9 +148,9 @@ export default function Dashboard({ essays, buckets, bucketID }: Props) {
       <section className="flex flex-col gap-6">
         <article className="border border-neutral-200 p-8 bg-white shadow-sm rounded-lg flex flex-col gap-10">
           <ExistingWordBuckets
-            buckets={buckets as unknown as Bucket[]}
+            buckets={buckets}
             currentBucketId={currentBucket?.id ?? null}
-            setCurrentBucket={setCurrentBucket as (bucket: Bucket | null) => void}
+            setCurrentBucket={setCurrentBucket}
             data={data}
             post={post}
             setData={setData}
@@ -240,12 +235,33 @@ export default function Dashboard({ essays, buckets, bucketID }: Props) {
                 <h3 className="text-lg font-semibold text-neutral-900 mb-4">Essays</h3>
                 {filteredEssays.length ? (
                   <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {filteredEssays.map((essay) => (
-                      <li key={essay.id} className="border border-neutral-200 p-4 rounded-md bg-neutral-50 hover:shadow-sm transition">
-                        <div className="font-semibold text-neutral-900 mb-1">{essay.title}</div>
-                        <p className="text-sm text-neutral-600 line-clamp-2">{essay.content}</p>
-                      </li>
-                    ))}
+                    {filteredEssays.map((essay) => {
+                      const isGraded = essay.tutor_id && essay.feedback
+                      return (
+                        <li
+                          key={essay.id}
+                          onClick={() => isGraded && router.get(route('student.view-essay', { essay_id: essay.id }))}
+                          className={`border border-neutral-200 p-4 rounded-md bg-neutral-50 transition ${
+                            isGraded ? 'cursor-pointer hover:shadow-md hover:border-primary-300' : 'opacity-75'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-1">
+                            <div className="font-semibold text-neutral-900">{essay.title}</div>
+                            {isGraded && (
+                              <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded">
+                                Graded
+                              </span>
+                            )}
+                            {!isGraded && (
+                              <span className="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-700 rounded">
+                                Pending
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-sm text-neutral-600 line-clamp-2">{essay.content}</p>
+                        </li>
+                      )
+                    })}
                   </ul>
                 ) : (
                   <p className="text-sm text-neutral-500 italic">No essays yet.</p>

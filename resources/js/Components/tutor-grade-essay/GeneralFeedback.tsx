@@ -8,10 +8,8 @@ interface GeneralFeedbackProps {
 export default function GeneralFeedback({ setData, feedback }: GeneralFeedbackProps) {
   return (
     <div className="w-full mt-4">
-      {/* Title */}
       <h3 className="text-lg font-semibold mb-2">General Feedback</h3>
 
-      {/* Feedback */}
       <div className="border rounded-lg p-4 bg-gray-50">
         <textarea
           rows={4}

@@ -65,6 +65,9 @@ Route::middleware(['auth', 'verified', 'role:student'])->name('student.')->group
         Route::get('/essays', 'index')->name('essays.index');
         Route::post('/essays/write-essay', 'store')->name('store-essay');
     });
+
+    // View Essay
+    Route::get('/view-essay', [StudentController::class, 'viewEssay'])->name('view-essay');
 });
 
 require __DIR__.'/auth.php';

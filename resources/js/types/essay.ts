@@ -7,6 +7,8 @@ export interface Essay {
   bucket_id: number;
   created_at: string;
   words: TutorWord[];
+  feedback?: string;
+  tutor_id?: number;
 }
 
 export interface EssayData {
