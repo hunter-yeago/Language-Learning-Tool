@@ -4,6 +4,7 @@ import { Head, useForm } from '@inertiajs/react'
 import Comments from '@/Components/tutor-grade-essay/Comments'
 import StudentEssay from '@/Components/tutor-grade-essay/StudentEssay'
 import GeneralFeedback from '@/Components/tutor-grade-essay/GeneralFeedback'
+import StudentNotes from '@/Components/tutor-grade-essay/StudentNotes'
 import { Essay } from '@/types/essay'
 import { FormEventHandler, useState } from 'react'
 
@@ -52,6 +53,7 @@ export default function TutorEssayPage({ essay }: {essay: Essay}) {
     <AuthenticatedLayout header={<h1 className="text-2xl font-semibold text-gray-800">Student Essay Review</h1>}>
       <Head title="Student Essay Review" />
       <div className="flex flex-col gap-6 p-6 bg-white shadow-md rounded-lg">
+        <StudentNotes essay={essay} />
         <WordBank essay={workingEssay} setData={setData} />
         <StudentEssay essay={workingEssay}/>
         <Comments essay={workingEssay} setData={setData} />

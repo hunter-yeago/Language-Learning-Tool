@@ -22,6 +22,7 @@ class StoreEssayRequest extends FormRequest
             'words.*.id' => 'required_with:words|integer|exists:words,id',
             'words.*.used' => 'boolean',
             'tutor_id' => 'required|exists:users,id',
+            'notes' => 'nullable|string|max:1000',
         ];
     }
 }

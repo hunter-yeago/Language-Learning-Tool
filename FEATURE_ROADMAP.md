@@ -108,7 +108,7 @@ Currently, the same word is stored multiple times in the database for different 
 
 ### 9. Tutor-Student Connection System
 **Status:** TODO
-**Priority:** Medium
+**Priority:** Low
 
 **Requirements:**
 - Add ability for tutors and students to connect with each other
@@ -119,17 +119,29 @@ Currently, the same word is stored multiple times in the database for different 
 ---
 
 ### 10. Essay Submission Notes
-**Status:** TODO
+**Status:** COMPLETED
 **Priority:** Low
 
 **Requirements:**
-- Add a note field on the "Write Essay" page
-- Allow students to include notes for tutors with their essay submissions
-- Display these notes to tutors during grading
+- ✅ Add a note field on the "Write Essay" page
+- ✅ Allow students to include notes for tutors with their essay submissions
+- ✅ Display these notes to tutors during grading
+
+**Implementation:**
+- Added optional notes textarea to Write Essay page
+- Notes field accepts up to 1000 characters
+- Notes saved with essay submission
+- Displayed prominently at top of tutor grading page in blue info banner
+- Only shown to tutors if student provided notes
 
 ---
 
 ### 11. Previously Graded Essays for Tutors
+
+This should be integrated into the Tutors' Student Page
+where they can go to a specific student and see all of their details
+including this
+
 **Status:** TODO
 **Priority:** Medium
 

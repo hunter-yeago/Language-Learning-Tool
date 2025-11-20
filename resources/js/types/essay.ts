@@ -10,6 +10,7 @@ export interface Essay {
   feedback?: string;
   tutor_id?: number;
   viewed?: boolean;
+  notes?: string;
 }
 
 export interface EssayData {
