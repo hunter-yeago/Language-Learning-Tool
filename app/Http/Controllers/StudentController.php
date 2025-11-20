@@ -95,4 +95,15 @@ class StudentController extends Controller
             'bucket_id' => $bucket_id,
         ]);
     }
+
+    public function progress()
+    {
+        $essays = Essay::where('user_id', Auth::id())->with('words')->get();
+        $buckets = Bucket::where('user_id', Auth::id())->with('words')->get();
+
+        return Inertia::render('ProgressPage', [
+            'essays' => $essays,
+            'buckets' => $buckets,
+        ]);
+    }
 }

@@ -19,13 +19,22 @@ export default function AuthenticatedLayout({ header, children }: PropsWithChild
   const user = usePage<PageProps>().props.auth.user
   const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false)
 
-  const sharedNavLinks: NavLinkConfig[] = [
+  const userRoles = user.roles?.map((role: any) => role.name) || []
+
+  const studentNavLinks: NavLinkConfig[] = [
     { href: route('/'), label: 'Dashboard' },
+    { href: route('student.progress'), label: 'Progress' },
     { href: route('dictionary'), label: 'Dictionary' },
   ]
 
-  // will eventually expand to include specific routes for each role
-  const navLinks = sharedNavLinks
+  const tutorNavLinks: NavLinkConfig[] = [
+    { href: route('/'), label: 'Dashboard' },
+    { href: route('dictionary'), label: 'Dictionary' },
+    { href: route('tutor.students'), label: 'Students' },
+  ]
+
+  // Determine which nav links to show based on user role
+  const navLinks = userRoles.includes('tutor') ? tutorNavLinks : studentNavLinks
 
   const toggleNavigation = () => setShowingNavigationDropdown((prev) => !prev)
   const renderNavLinks = (isResponsive: boolean) =>

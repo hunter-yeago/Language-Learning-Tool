@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\GradeEssayRequest;
 use App\Models\Essay;
+use App\Models\User;
+use App\Models\Bucket;
 use App\Services\EssayService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -75,6 +77,47 @@ class TutorController extends Controller
 
         return Inertia::render('TutorEssayPage', [
             'essay' => $essay,
+        ]);
+    }
+
+    public function students()
+    {
+        $tutorId = Auth::id();
+
+        // Get all unique students who have submitted essays to this tutor
+        $studentIds = Essay::where('tutor_id', $tutorId)
+            ->pluck('user_id')
+            ->unique();
+
+        $students = User::whereIn('id', $studentIds)
+            ->with(['essays' => function ($query) use ($tutorId) {
+                $query->where('tutor_id', $tutorId);
+            }])
+            ->get()
+            ->map(function ($student) use ($tutorId) {
+                // Get all buckets for this student
+                $buckets = Bucket::where('user_id', $student->id)
+                    ->with('words')
+                    ->get();
+
+                // Get essays for this student assigned to this tutor
+                $essays = Essay::where('user_id', $student->id)
+                    ->where('tutor_id', $tutorId)
+                    ->get();
+
+                return [
+                    'id' => $student->id,
+                    'name' => $student->name,
+                    'email' => $student->email,
+                    'buckets' => $buckets,
+                    'essays' => $essays,
+                    'total_essays' => $essays->count(),
+                    'graded_essays' => $essays->where('status', 'graded')->count(),
+                ];
+            });
+
+        return Inertia::render('TutorStudentsPage', [
+            'students' => $students,
         ]);
     }
 

@@ -29,16 +29,15 @@ Currently, the grading system relies on string and array comparisons declared in
 
 ---
 
-### 3. Tutor Student Management Page
+### 3. New Changes / Re-grading after essay submission?
+idea: the tutor makes a mistake and needs to fix their mistake
+
 **Status:** TODO
 **Priority:** High
 
 **Requirements:**
-- Create a "Student Page" for tutors to view their students
-- Display student information, progress, and submitted essays
 - Enable tutors to make changes to essays after grading
 - Provide ability to re-grade or edit feedback
-- Track student-tutor relationships
 
 ---
 

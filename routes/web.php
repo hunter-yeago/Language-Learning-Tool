@@ -41,11 +41,15 @@ Route::middleware(['auth', 'verified', 'role:tutor'])->name('tutor.')->group(fun
 
     Route::get('/grade-essay', [TutorController::class, 'grade_essay'])->name('grade-essay');
     Route::post('/update-essay', [TutorController::class, 'update_essay'])->name('update-essay');
+    Route::get('/students', [TutorController::class, 'students'])->name('students');
 });
 
 // Student
 Route::middleware(['auth', 'verified', 'role:student'])->name('student.')->group(function () {
-    
+
+    // Progress Page
+    Route::get('/progress', [StudentController::class, 'progress'])->name('progress');
+
     // Add Words
     Route::post('/add-words-page', [StudentController::class, 'addWordsPage'])->name('add-words-page');
     Route::get('/add-words-page', [StudentController::class, 'getAddWordsPage'])->name('add-words-page.get');
