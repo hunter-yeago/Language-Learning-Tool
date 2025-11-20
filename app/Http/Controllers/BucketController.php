@@ -6,6 +6,7 @@ use App\Models\bucket;
 use App\Models\Word;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\JsonResponse;
 
 class BucketController extends Controller
 {
@@ -82,5 +83,90 @@ class BucketController extends Controller
 
         return redirect()->route('/')
             ->with('success', "Bucket '{$bucketTitle}' has been deleted successfully.");
+    }
+
+    /**
+     * Check if a word exists in any of the user's buckets.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function checkWordExists(Request $request): JsonResponse
+    {
+        $wordText = $request->input('word');
+
+        if (!$wordText) {
+            return response()->json(['exists' => false]);
+        }
+
+        // Find the word in the words table (case-insensitive)
+        $word = Word::whereRaw('LOWER(word) = ?', [strtolower($wordText)])->first();
+
+        if (!$word) {
+            return response()->json(['exists' => false]);
+        }
+
+        // Get all buckets that contain this word for the current user
+        $buckets = $word->buckets()
+            ->where('buckets.user_id', Auth::id())
+            ->get(['buckets.id', 'buckets.title']);
+
+        if ($buckets->isEmpty()) {
+            return response()->json(['exists' => false]);
+        }
+
+        return response()->json([
+            'exists' => true,
+            'buckets' => $buckets
+        ]);
+    }
+
+    /**
+     * Add a single word to a bucket (used from dictionary page).
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addSingleWord(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'word' => 'required|string|max:255',
+            'bucket_id' => 'required|integer|exists:buckets,id',
+        ]);
+
+        $bucket = Bucket::findOrFail($validated['bucket_id']);
+
+        // Ensure the user owns this bucket
+        if ($bucket->user_id !== Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You do not have permission to add words to this bucket.'
+            ], 403);
+        }
+
+        // Check if word already exists in this bucket
+        $wordText = $validated['word'];
+        $existingWord = Word::whereRaw('LOWER(word) = ?', [strtolower($wordText)])->first();
+
+        if ($existingWord) {
+            $existsInBucket = $existingWord->buckets()
+                ->where('buckets.id', $bucket->id)
+                ->exists();
+
+            if ($existsInBucket) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'This word already exists in the selected bucket.'
+                ], 409);
+            }
+        }
+
+        // Add the word to the bucket
+        $bucket->words()->create(['word' => $wordText]);
+
+        return response()->json([
+            'success' => true,
+            'message' => "Word '{$wordText}' added to bucket '{$bucket->title}' successfully!"
+        ]);
     }
 }

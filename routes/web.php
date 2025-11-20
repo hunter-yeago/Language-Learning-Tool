@@ -27,7 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('/');
     
     // Dictionary
-    Route::get('/dictionary', fn() => Inertia::render('DictionaryPage'))->name('dictionary');
+    Route::get('/dictionary', [DictionaryController::class, 'index'])->name('dictionary');
     Route::get('/lookup-word/{word}', [DictionaryController::class, 'lookup']);
     
     // Profile
@@ -48,7 +48,7 @@ Route::middleware(['auth', 'verified', 'role:student'])->name('student.')->group
     
     // Add Words
     Route::post('/add-words-page', [StudentController::class, 'addWordsPage'])->name('add-words-page');
-    Route::get('/add-words-page', fn() => redirect()->route('student.dashboard'));
+    Route::get('/add-words-page', [StudentController::class, 'getAddWordsPage'])->name('add-words-page.get');
 
     // Write Essay
     Route::post('/write-essay', [StudentController::class, 'writeEssayPage'])->name('write-essay');
@@ -59,6 +59,8 @@ Route::middleware(['auth', 'verified', 'role:student'])->name('student.')->group
         Route::post('/buckets', 'store')->name('store-bucket');
         Route::post('/buckets/{bucketID}/add-new-words', 'addWords')->name('add-new-words');
         Route::delete('/buckets/{bucket_id}', 'destroy')->name('delete-bucket');
+        Route::post('/buckets/check-word-exists', 'checkWordExists')->name('check-word-exists');
+        Route::post('/buckets/add-word', 'addSingleWord')->name('add-word-to-bucket');
     });
 
     // Update Essay

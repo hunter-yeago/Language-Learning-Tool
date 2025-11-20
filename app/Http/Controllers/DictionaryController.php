@@ -2,14 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bucket;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class DictionaryController extends Controller
 {
+    public function index(): Response
+    {
+        $buckets = Bucket::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get(['id', 'title', 'description']);
+
+        return Inertia::render('DictionaryPage', [
+            'buckets' => $buckets,
+        ]);
+    }
 
     public function lookup($word): JsonResponse
     {

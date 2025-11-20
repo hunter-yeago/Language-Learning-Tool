@@ -132,13 +132,7 @@ export default function Dashboard({ essays, buckets, bucketID }: Props) {
 
   const handleAddWords: voidFunction = () => {
     if (data.bucket.id) {
-      router.visit(route('student.add-words-page'), {
-        method: 'post',
-        data: {
-          bucket: data.bucket as any,
-          words: data.bucket.words as any,
-        }
-      })
+      router.get(route('student.add-words-page.get', { bucketId: data.bucket.id }))
     }
   }
 

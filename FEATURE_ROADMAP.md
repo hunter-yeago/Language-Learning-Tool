@@ -4,6 +4,13 @@ This document outlines the planned features and improvements for the Language Le
 
 ---
 
+Dictionary Notes
+The dictionary serves as the Source of Truth for the users information and usage of words.. Everything goes through and attaches to it. As word are used and have a history and all that, you open up your dictionary and its like opening up your own history book of the learning of the language.
+
+That idea of not just having it be a useful app but also to serve as a historical record keeping of the language learning itself is... interesting. history of the use of the word. essays. buckets. there can even be a little graphic, or eonnected html elements. like
+
+well the word in a box like how it is shown in the bucket section on the dahboard. with a line that links to the next one then thats the second, then the third, etc. Maybe there can be a little crown on the top left corner of the word when its finally marked correct.
+
 ## High Priority / MVP Features
 
 ### 1. Robust Grading System
@@ -19,18 +26,6 @@ Currently, the grading system relies on string and array comparisons declared in
 - Remove scattered string/array comparisons
 - Implement a structured approach to essay evaluation
 - Ensure scalability and maintainability
-
----
-
-### 2. Dictionary Integration on Add Words Page
-**Status:** TODO
-**Priority:** High
-
-**Requirements:**
-- Add dictionary lookup functionality to the "Add Words" page
-- Clean up and improve the styling of the page
-- Provide word definitions, translations, or related data when adding words
-- Improve UX for word entry workflow
 
 ---
 
@@ -71,14 +66,12 @@ Currently, the grading system relies on string and array comparisons declared in
 
 ---
 
-### 6. Essay Page for Students
+### 6. Share Essay / Make Essay Public Feature
 **Status:** TODO
 **Priority:** Medium
 
 **Requirements:**
-- Create dedicated "Essay Page" for students when they receive marked essays
 - Provide option to make essays public
-- Display grading feedback and corrections
 - Enable essay sharing functionality
 
 ---

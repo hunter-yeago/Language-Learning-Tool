@@ -17,8 +17,9 @@ class Word extends Model
     }
 
 
-    public function bucket()
+    public function buckets()
     {
-        return $this->belongsTo(Bucket::class);
+        return $this->belongsToMany(Bucket::class, 'bucket_word_join')
+            ->withPivot(['grade']);
     }
 }

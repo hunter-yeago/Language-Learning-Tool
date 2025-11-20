@@ -35,6 +35,29 @@ class StudentController extends Controller
         ]);
     }
 
+    public function getAddWordsPage(Request $request)
+    {
+        $bucketId = $request->query('bucketId');
+
+        // If no bucket ID is provided, redirect to dashboard
+        if (!$bucketId) {
+            return redirect()->route('/');
+        }
+
+        // Fetch the bucket with its words
+        $bucket = Bucket::with('words')->find($bucketId);
+
+        // If bucket doesn't exist or doesn't belong to the user, redirect
+        if (!$bucket || $bucket->user_id !== Auth::id()) {
+            return redirect()->route('/')->with('error', 'Bucket not found');
+        }
+
+        return Inertia::render('AddWordsPage', [
+            'bucket' => $bucket,
+            'words' => $bucket->words ?? [],
+        ]);
+    }
+
     public function writeEssayPage(Request $request)
     {
         $bucket = $request->input('bucket');
