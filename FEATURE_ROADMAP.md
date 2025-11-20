@@ -65,16 +65,6 @@ idea: the tutor makes a mistake and needs to fix their mistake
 
 ---
 
-### 6. Share Essay / Make Essay Public Feature
-**Status:** TODO
-**Priority:** Medium
-
-**Requirements:**
-- Provide option to make essays public
-- Enable essay sharing functionality
-
----
-
 ### 7. Enhanced Word Details in Bucket Dashboard
 **Status:** TODO
 **Priority:** Medium
@@ -114,24 +104,6 @@ Currently, the same word is stored multiple times in the database for different 
 - Implement invitation/request system
 - Manage tutor-student relationships
 - Handle acceptance/rejection of connection requests
-
----
-
-### 10. Essay Submission Notes
-**Status:** COMPLETED
-**Priority:** Low
-
-**Requirements:**
-- ✅ Add a note field on the "Write Essay" page
-- ✅ Allow students to include notes for tutors with their essay submissions
-- ✅ Display these notes to tutors during grading
-
-**Implementation:**
-- Added optional notes textarea to Write Essay page
-- Notes field accepts up to 1000 characters
-- Notes saved with essay submission
-- Displayed prominently at top of tutor grading page in blue info banner
-- Only shown to tutors if student provided notes
 
 ---
 
@@ -184,6 +156,9 @@ including this
 - Allow single essay to be reviewed by multiple people
 - Support feedback from tutors, Reddit community, AI, etc.
 - Manage multiple review sources per essay
+other notes
+- Provide option to make essays public
+- Enable essay sharing functionality
 
 ---
 
