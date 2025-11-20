@@ -9,6 +9,7 @@ import Instructions from '@/Components/dashboard/Instructions'
 import GradeProgressBar from './GradeProgressBar'
 import GradedEssayUpdates from '@/Components/dashboard/GradedEssayUpdates'
 import BucketSettings from '@/Components/dashboard/BucketSettings'
+import BucketOverviewCard from '@/Components/dashboard/BucketOverviewCard'
 import { Bucket, BucketData } from '@/types/bucket'
 import { TutorWord } from '@/types/tutor'
 import { Word } from '@/types/word'
@@ -143,6 +144,32 @@ export default function Dashboard({ essays, buckets, bucketID }: Props) {
 
       <section className="flex flex-col gap-6">
         <GradedEssayUpdates essays={essays} currentBucketId={currentBucket?.id} />
+
+        {/* Bucket Overview Section */}
+        {buckets.length > 0 && (
+          <article className="border border-neutral-200 p-8 bg-white shadow-sm rounded-lg">
+            <h2 className="text-2xl font-semibold text-neutral-900 mb-6">Your Buckets</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {buckets.map((bucket) => (
+                <BucketOverviewCard
+                  key={bucket.id}
+                  bucket={bucket}
+                  essays={essays}
+                  onSelect={() => {
+                    setCurrentBucket(bucket)
+                    setData('bucket', {
+                      id: bucket.id,
+                      title: bucket.title,
+                      description: bucket.description,
+                      words: bucket.words,
+                    })
+                  }}
+                  isSelected={currentBucket?.id === bucket.id}
+                />
+              ))}
+            </div>
+          </article>
+        )}
 
         <article className="border border-neutral-200 p-8 bg-white shadow-sm rounded-lg flex flex-col gap-10">
           <ExistingWordBuckets
