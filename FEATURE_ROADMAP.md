@@ -143,6 +143,9 @@ including this
 - Enhance user experience throughout
 - Address specific UX pain points as they arise
 
+inspiration:
+https://www.bergesinstitutespanish.com/home
+
 ---
 
 ## Not MVP / Future Features
