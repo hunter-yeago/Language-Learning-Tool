@@ -80,7 +80,7 @@ class TutorController extends Controller
         ]);
     }
 
-    public function students()
+    public function students(Request $request)
     {
         $tutorId = Auth::id();
 
@@ -118,6 +118,33 @@ class TutorController extends Controller
 
         return Inertia::render('TutorStudentsPage', [
             'students' => $students,
+            'student_id' => $request->input('student_id'),
+        ]);
+    }
+
+    public function viewEssay(Request $request)
+    {
+        $essay_id = $request->input('essay_id');
+        $student_id = $request->input('student_id');
+
+        if (!$essay_id) {
+            return redirect()->route('tutor.students');
+        }
+
+        $essay = Essay::with('words')->find($essay_id);
+
+        if (!$essay) {
+            return redirect()->route('tutor.students')->with('error', 'Essay not found');
+        }
+
+        // Verify the essay belongs to this tutor
+        if ($essay->tutor_id !== Auth::id()) {
+            return redirect()->route('tutor.students')->with('error', 'Unauthorized');
+        }
+
+        return Inertia::render('TutorEssayViewPage', [
+            'essay' => $essay,
+            'student_id' => $student_id,
         ]);
     }
 

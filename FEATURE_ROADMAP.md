@@ -95,22 +95,6 @@ Currently, the same word is stored multiple times in the database for different 
 
 ---
 
-### 11. Previously Graded Essays for Tutors
-
-This should be integrated into the Tutors' Student Page
-where they can go to a specific student and see all of their details
-including this
-
-**Status:** TODO
-**Priority:** Medium
-
-**Requirements:**
-- Create a page for tutors to view previously graded essays
-- Enable filtering and searching of past graded work
-- Provide quick access to student history
-
----
-
 ### 12. Code Privacy Considerations
 **Status:** TODO
 **Priority:** Low

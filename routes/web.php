@@ -42,6 +42,7 @@ Route::middleware(['auth', 'verified', 'role:tutor'])->name('tutor.')->group(fun
     Route::get('/grade-essay', [TutorController::class, 'grade_essay'])->name('grade-essay');
     Route::post('/update-essay', [TutorController::class, 'update_essay'])->name('update-essay');
     Route::get('/students', [TutorController::class, 'students'])->name('students');
+    Route::get('/tutor-view-essay', [TutorController::class, 'viewEssay'])->name('view-essay');
 });
 
 // Student

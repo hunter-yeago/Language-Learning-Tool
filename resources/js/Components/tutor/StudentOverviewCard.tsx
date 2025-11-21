@@ -5,7 +5,8 @@ import { gradeConfig, GRADE_ORDER, calculateGradeCounts, calculateMasteryPercent
 import { filterEssaysByBucket, isEssayGraded } from '@/Utilities/essayUtils'
 import { pluralizeS } from '@/Utilities/stringUtils'
 import { calculatePercentageString } from '@/Utilities/mathUtils'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { router } from '@inertiajs/react'
 
 interface Student {
   id: number
@@ -19,10 +20,16 @@ interface Student {
 
 interface Props {
   student: Student
+  initialExpanded?: boolean
 }
 
-export default function StudentOverviewCard({ student }: Props) {
-  const [isExpanded, setIsExpanded] = useState(false)
+export default function StudentOverviewCard({ student, initialExpanded = false }: Props) {
+  const [isExpanded, setIsExpanded] = useState(initialExpanded)
+
+  // Update expanded state when initialExpanded changes
+  useEffect(() => {
+    setIsExpanded(initialExpanded)
+  }, [initialExpanded])
 
   const totalWords = calculateTotalWords(student.buckets)
   const totalBuckets = student.buckets.length
@@ -160,7 +167,11 @@ export default function StudentOverviewCard({ student }: Props) {
                         {bucketEssays.map((essay) => (
                           <div
                             key={essay.id}
-                            className="bg-white rounded px-2 py-1.5 border border-gray-200 text-xs"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              router.get(route('tutor.view-essay', { essay_id: essay.id, student_id: student.id }))
+                            }}
+                            className="bg-white rounded px-2 py-1.5 border border-gray-200 text-xs cursor-pointer hover:bg-gray-50 hover:border-gray-300 transition-colors"
                           >
                             <div className="flex items-center justify-between">
                               <span className="font-medium text-gray-900 truncate">{essay.title}</span>

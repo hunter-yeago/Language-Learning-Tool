@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import { Head } from '@inertiajs/react'
+import { Head, usePage } from '@inertiajs/react'
 import StudentOverviewCard from '@/Components/tutor/StudentOverviewCard'
 import { Bucket } from '@/types/bucket'
 import { TutorWord } from '@/types/tutor'
@@ -15,9 +15,11 @@ interface Student {
 
 interface Props {
   students: Student[]
+  student_id?: number
 }
 
-export default function TutorStudentsPage({ students }: Props) {
+export default function TutorStudentsPage({ students, student_id }: Props) {
+  const expandedStudentId = student_id ? Number(student_id) : null
   return (
     <AuthenticatedLayout header={<h1 className="text-2xl font-semibold text-gray-800">My Students</h1>}>
       <Head title="My Students" />
@@ -34,7 +36,11 @@ export default function TutorStudentsPage({ students }: Props) {
 
             <div className="space-y-4">
               {students.map((student) => (
-                <StudentOverviewCard key={student.id} student={student} />
+                <StudentOverviewCard
+                  key={student.id}
+                  student={student}
+                  initialExpanded={expandedStudentId === student.id}
+                />
               ))}
             </div>
           </>
