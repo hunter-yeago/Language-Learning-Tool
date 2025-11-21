@@ -4,7 +4,10 @@
 
 import { GradeType } from '@/types/tutor';
 
-type GradeableType = Exclude<GradeType, null>;
+type GradeableType = GradeType;
+
+// Canonical grade order used throughout the application
+export const GRADE_ORDER: readonly GradeType[] = ['correct', 'partially_correct', 'incorrect', 'not_graded', 'not_used'] as const;
 
 interface GradeConfigItem {
   label: string
@@ -19,7 +22,6 @@ export type GradeConfig = {
   [key: string]: GradeConfigItem | undefined
 }
 
-// TODO - add unused back in here
 export const gradeConfig: GradeConfig = {
   correct: {
     label: 'Correct',
@@ -39,9 +41,12 @@ export const gradeConfig: GradeConfig = {
     text: 'text-red-800',
     gradeable: true,
   },
-
-  // so that tutor can reset the word when they are grading the students' essay
-  // this may be broken, I guess I'll find out someday!
+  not_graded: {
+    label: 'Not Graded',
+    background: 'bg-blue-100',
+    text: 'text-blue-700',
+    gradeable: true,
+  },
   not_used: {
     label: 'Not Used',
     background: 'bg-gray-200',

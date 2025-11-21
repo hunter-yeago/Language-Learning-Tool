@@ -4,7 +4,7 @@ import ExistingWordBuckets from '@/Components/dashboard/ExistingWordBuckets'
 import { Head, useForm, router } from '@inertiajs/react'
 import CreateBucketForm from '@/Components/dashboard/CreateBucketForm'
 import ActionButton from '@/Components/dashboard/ActionButton'
-import { getGradeBackgroundColor, gradeConfig } from '@/Utilities/tutor_utils/grades'
+import { getGradeBackgroundColor, gradeConfig, GRADE_ORDER } from '@/Utilities/tutor_utils/grades'
 import Instructions from '@/Components/dashboard/Instructions'
 import GradeProgressBar from './GradeProgressBar'
 import GradedEssayUpdates from '@/Components/dashboard/GradedEssayUpdates'
@@ -67,8 +67,10 @@ export default function Dashboard({ essays, buckets, bucketID }: Props) {
 
   // Function to sort by grade
   const sortByGrade = (a: TutorWord, b: TutorWord, reverse = false) => {
-    const aGradeIndex = Object.keys(gradeConfig).indexOf(a.pivot.grade ?? 'not_graded')
-    const bGradeIndex = Object.keys(gradeConfig).indexOf(b.pivot.grade ?? 'not_graded')
+    const aGrade = a.pivot.grade ?? 'not_graded'
+    const bGrade = b.pivot.grade ?? 'not_graded'
+    const aGradeIndex = GRADE_ORDER.indexOf(aGrade)
+    const bGradeIndex = GRADE_ORDER.indexOf(bGrade)
     const comparison = aGradeIndex - bGradeIndex
 
     return reverse ? -comparison : comparison // Reverse the comparison if needed
@@ -187,8 +189,8 @@ export default function Dashboard({ essays, buckets, bucketID }: Props) {
                     <option value="correct">Correct</option>
                     <option value="partially_correct">Partially Correct</option>
                     <option value="incorrect">Incorrect</option>
-                    <option value="used_in_essay">Waiting for Grade</option>
-                    <option value="not_graded">Unused</option>
+                    <option value="not_graded">Not Graded</option>
+                    <option value="not_used">Not Used</option>
                   </select>
 
                   <select className="border border-neutral-300 px-4 py-2.5 rounded-md w-full max-w-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>

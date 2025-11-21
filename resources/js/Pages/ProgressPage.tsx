@@ -6,7 +6,7 @@ import BucketOverviewCard from '@/Components/dashboard/BucketOverviewCard'
 import { Bucket } from '@/types/bucket'
 import { TutorWord } from '@/types/tutor'
 import { Essay } from '@/types/essay'
-import { gradeConfig } from '@/Utilities/tutor_utils/grades'
+import { gradeConfig, GRADE_ORDER } from '@/Utilities/tutor_utils/grades'
 
 interface Props {
   essays: Essay[]
@@ -23,7 +23,6 @@ export default function ProgressPage({ essays, buckets }: Props) {
   const gradedEssays = essays.filter((essay) => essay.tutor_id && essay.feedback).length
 
   // Calculate overall grade statistics across all buckets
-  const gradeOrder = ['correct', 'partially_correct', 'incorrect', 'used_in_essay', 'not_graded']
   const overallGradeCounts = buckets.reduce((acc, bucket) => {
     bucket.words.forEach((word) => {
       const grade = word.pivot?.grade || 'not_graded'
@@ -58,7 +57,7 @@ export default function ProgressPage({ essays, buckets }: Props) {
                   {correctWords} of {totalWords} words correct
                 </div>
                 <div className="h-8 bg-gray-200 flex rounded overflow-hidden border border-gray-300">
-                  {gradeOrder.map((grade) => {
+                  {GRADE_ORDER.map((grade) => {
                     const count = overallGradeCounts[grade] || 0
                     if (count === 0) return null
                     const width = `${(count / totalWords) * 100}%`

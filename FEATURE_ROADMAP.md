@@ -41,18 +41,6 @@ idea: the tutor makes a mistake and needs to fix their mistake
 
 ---
 
-### 4. Bucket Dashboard Improvements
-**Status:** TODO
-**Priority:** Medium
-
-**Requirements:**
-- Remove unused filters or fix existing ones
-- Specifically address "unused" and "waiting for grade" filters
-- Clean up dashboard UI/UX
-- Ensure all displayed data is relevant and functional
-
----
-
 ### 5. Custom Dictionary Comments
 **Status:** TODO
 **Priority:** Medium

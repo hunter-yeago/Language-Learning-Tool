@@ -1,4 +1,4 @@
-export type GradeType = 'correct' | 'incorrect' | 'partially_correct' | 'not_used' | null;
+export type GradeType = 'correct' | 'incorrect' | 'partially_correct' | 'not_used' | 'not_graded';
 
 export interface WordPivot {
   grade: GradeType;

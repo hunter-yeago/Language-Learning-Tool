@@ -1,7 +1,7 @@
 import { Bucket } from '@/types/bucket'
 import { TutorWord } from '@/types/tutor'
 import { Essay } from '@/types/essay'
-import { gradeConfig } from '@/Utilities/tutor_utils/grades'
+import { gradeConfig, GRADE_ORDER } from '@/Utilities/tutor_utils/grades'
 import { useState } from 'react'
 
 interface Student {
@@ -25,7 +25,6 @@ export default function StudentOverviewCard({ student }: Props) {
   const totalBuckets = student.buckets.length
 
   // Calculate overall grade statistics across all buckets
-  const gradeOrder = ['correct', 'partially_correct', 'incorrect', 'used_in_essay', 'not_graded']
   const overallGradeCounts = student.buckets.reduce((acc, bucket) => {
     bucket.words.forEach((word) => {
       const grade = word.pivot?.grade || 'not_graded'
@@ -75,7 +74,7 @@ export default function StudentOverviewCard({ student }: Props) {
 
                 {/* Overall Progress Bar */}
                 <div className="h-6 bg-gray-200 flex rounded overflow-hidden border border-gray-300">
-                  {gradeOrder.map((grade) => {
+                  {GRADE_ORDER.map((grade) => {
                     const count = overallGradeCounts[grade] || 0
                     if (count === 0) return null
                     const width = `${(count / totalWords) * 100}%`
@@ -146,7 +145,7 @@ export default function StudentOverviewCard({ student }: Props) {
                     <>
                       <div className="text-xs text-gray-600 mb-1">{bucketMastery}% mastered</div>
                       <div className="h-4 bg-gray-200 flex rounded overflow-hidden">
-                        {gradeOrder.map((grade) => {
+                        {GRADE_ORDER.map((grade) => {
                           const count = bucketGradeCounts[grade] || 0
                           if (count === 0) return null
                           const width = `${(count / bucketTotal) * 100}%`

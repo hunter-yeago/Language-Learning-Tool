@@ -1,4 +1,4 @@
-import { gradeConfig } from '@/Utilities/tutor_utils/grades'
+import { gradeConfig, GRADE_ORDER } from '@/Utilities/tutor_utils/grades'
 import { TutorWord } from '@/types/tutor'
 
 interface Props {
@@ -7,8 +7,6 @@ interface Props {
 
 export default function GradeProgressBar({ words }: Props) {
   if (!words || words.length === 0) return null
-
-  const gradeOrder = ['correct', 'partially_correct', 'incorrect', 'used_in_essay', 'not_graded']
 
   const gradeCounts = words.reduce((acc, word) => {
     const grade = word.pivot?.grade || 'not_graded'
@@ -20,7 +18,7 @@ export default function GradeProgressBar({ words }: Props) {
 
   return (
     <div className="w-[min(50%,400px)] h-8 bg-gray-200 flex rounded overflow-hidden border">
-      {gradeOrder.map((grade) => {
+      {GRADE_ORDER.map((grade) => {
         const count = gradeCounts[grade] || 0
         if (count === 0) return null
         const width = `${(count / total) * 100}%`
