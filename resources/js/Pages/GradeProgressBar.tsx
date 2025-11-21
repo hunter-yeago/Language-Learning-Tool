@@ -1,4 +1,4 @@
-import { gradeConfig, GRADE_ORDER } from '@/Utilities/tutor_utils/grades'
+import { gradeConfig, GRADE_ORDER, calculateGradeCounts } from '@/Utilities/tutor_utils/grades'
 import { TutorWord } from '@/types/tutor'
 
 interface Props {
@@ -8,12 +8,7 @@ interface Props {
 export default function GradeProgressBar({ words }: Props) {
   if (!words || words.length === 0) return null
 
-  const gradeCounts = words.reduce((acc, word) => {
-    const grade = word.pivot?.grade || 'not_graded'
-    acc[grade] = (acc[grade] || 0) + 1
-    return acc
-  }, {} as Record<string, number>)
-
+  const gradeCounts = calculateGradeCounts(words)
   const total = words.length
 
   return (

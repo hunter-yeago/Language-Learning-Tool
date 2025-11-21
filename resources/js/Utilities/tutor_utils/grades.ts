@@ -143,3 +143,57 @@ export function cycleGrade(grade: GradeType): GradeType {
   // Return the next grade, using modulo to wrap around to the beginning
   return gradeCycle[(currentIndex + 1) % gradeCycle.length];
 }
+
+/**
+ * Calculate grade counts from an array of words
+ *
+ * @param words - Array of words with pivot.grade property
+ * @returns Object with grade counts (e.g., { correct: 5, not_graded: 3 })
+ *
+ * @example
+ * const counts = calculateGradeCounts(bucket.words)
+ * // Returns: { correct: 5, partially_correct: 2, incorrect: 1, not_graded: 3, not_used: 0 }
+ */
+export function calculateGradeCounts<T extends { pivot?: { grade?: GradeType | null } }>(
+  words: T[]
+): Record<string, number> {
+  return words.reduce((acc, word) => {
+    const grade = word.pivot?.grade || 'not_graded'
+    acc[grade] = (acc[grade] || 0) + 1
+    return acc
+  }, {} as Record<string, number>)
+}
+
+/**
+ * Calculate mastery percentage based on correct words
+ *
+ * @param gradeCounts - Grade counts object from calculateGradeCounts
+ * @param totalWords - Total number of words
+ * @returns Percentage of words marked as correct (0-100)
+ *
+ * @example
+ * const percentage = calculateMasteryPercentage(gradeCounts, totalWords)
+ * // Returns: 65 (meaning 65% of words are correct)
+ */
+export function calculateMasteryPercentage(
+  gradeCounts: Record<string, number>,
+  totalWords: number
+): number {
+  if (totalWords === 0) return 0
+  const correctWords = gradeCounts['correct'] || 0
+  return Math.round((correctWords / totalWords) * 100)
+}
+
+/**
+ * Calculate total number of words across multiple buckets
+ *
+ * @param buckets - Array of buckets with words arrays
+ * @returns Total count of words
+ *
+ * @example
+ * const total = calculateTotalWords(student.buckets)
+ * // Returns: 45 (sum of all words in all buckets)
+ */
+export function calculateTotalWords<T extends { words: any[] }>(buckets: T[]): number {
+  return buckets.reduce((sum, bucket) => sum + bucket.words.length, 0)
+}

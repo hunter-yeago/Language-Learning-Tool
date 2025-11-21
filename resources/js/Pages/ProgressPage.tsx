@@ -6,7 +6,10 @@ import BucketOverviewCard from '@/Components/dashboard/BucketOverviewCard'
 import { Bucket } from '@/types/bucket'
 import { TutorWord } from '@/types/tutor'
 import { Essay } from '@/types/essay'
-import { gradeConfig, GRADE_ORDER } from '@/Utilities/tutor_utils/grades'
+import { gradeConfig, GRADE_ORDER, calculateGradeCounts, calculateMasteryPercentage, calculateTotalWords } from '@/Utilities/tutor_utils/grades'
+import { countGradedEssays } from '@/Utilities/essayUtils'
+import { pluralizeS } from '@/Utilities/stringUtils'
+import { calculatePercentageString } from '@/Utilities/mathUtils'
 
 interface Props {
   essays: Essay[]
@@ -17,22 +20,16 @@ export default function ProgressPage({ essays, buckets }: Props) {
   const [selectedBucketId, setSelectedBucketId] = useState<number | null>(null)
 
   // Calculate overall statistics
-  const totalWords = buckets.reduce((sum, bucket) => sum + bucket.words.length, 0)
+  const totalWords = calculateTotalWords(buckets)
   const totalBuckets = buckets.length
   const totalEssays = essays.length
-  const gradedEssays = essays.filter((essay) => essay.tutor_id && essay.feedback).length
+  const gradedEssays = countGradedEssays(essays)
 
   // Calculate overall grade statistics across all buckets
-  const overallGradeCounts = buckets.reduce((acc, bucket) => {
-    bucket.words.forEach((word) => {
-      const grade = word.pivot?.grade || 'not_graded'
-      acc[grade] = (acc[grade] || 0) + 1
-    })
-    return acc
-  }, {} as Record<string, number>)
-
+  const allWords = buckets.flatMap((bucket) => bucket.words)
+  const overallGradeCounts = calculateGradeCounts(allWords)
   const correctWords = overallGradeCounts['correct'] || 0
-  const masteredPercentage = totalWords > 0 ? Math.round((correctWords / totalWords) * 100) : 0
+  const masteredPercentage = calculateMasteryPercentage(overallGradeCounts, totalWords)
 
   return (
     <AuthenticatedLayout header={<h1 className="text-3xl font-semibold text-neutral-900">Progress</h1>}>
@@ -60,7 +57,7 @@ export default function ProgressPage({ essays, buckets }: Props) {
                   {GRADE_ORDER.map((grade) => {
                     const count = overallGradeCounts[grade] || 0
                     if (count === 0) return null
-                    const width = `${(count / totalWords) * 100}%`
+                    const width = calculatePercentageString(count, totalWords)
                     return (
                       <div
                         key={grade}
@@ -77,7 +74,7 @@ export default function ProgressPage({ essays, buckets }: Props) {
               <div className="w-full grid grid-cols-4 gap-4 mb-6">
                 <div className="bg-indigo-50 rounded-lg p-4 border border-indigo-200">
                   <div className="text-3xl font-bold text-indigo-900">{totalBuckets}</div>
-                  <div className="text-sm text-indigo-700">Bucket{totalBuckets !== 1 ? 's' : ''}</div>
+                  <div className="text-sm text-indigo-700">Bucket{pluralizeS(totalBuckets)}</div>
                 </div>
                 <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
                   <div className="text-3xl font-bold text-purple-900">{totalWords}</div>
@@ -85,11 +82,11 @@ export default function ProgressPage({ essays, buckets }: Props) {
                 </div>
                 <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
                   <div className="text-3xl font-bold text-blue-900">{totalEssays}</div>
-                  <div className="text-sm text-blue-700">Essay{totalEssays !== 1 ? 's' : ''} Written</div>
+                  <div className="text-sm text-blue-700">Essay{pluralizeS(totalEssays)} Written</div>
                 </div>
                 <div className="bg-green-50 rounded-lg p-4 border border-green-200">
                   <div className="text-3xl font-bold text-green-900">{gradedEssays}</div>
-                  <div className="text-sm text-green-700">Essay{gradedEssays !== 1 ? 's' : ''} Graded</div>
+                  <div className="text-sm text-green-700">Essay{pluralizeS(gradedEssays)} Graded</div>
                 </div>
               </div>
             </div>

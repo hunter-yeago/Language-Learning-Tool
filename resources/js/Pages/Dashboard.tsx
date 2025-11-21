@@ -14,6 +14,7 @@ import { TutorWord } from '@/types/tutor'
 import { Word } from '@/types/word'
 import { Essay } from '@/types/essay'
 import { voidFunction } from '@/types/types'
+import { filterEssaysByBucket, isEssayGraded } from '@/Utilities/essayUtils'
 
 interface Props {
   essays: Essay[]
@@ -116,7 +117,7 @@ export default function Dashboard({ essays, buckets, bucketID }: Props) {
   }, [bucketID, buckets])
 
   // Filter essays to only show those associated with the current bucket
-  const filteredEssays = essays.filter((essay) => essay.bucket_id === currentBucket?.id)
+  const filteredEssays = filterEssaysByBucket(essays, currentBucket?.id)
 
   const handleWriteEssayPage: voidFunction = () => {
     if (data.bucket.id) {
@@ -236,11 +237,11 @@ export default function Dashboard({ essays, buckets, bucketID }: Props) {
                 {filteredEssays.length ? (
                   <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {filteredEssays.map((essay) => {
-                      const isGraded = essay.tutor_id && essay.feedback
+                      const isGraded = isEssayGraded(essay)
                       return (
-                        <li
-                          key={essay.id}
-                          onClick={() => isGraded && router.get(route('student.view-essay', { essay_id: essay.id, bucket_id: currentBucket?.id }))}
+                      <li
+                        key={essay.id}
+                        onClick={() => isGraded && router.get(route('student.view-essay', { essay_id: essay.id, bucket_id: currentBucket?.id }))}
                           className={`border border-neutral-200 p-4 rounded-md bg-neutral-50 transition ${
                             isGraded ? 'cursor-pointer hover:shadow-md hover:border-primary-300' : 'opacity-75'
                           }`}

@@ -1,7 +1,10 @@
 import { Bucket } from '@/types/bucket'
 import { TutorWord } from '@/types/tutor'
 import { Essay } from '@/types/essay'
-import { gradeConfig, GRADE_ORDER } from '@/Utilities/tutor_utils/grades'
+import { gradeConfig, GRADE_ORDER, calculateGradeCounts, calculateMasteryPercentage, calculateTotalWords } from '@/Utilities/tutor_utils/grades'
+import { filterEssaysByBucket, isEssayGraded } from '@/Utilities/essayUtils'
+import { pluralizeS } from '@/Utilities/stringUtils'
+import { calculatePercentageString } from '@/Utilities/mathUtils'
 import { useState } from 'react'
 
 interface Student {
@@ -21,20 +24,14 @@ interface Props {
 export default function StudentOverviewCard({ student }: Props) {
   const [isExpanded, setIsExpanded] = useState(false)
 
-  const totalWords = student.buckets.reduce((sum, bucket) => sum + bucket.words.length, 0)
+  const totalWords = calculateTotalWords(student.buckets)
   const totalBuckets = student.buckets.length
 
   // Calculate overall grade statistics across all buckets
-  const overallGradeCounts = student.buckets.reduce((acc, bucket) => {
-    bucket.words.forEach((word) => {
-      const grade = word.pivot?.grade || 'not_graded'
-      acc[grade] = (acc[grade] || 0) + 1
-    })
-    return acc
-  }, {} as Record<string, number>)
-
+  const allWords = student.buckets.flatMap((bucket) => bucket.words)
+  const overallGradeCounts = calculateGradeCounts(allWords)
   const correctWords = overallGradeCounts['correct'] || 0
-  const masteredPercentage = totalWords > 0 ? Math.round((correctWords / totalWords) * 100) : 0
+  const masteredPercentage = calculateMasteryPercentage(overallGradeCounts, totalWords)
 
   return (
     <div className="w-full bg-white border-2 border-gray-200 rounded-lg p-6 hover:shadow-lg hover:border-gray-300 transition-all">
@@ -77,7 +74,7 @@ export default function StudentOverviewCard({ student }: Props) {
                   {GRADE_ORDER.map((grade) => {
                     const count = overallGradeCounts[grade] || 0
                     if (count === 0) return null
-                    const width = `${(count / totalWords) * 100}%`
+                    const width = calculatePercentageString(count, totalWords)
                     return (
                       <div
                         key={grade}
@@ -97,7 +94,7 @@ export default function StudentOverviewCard({ student }: Props) {
         <div className="grid grid-cols-4 gap-3">
           <div className="bg-indigo-50 rounded-lg p-3 border border-indigo-200">
             <div className="text-2xl font-bold text-indigo-900">{totalBuckets}</div>
-            <div className="text-xs text-indigo-700">Bucket{totalBuckets !== 1 ? 's' : ''}</div>
+            <div className="text-xs text-indigo-700">Bucket{pluralizeS(totalBuckets)}</div>
           </div>
           <div className="bg-purple-50 rounded-lg p-3 border border-purple-200">
             <div className="text-2xl font-bold text-purple-900">{totalWords}</div>
@@ -105,11 +102,11 @@ export default function StudentOverviewCard({ student }: Props) {
           </div>
           <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
             <div className="text-2xl font-bold text-blue-900">{student.total_essays}</div>
-            <div className="text-xs text-blue-700">Essay{student.total_essays !== 1 ? 's' : ''} Written</div>
+            <div className="text-xs text-blue-700">Essay{pluralizeS(student.total_essays)} Written</div>
           </div>
           <div className="bg-green-50 rounded-lg p-3 border border-green-200">
             <div className="text-2xl font-bold text-green-900">{student.graded_essays}</div>
-            <div className="text-xs text-green-700">Essay{student.total_essays !== 1 ? 's' : ''} Graded</div>
+            <div className="text-xs text-green-700">Essay{pluralizeS(student.graded_essays)} Graded</div>
           </div>
         </div>
       </button>
@@ -120,25 +117,19 @@ export default function StudentOverviewCard({ student }: Props) {
           <h4 className="text-sm font-semibold text-gray-700 mb-3">Buckets:</h4>
           <div className="grid grid-cols-2 gap-4">
             {student.buckets.map((bucket) => {
-              const bucketGradeCounts = bucket.words.reduce((acc, word) => {
-                const grade = word.pivot?.grade || 'not_graded'
-                acc[grade] = (acc[grade] || 0) + 1
-                return acc
-              }, {} as Record<string, number>)
-
-              const bucketCorrect = bucketGradeCounts['correct'] || 0
+              const bucketGradeCounts = calculateGradeCounts(bucket.words)
               const bucketTotal = bucket.words.length
-              const bucketMastery = bucketTotal > 0 ? Math.round((bucketCorrect / bucketTotal) * 100) : 0
+              const bucketMastery = calculateMasteryPercentage(bucketGradeCounts, bucketTotal)
 
               // Get essays for this bucket
-              const bucketEssays = student.essays.filter((essay) => essay.bucket_id === bucket.id)
+              const bucketEssays = filterEssaysByBucket(student.essays, bucket.id)
 
               return (
                 <div key={bucket.id} className="bg-gray-50 rounded p-3 border border-gray-200">
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-medium text-sm text-gray-900 truncate">{bucket.title}</span>
                     <span className="text-xs text-gray-600 flex-shrink-0 ml-2">
-                      {bucket.words.length} word{bucket.words.length !== 1 ? 's' : ''}
+                      {bucket.words.length} word{pluralizeS(bucket.words.length)}
                     </span>
                   </div>
                   {bucketTotal > 0 && (
@@ -148,7 +139,7 @@ export default function StudentOverviewCard({ student }: Props) {
                         {GRADE_ORDER.map((grade) => {
                           const count = bucketGradeCounts[grade] || 0
                           if (count === 0) return null
-                          const width = `${(count / bucketTotal) * 100}%`
+                          const width = calculatePercentageString(count, bucketTotal)
                           return (
                             <div
                               key={grade}
@@ -166,28 +157,25 @@ export default function StudentOverviewCard({ student }: Props) {
                     <div className="mt-3 pt-3 border-t border-gray-300">
                       <div className="text-xs font-semibold text-gray-700 mb-2">Essays:</div>
                       <div className="space-y-2">
-                        {bucketEssays.map((essay) => {
-                          const isGraded = essay.tutor_id && essay.feedback
-                          return (
-                            <div
-                              key={essay.id}
-                              className="bg-white rounded px-2 py-1.5 border border-gray-200 text-xs"
-                            >
-                              <div className="flex items-center justify-between">
-                                <span className="font-medium text-gray-900 truncate">{essay.title}</span>
-                                {isGraded ? (
-                                  <span className="px-1.5 py-0.5 text-xs font-medium bg-green-100 text-green-700 rounded flex-shrink-0 ml-2">
-                                    Graded
-                                  </span>
-                                ) : (
-                                  <span className="px-1.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-700 rounded flex-shrink-0 ml-2">
-                                    Pending
-                                  </span>
-                                )}
-                              </div>
+                        {bucketEssays.map((essay) => (
+                          <div
+                            key={essay.id}
+                            className="bg-white rounded px-2 py-1.5 border border-gray-200 text-xs"
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="font-medium text-gray-900 truncate">{essay.title}</span>
+                              {isEssayGraded(essay) ? (
+                                <span className="px-1.5 py-0.5 text-xs font-medium bg-green-100 text-green-700 rounded flex-shrink-0 ml-2">
+                                  Graded
+                                </span>
+                              ) : (
+                                <span className="px-1.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-700 rounded flex-shrink-0 ml-2">
+                                  Pending
+                                </span>
+                              )}
                             </div>
-                          )
-                        })}
+                          </div>
+                        ))}
                       </div>
                     </div>
                   )}

@@ -1,7 +1,7 @@
 import { Bucket } from '@/types/bucket'
 import { TutorWord } from '@/types/tutor'
 import { Essay } from '@/types/essay'
-import { gradeConfig, GRADE_ORDER } from '@/Utilities/tutor_utils/grades'
+import { gradeConfig, GRADE_ORDER, calculateGradeCounts, calculateMasteryPercentage } from '@/Utilities/tutor_utils/grades'
 
 interface Props {
   bucket: Bucket<TutorWord>
@@ -14,15 +14,10 @@ export default function BucketOverviewCard({ bucket, essays, onSelect, isSelecte
   const bucketEssays = essays.filter((essay) => essay.bucket_id === bucket.id)
 
   // Calculate grade statistics
-  const gradeCounts = bucket.words.reduce((acc, word) => {
-    const grade = word.pivot?.grade || 'not_graded'
-    acc[grade] = (acc[grade] || 0) + 1
-    return acc
-  }, {} as Record<string, number>)
-
+  const gradeCounts = calculateGradeCounts(bucket.words)
   const totalWords = bucket.words.length
   const correctWords = gradeCounts['correct'] || 0
-  const masteredPercentage = totalWords > 0 ? Math.round((correctWords / totalWords) * 100) : 0
+  const masteredPercentage = calculateMasteryPercentage(gradeCounts, totalWords)
 
   return (
     <div
