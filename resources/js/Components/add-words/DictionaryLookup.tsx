@@ -8,18 +8,14 @@ interface Props {
   setCurrentWord: (word: string) => void
   onAddWord: () => void
   errors?: string
+  duplicateError?: string
+  canAddWord: boolean
 }
 
-interface ExistingWordCheck {
-  exists: boolean
-  buckets?: Array<{ id: number; title: string }>
-}
-
-export default function DictionaryLookup({ currentWord, setCurrentWord, onAddWord, errors }: Props) {
+export default function DictionaryLookup({ currentWord, setCurrentWord, onAddWord, errors, duplicateError, canAddWord }: Props) {
   const [dictionaryEntry, setDictionaryEntry] = useState<DictionaryEntry | null>(null)
   const [isLoadingDefinition, setIsLoadingDefinition] = useState(false)
   const [definitionError, setDefinitionError] = useState<string | null>(null)
-  const [existingWordCheck, setExistingWordCheck] = useState<ExistingWordCheck | null>(null)
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -34,7 +30,6 @@ export default function DictionaryLookup({ currentWord, setCurrentWord, onAddWor
     if (trimmedWord === '') {
       setDictionaryEntry(null)
       setDefinitionError(null)
-      setExistingWordCheck(null)
       return
     }
 
@@ -43,17 +38,10 @@ export default function DictionaryLookup({ currentWord, setCurrentWord, onAddWor
       setDefinitionError(null)
 
       try {
-        // Fetch both dictionary definition and check if word exists
-        const [dictionaryResponse, existsResponse] = await Promise.all([
-          axios.get(`/lookup-word/${encodeURIComponent(trimmedWord)}`).catch(err => {
-            console.error('Dictionary lookup error:', err)
-            return { data: { success: false } }
-          }),
-          axios.post('/buckets/check-word-exists', { word: trimmedWord }).catch(err => {
-            console.error('Word exists check error:', err)
-            return { data: { exists: false } }
-          }),
-        ])
+        const dictionaryResponse = await axios.get(`/lookup-word/${encodeURIComponent(trimmedWord)}`).catch(err => {
+          console.error('Dictionary lookup error:', err)
+          return { data: { success: false } }
+        })
 
         if (dictionaryResponse.data.success && dictionaryResponse.data.response?.entries?.length > 0) {
           setDictionaryEntry(dictionaryResponse.data.response.entries[0])
@@ -61,13 +49,10 @@ export default function DictionaryLookup({ currentWord, setCurrentWord, onAddWor
           setDictionaryEntry(null)
           setDefinitionError('No definition found')
         }
-
-        setExistingWordCheck(existsResponse.data)
       } catch (error) {
         console.error('Error fetching data:', error)
         setDictionaryEntry(null)
         setDefinitionError('Failed to load definition')
-        setExistingWordCheck({ exists: false })
       } finally {
         setIsLoadingDefinition(false)
       }
@@ -99,25 +84,16 @@ export default function DictionaryLookup({ currentWord, setCurrentWord, onAddWor
             <button
               type="button"
               onClick={onAddWord}
-              disabled={!currentWord.trim() || existingWordCheck?.exists}
+              disabled={!canAddWord}
               className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Add
             </button>
           </div>
           {errors && <div className="text-red-500 text-sm mt-2">{errors}</div>}
-          {existingWordCheck?.exists && existingWordCheck.buckets && (
-            <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-              <p className="text-sm font-medium text-amber-800">
-                This word already exists in:
-              </p>
-              <ul className="mt-1 space-y-1">
-                {existingWordCheck.buckets.map((bucket) => (
-                  <li key={bucket.id} className="text-sm text-amber-700">
-                    • {bucket.title}
-                  </li>
-                ))}
-              </ul>
+          {duplicateError && (
+            <div className="mt-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm font-medium text-red-800">{duplicateError}</p>
             </div>
           )}
         </div>

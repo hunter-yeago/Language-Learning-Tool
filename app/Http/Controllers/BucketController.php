@@ -51,18 +51,44 @@ class BucketController extends Controller
             'words.*' => 'required|string|max:255',
         ]);
 
-        // Add words to the bucket
+        // Get all words that already exist in any of the user's buckets
+        $existingWords = Word::whereHas('buckets', function ($query) {
+            $query->where('buckets.user_id', Auth::id());
+        })->pluck('word')->map(fn($word) => strtolower($word))->toArray();
+
+        $duplicates = [];
+        $addedWords = [];
+
+        // Check each word for duplicates across all user's buckets
         foreach ($validated['words'] as $wordText) {
             // Normalize word to lowercase
             $normalizedWord = trim(strtolower($wordText));
 
-            // Find or create the word (prevents duplicates)
+            // Check if word exists in any of user's buckets
+            if (in_array($normalizedWord, $existingWords)) {
+                $duplicates[] = $wordText;
+                continue;
+            }
+
+            // Find or create the word (prevents duplicates in words table)
             $word = Word::firstOrCreate(['word' => $normalizedWord]);
 
-            // Attach to bucket if not already attached
+            // Attach to bucket
             if (!$bucket->words()->where('word_id', $word->id)->exists()) {
                 $bucket->words()->attach($word->id);
+                $addedWords[] = $wordText;
+                // Add to existing words array to catch duplicates within this request
+                $existingWords[] = $normalizedWord;
             }
+        }
+
+        // Return with appropriate message
+        if (!empty($duplicates) && empty($addedWords)) {
+            return redirect()->route('/', ['bucketID' => $bucketID])
+                ->with('error', 'All words already exist in your buckets: ' . implode(', ', $duplicates));
+        } elseif (!empty($duplicates)) {
+            return redirect()->route('/', ['bucketID' => $bucketID])
+                ->with('warning', 'Some words were skipped as they already exist: ' . implode(', ', $duplicates));
         }
 
         return redirect()->route('/', ['bucketID' => $bucketID])
@@ -161,13 +187,21 @@ class BucketController extends Controller
         // Find or create the word (prevents duplicates in words table)
         $word = Word::firstOrCreate(['word' => $normalizedWord]);
 
-        // Check if word already exists in this bucket
-        $existsInBucket = $bucket->words()->where('word_id', $word->id)->exists();
+        // Check if word already exists in ANY of the user's buckets
+        $existsInUserBuckets = $word->buckets()
+            ->where('buckets.user_id', Auth::id())
+            ->exists();
 
-        if ($existsInBucket) {
+        if ($existsInUserBuckets) {
+            // Get the buckets it exists in for better error message
+            $existingBuckets = $word->buckets()
+                ->where('buckets.user_id', Auth::id())
+                ->pluck('title')
+                ->toArray();
+
             return response()->json([
                 'success' => false,
-                'message' => 'This word already exists in the selected bucket.'
+                'message' => 'This word already exists in your buckets: ' . implode(', ', $existingBuckets)
             ], 409);
         }
 

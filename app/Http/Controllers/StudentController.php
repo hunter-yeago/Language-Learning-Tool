@@ -52,9 +52,20 @@ class StudentController extends Controller
             return redirect()->route('/')->with('error', 'Bucket not found');
         }
 
+        // Get all words from all of the user's buckets
+        $allUserWords = Bucket::where('user_id', Auth::id())
+            ->with('words')
+            ->get()
+            ->pluck('words')
+            ->flatten()
+            ->pluck('word')
+            ->unique()
+            ->values();
+
         return Inertia::render('AddWordsPage', [
             'bucket' => $bucket,
             'words' => $bucket->words ?? [],
+            'existingWords' => $allUserWords,
         ]);
     }
 

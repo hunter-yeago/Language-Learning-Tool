@@ -10,9 +10,10 @@ import WordListPanel from '@/Components/add-words/WordListPanel'
 interface Props {
   bucket: Bucket
   words: Word[]
+  existingWords: string[]
 }
 
-export default function AddWordsPage({ bucket }: Props) {
+export default function AddWordsPage({ bucket, existingWords = [] }: Props) {
   const { setData, post, processing, errors } = useForm({
     words: [] as string[],
   })
@@ -20,31 +21,58 @@ export default function AddWordsPage({ bucket }: Props) {
   const [currentWord, setCurrentWord] = useState('')
   const [wordList, setWordList] = useState<string[]>([])
 
+  // Check validation status and generate error message
+  const { canAddWord, duplicateError } = (() => {
+    const trimmedWord = currentWord.trim()
+
+    if (!trimmedWord) {
+      return { canAddWord: false, duplicateError: '' }
+    }
+
+    const normalizedWord = trimmedWord.toLowerCase()
+
+    // Check if word already exists in any of the user's buckets
+    if (existingWords.some((word) => word.toLowerCase() === normalizedWord)) {
+      return {
+        canAddWord: false,
+        duplicateError: `"${trimmedWord}" already exists in one of your buckets`,
+      }
+    }
+
+    // Check if word is already in current list
+    if (wordList.some((word) => word.toLowerCase() === normalizedWord)) {
+      return {
+        canAddWord: false,
+        duplicateError: `"${trimmedWord}" is already in your word list`,
+      }
+    }
+
+    return { canAddWord: true, duplicateError: '' }
+  })()
+
   /**
    * Adds a word to the word list if it's valid and not a duplicate.
    * Validates the word by trimming whitespace and checking for empty strings.
    */
   const addWord = () => {
-    // Remove leading/trailing whitespace
+    // Only proceed if the word can be added
+    if (!canAddWord) {
+      return
+    }
+
     const trimmedWord = currentWord.trim()
 
-    // Only proceed if the word is not empty
-    if (trimmedWord !== '') {
-      // Prevent duplicate words from being added
-      if (!wordList.includes(trimmedWord)) {
-        // Create new array with the added word
-        const updatedWordList = [...wordList, trimmedWord]
+    // Create new array with the added word
+    const updatedWordList = [...wordList, trimmedWord]
 
-        // Update local state for UI display
-        setWordList(updatedWordList)
+    // Update local state for UI display
+    setWordList(updatedWordList)
 
-        // Update form data for submission
-        setData('words', updatedWordList)
+    // Update form data for submission
+    setData('words', updatedWordList)
 
-        // Clear the input field
-        setCurrentWord('')
-      }
-    }
+    // Clear the input field
+    setCurrentWord('')
   }
 
   /**
@@ -107,6 +135,8 @@ export default function AddWordsPage({ bucket }: Props) {
             setCurrentWord={setCurrentWord}
             onAddWord={addWord}
             errors={errors.words}
+            duplicateError={duplicateError}
+            canAddWord={canAddWord}
           />
 
           <WordListPanel
