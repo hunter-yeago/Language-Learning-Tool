@@ -73,16 +73,18 @@ class SubmittedEssaysSeeder extends Seeder
             ],
         ];
 
-        // Create all unique words
+        // Create all unique words (normalized to lowercase)
         $uniqueWords = collect($bucketConfig)
             ->flatMap(fn ($bucket) => $bucket['words'])
+            ->map(fn ($word) => trim(strtolower($word)))
             ->unique()
             ->values();
 
-        // Create words
+        // Create words using firstOrCreate to prevent duplicates
+        // Index by normalized word for consistent lookup
         $words = collect();
-        foreach ($uniqueWords as $wordText) {
-            $words[$wordText] = Word::create(['word' => $wordText]);
+        foreach ($uniqueWords as $normalizedWord) {
+            $words[$normalizedWord] = Word::firstOrCreate(['word' => $normalizedWord]);
         }
 
         // Loop through bucket config and build buckets, bucket_word_joins, essays, and essay_word_joins
@@ -94,14 +96,13 @@ class SubmittedEssaysSeeder extends Seeder
                 'user_id' => $student->id,
             ]);
 
-            // Attach words to bucket
+            // Attach words to bucket using Eloquent relationship
             foreach ($config['words'] as $wordText) {
-                DB::table('bucket_word_join')->insert([
-                    'bucket_id' => $bucket->id,
-                    'word_id' => $words[$wordText]->id,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+                $normalizedWord = trim(strtolower($wordText));
+                // Only attach if not already attached (respects unique constraint)
+                if (!$bucket->words()->where('word_id', $words[$normalizedWord]->id)->exists()) {
+                    $bucket->words()->attach($words[$normalizedWord]->id);
+                }
             }
 
             // Create essays and attach same words
@@ -116,15 +117,13 @@ class SubmittedEssaysSeeder extends Seeder
                     'status' => 'submitted',
                 ]);
 
+                // Attach words to essay using Eloquent relationship
                 foreach ($config['words'] as $wordText) {
-                    DB::table('essay_word_join')->insert([
-                        'essay_id' => $essay->id,
-                        'word_id' => $words[$wordText]->id,
-                        'grade' => null,
-                        'comment' => null,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
+                    $normalizedWord = trim(strtolower($wordText));
+                    // Only attach if not already attached (respects unique constraint)
+                    if (!$essay->words()->where('word_id', $words[$normalizedWord]->id)->exists()) {
+                        $essay->words()->attach($words[$normalizedWord]->id);
+                    }
                 }
             }
         }

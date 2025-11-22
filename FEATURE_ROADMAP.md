@@ -29,18 +29,6 @@ Currently, the grading system relies on string and array comparisons declared in
 
 ---
 
-### 3. New Changes / Re-grading after essay submission?
-idea: the tutor makes a mistake and needs to fix their mistake
-
-**Status:** TODO
-**Priority:** High
-
-**Requirements:**
-- Enable tutors to make changes to essays after grading
-- Provide ability to re-grade or edit feedback
-
----
-
 ### 5. Custom Dictionary Comments
 **Status:** TODO
 **Priority:** Medium
@@ -88,21 +76,10 @@ Currently, the same word is stored multiple times in the database for different 
 **Priority:** Low
 
 **Requirements:**
-- Add ability for tutors and students to connect with each other
+- Add ability for tutors and students to connect with each other.
 - Implement invitation/request system
 - Manage tutor-student relationships
 - Handle acceptance/rejection of connection requests
-
----
-
-### 12. Code Privacy Considerations
-**Status:** TODO
-**Priority:** Low
-
-**Consideration:**
-- Evaluate making repository private
-- Create comprehensive public-facing documentation page about the project
-- Balance open-source benefits with privacy concerns
 
 ---
 
@@ -205,5 +182,19 @@ When implementing any feature from this roadmap:
 - Then it was right.
 - Then it was partially correct?
 - have access to the essay / tutor / whatever in the history
+
+---
+
+
+
+### 3. New Changes / Re-grading after essay submission?
+idea: the tutor makes a mistake and needs to fix their mistake
+
+**Status:** TODO
+**Priority:** High
+
+**Requirements:**
+- Enable tutors to make changes to essays after grading
+- Provide ability to re-grade or edit feedback
 
 ---

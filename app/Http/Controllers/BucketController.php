@@ -52,8 +52,17 @@ class BucketController extends Controller
         ]);
 
         // Add words to the bucket
-        foreach ($validated['words'] as $word) {
-            $bucket->words()->create(['word' => $word]);
+        foreach ($validated['words'] as $wordText) {
+            // Normalize word to lowercase
+            $normalizedWord = trim(strtolower($wordText));
+
+            // Find or create the word (prevents duplicates)
+            $word = Word::firstOrCreate(['word' => $normalizedWord]);
+
+            // Attach to bucket if not already attached
+            if (!$bucket->words()->where('word_id', $word->id)->exists()) {
+                $bucket->words()->attach($word->id);
+            }
         }
 
         return redirect()->route('/', ['bucketID' => $bucketID])
@@ -144,25 +153,26 @@ class BucketController extends Controller
             ], 403);
         }
 
-        // Check if word already exists in this bucket
         $wordText = $validated['word'];
-        $existingWord = Word::whereRaw('LOWER(word) = ?', [strtolower($wordText)])->first();
 
-        if ($existingWord) {
-            $existsInBucket = $existingWord->buckets()
-                ->where('buckets.id', $bucket->id)
-                ->exists();
+        // Normalize word to lowercase
+        $normalizedWord = trim(strtolower($wordText));
 
-            if ($existsInBucket) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'This word already exists in the selected bucket.'
-                ], 409);
-            }
+        // Find or create the word (prevents duplicates in words table)
+        $word = Word::firstOrCreate(['word' => $normalizedWord]);
+
+        // Check if word already exists in this bucket
+        $existsInBucket = $bucket->words()->where('word_id', $word->id)->exists();
+
+        if ($existsInBucket) {
+            return response()->json([
+                'success' => false,
+                'message' => 'This word already exists in the selected bucket.'
+            ], 409);
         }
 
-        // Add the word to the bucket
-        $bucket->words()->create(['word' => $wordText]);
+        // Attach the word to the bucket
+        $bucket->words()->attach($word->id);
 
         return response()->json([
             'success' => true,
