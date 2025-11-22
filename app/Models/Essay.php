@@ -33,4 +33,31 @@ class Essay extends Model
     {
         return $this->belongsTo(User::class, 'tutor_id');
     }
+
+    /**
+     * Check if the essay is in draft status
+     */
+    public function isDraft(): bool
+    {
+        return $this->status === 'draft';
+    }
+
+    /**
+     * Check if the essay has been submitted
+     */
+    public function isSubmitted(): bool
+    {
+        return in_array($this->status, ['submitted', 'under_review', 'graded']);
+    }
+
+    /**
+     * Return essay to draft status (used when tutor disconnects)
+     */
+    public function returnToDraft(): void
+    {
+        $this->update([
+            'status' => 'draft',
+            'tutor_id' => null,
+        ]);
+    }
 }

@@ -7,6 +7,7 @@ use App\Http\Controllers\BucketController;
 use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TutorController;
+use App\Http\Controllers\TutorInvitationController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -29,11 +30,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Dictionary
     Route::get('/dictionary', [DictionaryController::class, 'index'])->name('dictionary');
     Route::get('/lookup-word/{word}', [DictionaryController::class, 'lookup']);
-    
+
     // Profile
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Invitation Actions (both students and tutors can access)
+    Route::post('/accept-invitation/{token}', [TutorInvitationController::class, 'accept'])->name('invitation.accept');
+    Route::post('/reject-invitation/{token}', [TutorInvitationController::class, 'reject'])->name('invitation.reject');
+
+    // Notifications
+    Route::post('/notifications/{id}/mark-as-read', [ProfileController::class, 'markNotificationAsRead'])->name('notifications.mark-as-read');
 });
 
 // Tutor
@@ -43,6 +52,11 @@ Route::middleware(['auth', 'verified', 'role:tutor'])->name('tutor.')->group(fun
     Route::post('/update-essay', [TutorController::class, 'update_essay'])->name('update-essay');
     Route::get('/students', [TutorController::class, 'students'])->name('students');
     Route::get('/tutor-view-essay', [TutorController::class, 'viewEssay'])->name('view-essay');
+
+    // Tutor Invitation & Connection Management
+    Route::post('/invite-student', [TutorInvitationController::class, 'store'])->name('invite-student');
+    Route::post('/cancel-invitation/{id}', [TutorInvitationController::class, 'cancel'])->name('invitation.cancel');
+    Route::post('/disconnect-student/{studentId}', [ProfileController::class, 'disconnectStudent'])->name('profile.disconnect-student');
 });
 
 // Student

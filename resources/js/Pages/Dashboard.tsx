@@ -119,6 +119,10 @@ export default function Dashboard({ essays, buckets, bucketID }: Props) {
   // Filter essays to only show those associated with the current bucket
   const filteredEssays = filterEssaysByBucket(essays, currentBucket?.id)
 
+  // Separate draft essays from submitted essays
+  const draftEssays = filteredEssays.filter((essay) => essay.status === 'draft')
+  const submittedEssays = filteredEssays.filter((essay) => essay.status !== 'draft')
+
   const handleWriteEssayPage: voidFunction = () => {
     if (data.bucket.id) {
       router.visit(route('student.write-essay'), {
@@ -231,12 +235,39 @@ export default function Dashboard({ essays, buckets, bucketID }: Props) {
                 )}
               </section>
 
-              {/* Essay List */}
-              <section className="pt-6 border-t border-neutral-200">
-                <h3 className="text-lg font-semibold text-neutral-900 mb-4">Essays</h3>
-                {filteredEssays.length ? (
+              {/* Draft Essays Section */}
+              {draftEssays.length > 0 && (
+                <section className="pt-6 border-t border-neutral-200">
+                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">Draft Essays</h3>
                   <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {filteredEssays.map((essay) => {
+                    {draftEssays.map((essay) => (
+                      <li
+                        key={essay.id}
+                        onClick={() => router.post(route('student.write-essay'), {
+                          bucket: data.bucket as any,
+                          bucketID: data.bucket.id
+                        })}
+                        className="border border-neutral-200 p-4 rounded-md bg-blue-50 transition cursor-pointer hover:shadow-md hover:border-blue-300"
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <div className="font-semibold text-neutral-900">{essay.title}</div>
+                          <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded">
+                            Draft
+                          </span>
+                        </div>
+                        <p className="text-sm text-neutral-600 line-clamp-2">{essay.content}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
+              {/* Submitted/Graded Essays Section */}
+              <section className="pt-6 border-t border-neutral-200">
+                <h3 className="text-lg font-semibold text-neutral-900 mb-4">Submitted Essays</h3>
+                {submittedEssays.length ? (
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {submittedEssays.map((essay) => {
                       const isGraded = isEssayGraded(essay)
                       return (
                       <li
@@ -265,7 +296,7 @@ export default function Dashboard({ essays, buckets, bucketID }: Props) {
                     })}
                   </ul>
                 ) : (
-                  <p className="text-sm text-neutral-500 italic">No essays yet.</p>
+                  <p className="text-sm text-neutral-500 italic">No submitted essays yet.</p>
                 )}
               </section>
 

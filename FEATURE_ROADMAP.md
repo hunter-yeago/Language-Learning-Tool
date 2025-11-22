@@ -11,23 +11,6 @@ That idea of not just having it be a useful app but also to serve as a historica
 
 well the word in a box like how it is shown in the bucket section on the dahboard. with a line that links to the next one then thats the second, then the third, etc. Maybe there can be a little crown on the top left corner of the word when its finally marked correct.
 
-## High Priority / MVP Features
-
-### 1. Robust Grading System
-**Status:** TODO
-**Priority:** High
-
-**Problem:**
-Currently, the grading system relies on string and array comparisons declared in random places throughout the codebase, which creates maintainability issues and potential bugs.
-
-**Requirements:**
-- Centralize grading logic into a dedicated system/module
-- Create consistent grading criteria and validation
-- Remove scattered string/array comparisons
-- Implement a structured approach to essay evaluation
-- Ensure scalability and maintainability
-
----
 
 ### 5. Custom Dictionary Comments
 **Status:** TODO
@@ -53,35 +36,6 @@ Currently, the grading system relies on string and array comparisons declared in
 - Show context: 30 characters before and after word usage in essays
 - Improve essay styling with additional metadata
 
----
-
-### 8. Prevent Duplicate Words in Database
-**Status:** TODO
-**Priority:** High
-
-**Problem:**
-Currently, the same word is stored multiple times in the database for different users, leading to data redundancy.
-
-**Solution:**
-- Create a single centralized `words` table
-- When users add a word to their bucket, reference the existing word entry
-- Use pivot tables to manage user-word relationships
-- Ensure only one entry per word (e.g., only one "analyze" entry in database)
-- Reduce storage redundancy and improve data consistency
-
----
-
-### 9. Tutor-Student Connection System
-**Status:** TODO
-**Priority:** Low
-
-**Requirements:**
-- Add ability for tutors and students to connect with each other.
-- Implement invitation/request system
-- Manage tutor-student relationships
-- Handle acceptance/rejection of connection requests
-
----
 
 ### 13. Design & UX Improvements
 **Status:** TODO
@@ -198,3 +152,10 @@ idea: the tutor makes a mistake and needs to fix their mistake
 - Provide ability to re-grade or edit feedback
 
 ---
+
+
+User Pain Points - LingQ
+<!-- https://www.youtube.com/watch?v=WS3kSezOTvY -->
+- "It doesn't actually give you the grammatical aspects of a word if you click on it (shown in sidebar)"
+For example (in french) If you click on a word that its in the imperfective case, it won't tell you it's imperfective
+, it will only give you the english translation. 

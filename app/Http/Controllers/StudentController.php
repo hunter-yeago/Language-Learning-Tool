@@ -74,10 +74,14 @@ class StudentController extends Controller
         $bucket = $request->input('bucket');
         $bucketID = $request->input('bucketID');
 
+        // Get connected tutors for this student
+        $tutors = Auth::user()->tutors;
+
         return Inertia::render('WriteEssayPage', [
             'bucket' => $bucket,
             'words' => $bucket['words'],
-            'bucketID' => $bucketID
+            'bucketID' => $bucketID,
+            'tutors' => $tutors,
         ]);
     }
 

@@ -82,19 +82,12 @@ class TutorController extends Controller
 
     public function students(Request $request)
     {
-        $tutorId = Auth::id();
+        $tutor = Auth::user();
 
-        // Get all unique students who have submitted essays to this tutor
-        $studentIds = Essay::where('tutor_id', $tutorId)
-            ->pluck('user_id')
-            ->unique();
-
-        $students = User::whereIn('id', $studentIds)
-            ->with(['essays' => function ($query) use ($tutorId) {
-                $query->where('tutor_id', $tutorId);
-            }])
+        // Get connected students from the student_tutor pivot table
+        $students = $tutor->students()
             ->get()
-            ->map(function ($student) use ($tutorId) {
+            ->map(function ($student) use ($tutor) {
                 // Get all buckets for this student
                 $buckets = Bucket::where('user_id', $student->id)
                     ->with('words')
@@ -102,7 +95,7 @@ class TutorController extends Controller
 
                 // Get essays for this student assigned to this tutor
                 $essays = Essay::where('user_id', $student->id)
-                    ->where('tutor_id', $tutorId)
+                    ->where('tutor_id', $tutor->id)
                     ->get();
 
                 return [

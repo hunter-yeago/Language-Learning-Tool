@@ -25,12 +25,14 @@ export default function AuthenticatedLayout({ header, children }: PropsWithChild
     { href: route('/'), label: 'Dashboard' },
     { href: route('student.progress'), label: 'Progress' },
     { href: route('dictionary'), label: 'Dictionary' },
+    { href: route('profile'), label: 'Profile' },
   ]
 
   const tutorNavLinks: NavLinkConfig[] = [
     { href: route('/'), label: 'Dashboard' },
     { href: route('dictionary'), label: 'Dictionary' },
     { href: route('tutor.students'), label: 'Students' },
+    { href: route('profile'), label: 'Profile' },
   ]
 
   // Determine which nav links to show based on user role

@@ -11,6 +11,7 @@ export interface Essay {
   tutor_id?: number;
   viewed?: boolean;
   notes?: string;
+  status: 'draft' | 'submitted' | 'under_review' | 'graded' | 'returned';
 }
 
 export interface EssayData {

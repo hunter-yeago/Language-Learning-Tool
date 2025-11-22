@@ -9,9 +9,16 @@ interface WordWithUsed extends Word {
   used: boolean
 }
 
+interface Tutor {
+  id: number
+  name: string
+  email: string
+}
+
 interface Props {
   bucket: Bucket
   words: Word[]
+  tutors: Tutor[]
 }
 
 interface FormData {
@@ -19,21 +26,23 @@ interface FormData {
   content: string
   bucket_id: number
   words: WordWithUsed[]
-  tutor_id: number
+  tutor_id: number | null
   notes: string
+  status: 'draft' | 'submitted'
 }
 
-export default function WriteEssayPage({ bucket, words }: Props) {
+export default function WriteEssayPage({ bucket, words, tutors }: Props) {
   const [title, setTitle] = useState('')
   const [notes, setNotes] = useState('')
   const [wordButtons, setWordButtons] = useState<Word[]>([])
-  const { setData, post, processing } = useForm<FormData>({
+  const { data, setData, post, processing } = useForm<FormData>({
     title: '',
     content: '',
     bucket_id: bucket.id,
     words: [],
-    tutor_id: 2,
+    tutor_id: null,
     notes: '',
+    status: 'draft',
   })
 
   /**
@@ -123,8 +132,19 @@ export default function WriteEssayPage({ bucket, words }: Props) {
     })
   }
 
-  const handleSubmit: FormEventHandler = (e) => {
+  const handleSaveDraft: FormEventHandler = (e) => {
     e.preventDefault()
+    setData('status', 'draft')
+    post(route('student.store-essay'))
+  }
+
+  const handleSubmitToTutor: FormEventHandler = (e) => {
+    e.preventDefault()
+    if (!data.tutor_id) {
+      alert('Please select a tutor before submitting')
+      return
+    }
+    setData('status', 'submitted')
     post(route('student.store-essay'))
   }
 
@@ -136,7 +156,7 @@ export default function WriteEssayPage({ bucket, words }: Props) {
 
           <WordBank words={words} wordButtons={wordButtons} />
 
-          <form onSubmit={handleSubmit} className="flex flex-col items-center gap-6 w-full">
+          <form className="flex flex-col items-center gap-6 w-full">
             <input
               type="text"
               value={title}
@@ -169,9 +189,48 @@ export default function WriteEssayPage({ bucket, words }: Props) {
               </p>
             </div>
 
-            <button className="w-1/2 p-2 bg-green-500 text-white rounded-md hover:bg-green-600" type="submit" disabled={processing}>
-              {processing ? 'Submitting...' : 'Submit Essay'}
-            </button>
+            <div className="w-full">
+              <label htmlFor="tutor" className="block text-sm font-medium text-gray-700 mb-1">
+                Select Tutor (Required to submit)
+              </label>
+              <select
+                id="tutor"
+                value={data.tutor_id || ''}
+                onChange={(e) => setData('tutor_id', e.target.value ? parseInt(e.target.value) : null)}
+                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              >
+                <option value="">Choose a tutor...</option>
+                {tutors.map((tutor) => (
+                  <option key={tutor.id} value={tutor.id}>
+                    {tutor.name}
+                  </option>
+                ))}
+              </select>
+              {tutors.length === 0 && (
+                <p className="text-xs text-red-500 mt-1">
+                  You need to connect with a tutor before submitting essays. Check your profile for pending invitations.
+                </p>
+              )}
+            </div>
+
+            <div className="flex gap-4 w-full">
+              <button
+                className="flex-1 p-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+                onClick={handleSaveDraft}
+                disabled={processing}
+                type="button"
+              >
+                {processing ? 'Saving...' : 'Save as Draft'}
+              </button>
+              <button
+                className="flex-1 p-2 bg-green-500 text-white rounded-md hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                onClick={handleSubmitToTutor}
+                disabled={processing || !data.tutor_id}
+                type="button"
+              >
+                {processing ? 'Submitting...' : 'Submit to Tutor'}
+              </button>
+            </div>
           </form>
         </div>
       </div>
