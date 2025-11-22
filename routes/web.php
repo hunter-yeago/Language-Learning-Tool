@@ -8,6 +8,7 @@ use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TutorController;
 use App\Http\Controllers\TutorInvitationController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -90,6 +91,29 @@ Route::middleware(['auth', 'verified', 'role:student'])->name('student.')->group
 
     // View Essay
     Route::get('/view-essay', [StudentController::class, 'viewEssay'])->name('view-essay');
+
+    // Review Management
+    Route::controller(ReviewController::class)->group(function () {
+        Route::get('/essays/{essayId}/reviews', 'getEssayReviews')->name('essays.reviews');
+        Route::get('/essays/{essayId}/review-summary', 'getReviewSummary')->name('essays.review-summary');
+        Route::get('/essays/{essayId}/approve', 'showApprovalPage')->name('essays.approve-page');
+        Route::post('/essays/{essayId}/approve-grades', 'approveGrades')->name('essays.approve-grades');
+        Route::post('/reviews/{reviewId}/helpful', 'markHelpful')->name('reviews.mark-helpful');
+    });
+
+    // Essay Visibility
+    Route::post('/essays/{id}/visibility', [EssayController::class, 'updateVisibility'])->name('essays.update-visibility');
+});
+
+// Public Routes (no auth required)
+Route::controller(EssayController::class)->group(function () {
+    Route::get('/public/essay/{token}', 'showPublic')->name('public.essay');
+});
+
+Route::controller(ReviewController::class)->group(function () {
+    Route::post('/public/essay/{token}/review', 'submitPublicReview')->name('public.submit-review');
+    Route::get('/reviewers/leaderboard', 'getLeaderboard')->name('reviewers.leaderboard');
+    Route::get('/reviewers/{reviewerId}/stats', 'getReviewerStats')->name('reviewers.stats');
 });
 
 require __DIR__.'/auth.php';

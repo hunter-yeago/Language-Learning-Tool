@@ -5,26 +5,56 @@ namespace App\Services;
 use App\Models\BucketWordJoin;
 use App\Models\Essay;
 use App\Models\EssayWordJoin;
+use App\Models\EssayVisibility;
 use App\Models\User;
 use App\Notifications\EssayAssignedToTutor;
 
 class EssayService
 {
+    protected ?ReviewService $reviewService = null;
+
+    public function __construct(?ReviewService $reviewService = null)
+    {
+        $this->reviewService = $reviewService;
+    }
     public function storeEssay(array $validated, User $user): Essay
     {
+        $status = $validated['status'] ?? 'submitted';
+
         $essay = Essay::create([
             'title' => $validated['title'],
             'bucket_id' => $validated['bucket_id'],
             'content' => $validated['content'],
             'feedback' => '',
             'user_id' => $user->id,
-            'tutor_id' => $validated['tutor_id'],
-            'status' => 'submitted',
+            'tutor_id' => $validated['tutor_id'] ?? null,
+            'primary_reviewer_id' => $validated['tutor_id'] ?? null,
+            'status' => $status,
             'notes' => $validated['notes'] ?? null,
         ]);
 
+        // Create visibility record (defaults to private)
+        EssayVisibility::create([
+            'essay_id' => $essay->id,
+            'visibility_type' => 'private',
+            'allow_anonymous' => true,
+        ]);
+
         $this->attachWordToEssay($essay->id, $validated['words']);
-        $essay->tutor?->notify(new EssayAssignedToTutor($essay));
+
+        // Only notify tutor if essay is submitted (not draft)
+        if ($status === 'submitted' && $essay->tutor) {
+            $essay->tutor->notify(new EssayAssignedToTutor($essay));
+
+            // Create review session for backward compatibility
+            if ($this->reviewService) {
+                $this->reviewService->createReview(
+                    $essay,
+                    $essay->tutor_id,
+                    'tutor'
+                );
+            }
+        }
 
         return $essay;
     }

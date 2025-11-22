@@ -11,7 +11,26 @@ class Essay extends Model
     protected $table = "essays";
     
     // only these two can be mass assigned
-    protected $fillable = ['title', 'content', 'user_id', 'bucket_id', 'tutor_id', 'feedback', 'status', 'viewed', 'notes'];
+    protected $fillable = [
+        'title',
+        'content',
+        'user_id',
+        'bucket_id',
+        'tutor_id',
+        'primary_reviewer_id',
+        'feedback',
+        'status',
+        'viewed',
+        'notes',
+        'requires_student_review',
+        'student_reviewed_at',
+    ];
+
+    protected $casts = [
+        'viewed' => 'boolean',
+        'requires_student_review' => 'boolean',
+        'student_reviewed_at' => 'datetime',
+    ];
 
     public function words()
     {
@@ -59,5 +78,53 @@ class Essay extends Model
             'status' => 'draft',
             'tutor_id' => null,
         ]);
+    }
+
+    /**
+     * Get the primary reviewer
+     */
+    public function primaryReviewer()
+    {
+        return $this->belongsTo(User::class, 'primary_reviewer_id');
+    }
+
+    /**
+     * Get all reviews for this essay
+     */
+    public function reviews()
+    {
+        return $this->hasMany(EssayReview::class);
+    }
+
+    /**
+     * Get visibility settings
+     */
+    public function visibility()
+    {
+        return $this->hasOne(EssayVisibility::class);
+    }
+
+    /**
+     * Get completed reviews
+     */
+    public function completedReviews()
+    {
+        return $this->reviews()->where('status', 'completed');
+    }
+
+    /**
+     * Check if essay has multiple reviews
+     */
+    public function hasMultipleReviews(): bool
+    {
+        return $this->completedReviews()->count() > 1;
+    }
+
+    /**
+     * Check if essay is publicly accessible
+     */
+    public function isPublic(): bool
+    {
+        return $this->visibility && $this->visibility->isAccessible();
     }
 }

@@ -7,18 +7,21 @@ use App\Models\Essay;
 use App\Models\User;
 use App\Models\Bucket;
 use App\Services\EssayService;
+use App\Services\ReviewService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class TutorController extends Controller
 {
-    
-    protected EssayService $essayService;
 
-    public function __construct(EssayService $essayService)
+    protected EssayService $essayService;
+    protected ReviewService $reviewService;
+
+    public function __construct(EssayService $essayService, ReviewService $reviewService)
     {
         $this->essayService = $essayService;
+        $this->reviewService = $reviewService;
     }
     
     public function index()
@@ -34,22 +37,47 @@ class TutorController extends Controller
     public function update_essay(GradeEssayRequest $request)
     {
         $validated = $request->validated();
+        $essay = Essay::findOrFail($validated['essay_id']);
 
-        // Debug: Log all incoming data
-        \Log::info('=== Update Essay Debug ===');
-        \Log::info('Essay ID: ' . $validated['essay_id']);
-        \Log::info('Feedback: ' . $validated['feedback']);
-        \Log::info('Words count: ' . count($validated['words']));
-        \Log::info('Words data: ', $validated['words']);
-        \Log::info('Raw request data: ', $request->all());
+        // Find or create review session for this tutor
+        $review = $essay->reviews()
+            ->where('reviewer_id', Auth::id())
+            ->where('reviewer_type', 'tutor')
+            ->first();
 
-        $this->essayService->update_essay(
-            Essay::findOrFail($validated['essay_id']),
-            $validated['words'],
+        if (!$review) {
+            $review = $this->reviewService->createReview(
+                $essay,
+                Auth::id(),
+                'tutor'
+            );
+        }
+
+        // Transform words data to match ReviewService format
+        $wordGrades = [];
+        foreach ($validated['words'] as $word) {
+            $wordGrades[] = [
+                'word_id' => $word['id'],
+                'grade' => $word['pivot']['grade'],
+                'comment' => $word['pivot']['comment'] ?? null,
+            ];
+        }
+
+        // Submit the review (triggers consensus calculation)
+        $this->reviewService->submitReview(
+            $review,
+            $wordGrades,
             $validated['feedback']
         );
 
-        return redirect()->route('/')->with('success', 'Essay graded!');
+        // Try to auto-approve if consensus is strong enough
+        $autoApproved = $this->reviewService->autoApproveIfPossible($essay);
+
+        $message = $autoApproved
+            ? 'Essay graded and approved!'
+            : 'Essay graded! Student will review the feedback.';
+
+        return redirect()->route('/')->with('success', $message);
     }
 
     public function grade_essay(Request $request)
