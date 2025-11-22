@@ -1,6 +1,8 @@
+import { voidFunction } from "@/types/types";
+
 interface WordButtonProps {
   color: string;
-  clickHandler: () => void;
+  clickHandler: voidFunction;
   word: string;
 }
 

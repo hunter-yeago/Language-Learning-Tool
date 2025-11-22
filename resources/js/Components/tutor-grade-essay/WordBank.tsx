@@ -1,15 +1,17 @@
 import { cycleGrade } from '@/Utilities/tutor_utils/grades'
-import { TutorEssay, TutorWord } from '@/types/tutor'
+import { TutorWord } from '@/types/tutor'
 import Instructions from './Instructions'
 import WordBankItem from './WordBankItem'
+import { Essay } from '@/types/essay';
 
 interface WordBankProps {
-  essay: TutorEssay;
+  essay: Essay;
   setData: (key: string, value: TutorWord[]) => void;
-  words: TutorWord[];
 }
 
-export default function WordBank({ essay, setData, words }: WordBankProps) {
+export default function WordBank({ essay, setData }: WordBankProps) {
+  const words = essay.words;
+
   const hasWords = Array.isArray(words) && words.length > 0
 
   if (!hasWords) {
@@ -41,15 +43,16 @@ export default function WordBank({ essay, setData, words }: WordBankProps) {
 
   return (
     <section className="w-full" aria-label={`word bank for the ${essay.title} essay`}>
-      <div className="flex gap-3 items-center mb-2">
-        <h2 className="text-lg font-semibold">Word Bank</h2>
-        <Instructions />
+      <Instructions />
+      
+      <div className='border rounded-lg p-4 flex flex-col gap-2'>
+        <h2 className="text-lg">Word Bank</h2>
+        <ul className="flex flex-wrap gap-4">
+          {words.map((word) => (
+            <WordBankItem key={word.id} word={word} handleWordClick={handleWordClick} />
+          ))}
+        </ul>
       </div>
-      <ul className="border items-center rounded-lg p-4 flex flex-wrap gap-2">
-        {words.map((word) => (
-          <WordBankItem key={word.id} word={word} handleWordClick={handleWordClick} />
-        ))}
-      </ul>
     </section>
   )
 }

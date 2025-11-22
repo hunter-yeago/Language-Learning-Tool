@@ -1,4 +1,4 @@
-export type GradeType = 'correct' | 'incorrect' | 'partially_correct' | 'not_used' | null;
+export type GradeType = 'correct' | 'incorrect' | 'partially_correct' | 'not_used' | 'not_graded';
 
 export interface WordPivot {
   grade: GradeType;
@@ -10,11 +10,7 @@ export interface TutorWord {
   word: string;
   pivot: WordPivot;
   created_at?: string;
-}
-
-export interface TutorEssay {
-  title: string;
-  content: string;
+  previous_grade?: GradeType;
 }
 
 export interface TutorFormData {
@@ -32,5 +28,5 @@ export interface WordMatch {
 export interface TextSegment {
   type: 'text' | 'word';
   content: string;
-  wordId?: number;
+  wordId: number;
 }

@@ -1,21 +1,20 @@
 import { getGradeColor } from '@/Utilities/tutor_utils/grades'
-import { TutorEssay, TutorWord } from '@/types/tutor'
+import { TutorWord } from '@/types/tutor'
 
 interface CommentListProps {
-  essay: TutorEssay;
-  data: TutorWord[];
+  words: TutorWord[];
   currentComment: number | null;
   setCurrentComment: (wordId: number | null) => void;
   setData: (key: string, value: TutorWord[]) => void;
   setTempData: (comment: string) => void;
 }
 
-export default function CommentList({ data, currentComment, setCurrentComment, setData, setTempData }: CommentListProps) {
-  if (!data) return null
+export default function CommentList({ words, currentComment, setCurrentComment, setData, setTempData }: CommentListProps) {
+  if (!words) return null
 
   function deleteComment(wordId: number) {
-    // Update the word's comment in the data array
-    const updatedWords = data.map((word) => {
+    // Update the word's comment in the w array
+    const updatedWords = words.map((word) => {
       if (word.id === wordId) {
         return {
           ...word,
@@ -36,7 +35,7 @@ export default function CommentList({ data, currentComment, setCurrentComment, s
 
   return (
     <div className="flex flex-col gap-3">
-      {data.map((word) => {
+      {words.map((word) => {
         // Skip words without comments
         if (!word.pivot?.comment?.trim()) return null
 

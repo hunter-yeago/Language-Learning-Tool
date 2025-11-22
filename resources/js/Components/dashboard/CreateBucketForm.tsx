@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { BucketData } from '@/types/bucket'
+import { voidFunction } from '@/types/types';
 
 interface CreateBucketFormProps {
   bucketData: BucketData;
@@ -8,7 +9,7 @@ interface CreateBucketFormProps {
   data: {
     bucket: BucketData;
   };
-  onCancel: () => void;
+  onCancel: voidFunction;
   processing: boolean;
 }
 

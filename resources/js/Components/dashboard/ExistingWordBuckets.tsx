@@ -1,9 +1,9 @@
 import { Bucket, BucketData } from '@/types/bucket'
 
-interface ExistingWordBucketsProps {
-  buckets: Bucket[];
+interface ExistingWordBucketsProps<T = any> {
+  buckets: Bucket<T>[];
   currentBucketId: number | null;
-  setCurrentBucket: (bucket: Bucket | null) => void;
+  setCurrentBucket: (bucket: Bucket<T> | null) => void;
   setData: (key: string, value: BucketData) => void;
   data: {
     bucket: BucketData;
@@ -12,7 +12,7 @@ interface ExistingWordBucketsProps {
   processing: boolean;
 }
 
-export default function ExistingWordBuckets({ buckets, currentBucketId, setCurrentBucket, setData }: ExistingWordBucketsProps) {
+export default function ExistingWordBuckets<T = any>({ buckets, currentBucketId, setCurrentBucket, setData }: ExistingWordBucketsProps<T>) {
   function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const bucketId = parseInt(event.target.value)
     const selectedBucket = buckets.find((b) => b.id === bucketId) || null

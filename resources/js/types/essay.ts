@@ -1,4 +1,4 @@
-import { Word } from './word';
+import { TutorWord } from './tutor';
 
 export interface Essay {
   id: number;
@@ -6,11 +6,16 @@ export interface Essay {
   content: string;
   bucket_id: number;
   created_at: string;
-  words: Word[];
+  words: TutorWord[];
+  feedback?: string;
+  tutor_id?: number;
+  viewed?: boolean;
+  notes?: string;
+  status: 'draft' | 'submitted' | 'under_review' | 'graded' | 'returned';
 }
 
 export interface EssayData {
   title: string;
   content: string;
-  words: Word[];
+  words: TutorWord[];
 }

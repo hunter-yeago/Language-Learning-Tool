@@ -4,7 +4,10 @@
 
 import { GradeType } from '@/types/tutor';
 
-type GradeableType = Exclude<GradeType, null>;
+type GradeableType = GradeType;
+
+// Canonical grade order used throughout the application
+export const GRADE_ORDER: readonly GradeType[] = ['correct', 'partially_correct', 'incorrect', 'not_graded', 'not_used'] as const;
 
 interface GradeConfigItem {
   label: string
@@ -19,7 +22,6 @@ export type GradeConfig = {
   [key: string]: GradeConfigItem | undefined
 }
 
-// TODO - add unused back in here
 export const gradeConfig: GradeConfig = {
   correct: {
     label: 'Correct',
@@ -39,9 +41,12 @@ export const gradeConfig: GradeConfig = {
     text: 'text-red-800',
     gradeable: true,
   },
-
-  // so that tutor can reset the word when they are grading the students' essay
-  // this may be broken, I guess I'll find out someday!
+  not_graded: {
+    label: 'Not Graded',
+    background: 'bg-blue-100',
+    text: 'text-blue-700',
+    gradeable: true,
+  },
   not_used: {
     label: 'Not Used',
     background: 'bg-gray-200',
@@ -50,28 +55,145 @@ export const gradeConfig: GradeConfig = {
   },
 }
 
+/**
+ * Returns Tailwind CSS classes for background and text color based on the grade type.
+ *
+ * @param grade - The grade type (correct, incorrect, partially_correct, not_used, or null)
+ * @returns A string containing Tailwind CSS classes for background and text colors
+ *
+ * @example
+ * getGradeColor('correct') // Returns: "bg-green-200 text-green-800"
+ * getGradeColor(null) // Returns: "text-gray-800"
+ */
 export function getGradeColor(grade: GradeType): string {
+  // Return default gray color if no grade is provided
   if (!grade) return 'text-gray-800';
+
+  // Look up the grade configuration for the provided grade
   const g = gradeConfig[grade as GradeableType];
+
+  // Return combined background and text classes, or default if config not found
   return g ? `${g.background} ${g.text}` : 'text-gray-800';
 }
 
-// update to handle waiting / not waitinf for grade
+/**
+ * Returns only the Tailwind CSS background color class based on the grade type.
+ * Used when you only need the background color without text color styling.
+ *
+ * @param grade - The grade type (correct, incorrect, partially_correct, not_used, or null)
+ * @returns A string containing the Tailwind CSS background color class
+ *
+ * @example
+ * getGradeBackgroundColor('correct') // Returns: "bg-green-200"
+ * getGradeBackgroundColor(null) // Returns: "bg-gray-200"
+ */
 export function getGradeBackgroundColor(grade: GradeType): string {
+  // Return default gray background if no grade is provided
   if (!grade) return 'bg-gray-200';
+
+  // Return the background color from config, or default gray if not found
   return gradeConfig[grade as GradeableType]?.background || 'bg-gray-200';
 }
 
+/**
+ * Returns a human-readable label for the grade type.
+ * Converts grade enum values into user-friendly display text.
+ *
+ * @param grade - The grade type (correct, incorrect, partially_correct, not_used, or null)
+ * @returns A human-readable string label for the grade
+ *
+ * @example
+ * getGradeLabel('correct') // Returns: "Correct"
+ * getGradeLabel('partially_correct') // Returns: "Partially Correct"
+ * getGradeLabel(null) // Returns: "No Grade"
+ */
 export function getGradeLabel(grade: GradeType): string {
+  // Return "No Grade" text if no grade is provided
   if (!grade) return 'No Grade';
+
+  // Return the label from config, or fall back to the grade string itself if not found
   return gradeConfig[grade as GradeableType]?.label || grade;
 }
 
+/**
+ * Cycles to the next grade in the grading sequence.
+ * Used when tutors click on word buttons to change grades.
+ * For words used in essays: correct → partially_correct → incorrect → correct (loops)
+ * Excludes 'not_used' since words in the essay must be graded.
+ *
+ * @param grade - The current grade type
+ * @returns The next grade type in the cycle
+ *
+ * @example
+ * cycleGrade('correct') // Returns: "partially_correct"
+ * cycleGrade('incorrect') // Returns: "correct" (loops back to start)
+ */
 export function cycleGrade(grade: GradeType): GradeType {
-  const gradeCycle = Object.entries(gradeConfig)
-    .filter(([_, config]) => config !== undefined && config.gradeable)
-    .map(([key]) => key) as GradeableType[];
+  // Only cycle through actual grades (exclude 'not_used' for words that are used in essays)
+  const gradeCycle: GradeableType[] = ['correct', 'partially_correct', 'incorrect'];
 
+  // Find the current grade's position in the cycle array
   const currentIndex = gradeCycle.indexOf(grade as GradeableType);
+
+  // If not found (null or not_used), start with 'correct'
+  if (currentIndex === -1) {
+    return 'correct';
+  }
+
+  // Return the next grade, using modulo to wrap around to the beginning
   return gradeCycle[(currentIndex + 1) % gradeCycle.length];
+}
+
+/**
+ * Calculate grade counts from an array of words
+ *
+ * @param words - Array of words with pivot.grade property
+ * @returns Object with grade counts (e.g., { correct: 5, not_graded: 3 })
+ *
+ * @example
+ * const counts = calculateGradeCounts(bucket.words)
+ * // Returns: { correct: 5, partially_correct: 2, incorrect: 1, not_graded: 3, not_used: 0 }
+ */
+export function calculateGradeCounts<T extends { pivot?: { grade?: GradeType | null } }>(
+  words: T[]
+): Record<string, number> {
+  return words.reduce((acc, word) => {
+    const grade = word.pivot?.grade || 'not_graded'
+    acc[grade] = (acc[grade] || 0) + 1
+    return acc
+  }, {} as Record<string, number>)
+}
+
+/**
+ * Calculate mastery percentage based on correct words
+ *
+ * @param gradeCounts - Grade counts object from calculateGradeCounts
+ * @param totalWords - Total number of words
+ * @returns Percentage of words marked as correct (0-100)
+ *
+ * @example
+ * const percentage = calculateMasteryPercentage(gradeCounts, totalWords)
+ * // Returns: 65 (meaning 65% of words are correct)
+ */
+export function calculateMasteryPercentage(
+  gradeCounts: Record<string, number>,
+  totalWords: number
+): number {
+  if (totalWords === 0) return 0
+  const correctWords = gradeCounts['correct'] || 0
+  return Math.round((correctWords / totalWords) * 100)
+}
+
+/**
+ * Calculate total number of words across multiple buckets
+ *
+ * @param buckets - Array of buckets with words arrays
+ * @returns Total count of words
+ *
+ * @example
+ * const total = calculateTotalWords(student.buckets)
+ * // Returns: 45 (sum of all words in all buckets)
+ */
+export function calculateTotalWords<T extends { words: any[] }>(buckets: T[]): number {
+  return buckets.reduce((sum, bucket) => sum + bucket.words.length, 0)
 }

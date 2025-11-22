@@ -7,6 +7,7 @@ use App\Http\Controllers\BucketController;
 use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TutorController;
+use App\Http\Controllers\TutorInvitationController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -27,13 +28,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('/');
     
     // Dictionary
-    Route::get('/dictionary', fn() => Inertia::render('DictionaryPage'))->name('dictionary');
+    Route::get('/dictionary', [DictionaryController::class, 'index'])->name('dictionary');
     Route::get('/lookup-word/{word}', [DictionaryController::class, 'lookup']);
-    
+
     // Profile
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Invitation Actions (both students and tutors can access)
+    Route::post('/accept-invitation/{token}', [TutorInvitationController::class, 'accept'])->name('invitation.accept');
+    Route::post('/reject-invitation/{token}', [TutorInvitationController::class, 'reject'])->name('invitation.reject');
+
+    // Notifications
+    Route::post('/notifications/{id}/mark-as-read', [ProfileController::class, 'markNotificationAsRead'])->name('notifications.mark-as-read');
 });
 
 // Tutor
@@ -41,14 +50,24 @@ Route::middleware(['auth', 'verified', 'role:tutor'])->name('tutor.')->group(fun
 
     Route::get('/grade-essay', [TutorController::class, 'grade_essay'])->name('grade-essay');
     Route::post('/update-essay', [TutorController::class, 'update_essay'])->name('update-essay');
+    Route::get('/students', [TutorController::class, 'students'])->name('students');
+    Route::get('/tutor-view-essay', [TutorController::class, 'viewEssay'])->name('view-essay');
+
+    // Tutor Invitation & Connection Management
+    Route::post('/invite-student', [TutorInvitationController::class, 'store'])->name('invite-student');
+    Route::post('/cancel-invitation/{id}', [TutorInvitationController::class, 'cancel'])->name('invitation.cancel');
+    Route::post('/disconnect-student/{studentId}', [ProfileController::class, 'disconnectStudent'])->name('profile.disconnect-student');
 });
 
 // Student
 Route::middleware(['auth', 'verified', 'role:student'])->name('student.')->group(function () {
-    
+
+    // Progress Page
+    Route::get('/progress', [StudentController::class, 'progress'])->name('progress');
+
     // Add Words
     Route::post('/add-words-page', [StudentController::class, 'addWordsPage'])->name('add-words-page');
-    Route::get('/add-words-page', fn() => redirect()->route('student.dashboard'));
+    Route::get('/add-words-page', [StudentController::class, 'getAddWordsPage'])->name('add-words-page.get');
 
     // Write Essay
     Route::post('/write-essay', [StudentController::class, 'writeEssayPage'])->name('write-essay');
@@ -58,6 +77,9 @@ Route::middleware(['auth', 'verified', 'role:student'])->name('student.')->group
     Route::controller(BucketController::class)->group(function () {
         Route::post('/buckets', 'store')->name('store-bucket');
         Route::post('/buckets/{bucketID}/add-new-words', 'addWords')->name('add-new-words');
+        Route::delete('/buckets/{bucket_id}', 'destroy')->name('delete-bucket');
+        Route::post('/buckets/check-word-exists', 'checkWordExists')->name('check-word-exists');
+        Route::post('/buckets/add-word', 'addSingleWord')->name('add-word-to-bucket');
     });
 
     // Update Essay
@@ -65,6 +87,9 @@ Route::middleware(['auth', 'verified', 'role:student'])->name('student.')->group
         Route::get('/essays', 'index')->name('essays.index');
         Route::post('/essays/write-essay', 'store')->name('store-essay');
     });
+
+    // View Essay
+    Route::get('/view-essay', [StudentController::class, 'viewEssay'])->name('view-essay');
 });
 
 require __DIR__.'/auth.php';

@@ -1,3 +1,4 @@
+import { voidFunction } from '@/types/types';
 import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react';
 import { PropsWithChildren } from 'react';
 
@@ -5,7 +6,7 @@ interface ModalProps {
   show?: boolean;
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   closeable?: boolean;
-  onClose?: () => void;
+  onClose?: voidFunction;
 }
 
 export default function Modal({ children, show = false, maxWidth = '2xl', closeable = true, onClose = () => {} }: PropsWithChildren<ModalProps>) {

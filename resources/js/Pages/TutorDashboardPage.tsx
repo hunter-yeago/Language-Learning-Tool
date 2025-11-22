@@ -12,6 +12,8 @@ export default function TutorDashboardPage({ essays }: Props) {
     router.get('/grade-essay', { essay_id: essay.id })
   }
 
+  essays.reverse();
+
   return (
     <AuthenticatedLayout header={<h1 className="text-3xl font-semibold text-neutral-900">Tutor Dashboard</h1>}>
       <Head title="Tutor Review" />

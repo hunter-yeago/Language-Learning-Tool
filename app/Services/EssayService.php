@@ -20,6 +20,7 @@ class EssayService
             'user_id' => $user->id,
             'tutor_id' => $validated['tutor_id'],
             'status' => 'submitted',
+            'notes' => $validated['notes'] ?? null,
         ]);
 
         $this->attachWordToEssay($essay->id, $validated['words']);
@@ -33,8 +34,8 @@ class EssayService
 
         foreach ($words as $word) {
 
-            if (!$word['used']) return;
-    
+            if (!$word['used']) continue;
+
             EssayWordJoin::updateOrCreate(
                 ['essay_id' => $essay_id, 'word_id' => $word['id']],
                 ['used_in_essay' => true]

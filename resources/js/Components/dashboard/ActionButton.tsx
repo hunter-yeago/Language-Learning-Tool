@@ -1,7 +1,9 @@
+import { voidFunction } from "@/types/types";
+
 type ButtonColor = 'blue' | 'green' | 'red';
 
 interface ActionButtonProps {
-  onClick: () => void;
+  onClick: voidFunction;
   processing: boolean;
   color: ButtonColor;
   text: string;

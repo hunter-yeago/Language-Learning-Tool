@@ -4,60 +4,13 @@ This document outlines the planned features and improvements for the Language Le
 
 ---
 
-## High Priority / MVP Features
+Dictionary Notes
+The dictionary serves as the Source of Truth for the users information and usage of words.. Everything goes through and attaches to it. As word are used and have a history and all that, you open up your dictionary and its like opening up your own history book of the learning of the language.
 
-### 1. Robust Grading System
-**Status:** TODO
-**Priority:** High
+That idea of not just having it be a useful app but also to serve as a historical record keeping of the language learning itself is... interesting. history of the use of the word. essays. buckets. there can even be a little graphic, or eonnected html elements. like
 
-**Problem:**
-Currently, the grading system relies on string and array comparisons declared in random places throughout the codebase, which creates maintainability issues and potential bugs.
+well the word in a box like how it is shown in the bucket section on the dahboard. with a line that links to the next one then thats the second, then the third, etc. Maybe there can be a little crown on the top left corner of the word when its finally marked correct.
 
-**Requirements:**
-- Centralize grading logic into a dedicated system/module
-- Create consistent grading criteria and validation
-- Remove scattered string/array comparisons
-- Implement a structured approach to essay evaluation
-- Ensure scalability and maintainability
-
----
-
-### 2. Dictionary Integration on Add Words Page
-**Status:** TODO
-**Priority:** High
-
-**Requirements:**
-- Add dictionary lookup functionality to the "Add Words" page
-- Clean up and improve the styling of the page
-- Provide word definitions, translations, or related data when adding words
-- Improve UX for word entry workflow
-
----
-
-### 3. Tutor Student Management Page
-**Status:** TODO
-**Priority:** High
-
-**Requirements:**
-- Create a "Student Page" for tutors to view their students
-- Display student information, progress, and submitted essays
-- Enable tutors to make changes to essays after grading
-- Provide ability to re-grade or edit feedback
-- Track student-tutor relationships
-
----
-
-### 4. Bucket Dashboard Improvements
-**Status:** TODO
-**Priority:** Medium
-
-**Requirements:**
-- Remove unused filters or fix existing ones
-- Specifically address "unused" and "waiting for grade" filters
-- Clean up dashboard UI/UX
-- Ensure all displayed data is relevant and functional
-
----
 
 ### 5. Custom Dictionary Comments
 **Status:** TODO
@@ -68,18 +21,6 @@ Currently, the grading system relies on string and array comparisons declared in
 - Enable tutors to add comments visible to their students
 - Create student-specific dictionary feature
 - Implement comment visibility controls (private vs. shared)
-
----
-
-### 6. Essay Page for Students
-**Status:** TODO
-**Priority:** Medium
-
-**Requirements:**
-- Create dedicated "Essay Page" for students when they receive marked essays
-- Provide option to make essays public
-- Display grading feedback and corrections
-- Enable essay sharing functionality
 
 ---
 
@@ -95,68 +36,6 @@ Currently, the grading system relies on string and array comparisons declared in
 - Show context: 30 characters before and after word usage in essays
 - Improve essay styling with additional metadata
 
----
-
-### 8. Prevent Duplicate Words in Database
-**Status:** TODO
-**Priority:** High
-
-**Problem:**
-Currently, the same word is stored multiple times in the database for different users, leading to data redundancy.
-
-**Solution:**
-- Create a single centralized `words` table
-- When users add a word to their bucket, reference the existing word entry
-- Use pivot tables to manage user-word relationships
-- Ensure only one entry per word (e.g., only one "analyze" entry in database)
-- Reduce storage redundancy and improve data consistency
-
----
-
-### 9. Tutor-Student Connection System
-**Status:** TODO
-**Priority:** Medium
-
-**Requirements:**
-- Add ability for tutors and students to connect with each other
-- Implement invitation/request system
-- Manage tutor-student relationships
-- Handle acceptance/rejection of connection requests
-
----
-
-### 10. Essay Submission Notes
-**Status:** TODO
-**Priority:** Low
-
-**Requirements:**
-- Add a note field on the "Write Essay" page
-- Allow students to include notes for tutors with their essay submissions
-- Display these notes to tutors during grading
-
----
-
-### 11. Previously Graded Essays for Tutors
-**Status:** TODO
-**Priority:** Medium
-
-**Requirements:**
-- Create a page for tutors to view previously graded essays
-- Enable filtering and searching of past graded work
-- Provide quick access to student history
-
----
-
-### 12. Code Privacy Considerations
-**Status:** TODO
-**Priority:** Low
-
-**Consideration:**
-- Evaluate making repository private
-- Create comprehensive public-facing documentation page about the project
-- Balance open-source benefits with privacy concerns
-
----
 
 ### 13. Design & UX Improvements
 **Status:** TODO
@@ -166,6 +45,9 @@ Currently, the same word is stored multiple times in the database for different 
 - General design improvements across the application
 - Enhance user experience throughout
 - Address specific UX pain points as they arise
+
+inspiration:
+https://www.bergesinstitutespanish.com/home
 
 ---
 
@@ -180,6 +62,9 @@ Currently, the same word is stored multiple times in the database for different 
 - Allow single essay to be reviewed by multiple people
 - Support feedback from tutors, Reddit community, AI, etc.
 - Manage multiple review sources per essay
+other notes
+- Provide option to make essays public
+- Enable essay sharing functionality
 
 ---
 
@@ -239,3 +124,38 @@ When implementing any feature from this roadmap:
 3. Ensure consistency with current architecture
 4. Consider impact on related features
 5. Update this document when features are completed or requirements change
+
+### 19. Word History
+**Status:** Future
+**Priority:** Medium
+
+**Requirements:**
+- Can see the history of how the word was used.
+- First it was unused.
+- Then it was wrong.
+- Then it was right.
+- Then it was partially correct?
+- have access to the essay / tutor / whatever in the history
+
+---
+
+
+
+### 3. New Changes / Re-grading after essay submission?
+idea: the tutor makes a mistake and needs to fix their mistake
+
+**Status:** TODO
+**Priority:** High
+
+**Requirements:**
+- Enable tutors to make changes to essays after grading
+- Provide ability to re-grade or edit feedback
+
+---
+
+
+User Pain Points - LingQ
+<!-- https://www.youtube.com/watch?v=WS3kSezOTvY -->
+- "It doesn't actually give you the grammatical aspects of a word if you click on it (shown in sidebar)"
+For example (in french) If you click on a word that its in the imperfective case, it won't tell you it's imperfective
+, it will only give you the english translation. 
